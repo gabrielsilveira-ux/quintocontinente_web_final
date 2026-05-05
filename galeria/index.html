@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeria – Quinto Continente</title>
+  <meta name="description" content="Confira registros dos grandes eventos realizados pela Quinto Continente.">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/media.css">
+  <script>if(localStorage.getItem('qc_theme')==='light') document.documentElement.setAttribute('data-theme','light');</script>
+</head>
+<body>
+  <nav id="nav">
+    <a href="../index.html" class="nav-logo">
+      <img src="../assets/images/logo.png" alt="Quinto Continente" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-family:Space Grotesk,sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)\'>Quinto Continente</span>')">
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../sobre/index.html">Quem Somos</a></li>
+      <li><a href="index.html" class="active">Galeria</a></li>
+      <li><a href="../artistas/index.html">Artistas</a></li>
+      <li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li>
+    </ul>
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <a href="../index.html#contato" class="nav-btn">Consultar Agenda</a>
+      <button class="theme-toggle" aria-label="Alternar tema" id="themeToggle"><svg id="themeIcon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      <button class="nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="nav-mobile">
+    <a href="../index.html">Home</a>
+    <a href="../sobre/index.html">Quem Somos</a>
+    <a href="index.html" class="active">Galeria</a>
+    <a href="../artistas/index.html">Artistas</a>
+    <a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a>
+    <a href="../index.html#contato" style="color:var(--accent)">Consultar Agenda →</a>
+  </div>
+
+  <div class="page-hero">
+    <div class="breadcrumb"><a href="../index.html">Home</a><span>/</span><span>Galeria</span></div>
+    <div class="page-hero-label">Registros</div>
+    <h1>Nossa trajetória em imagens.</h1>
+    <p class="page-hero-sub">Momentos marcantes de grandes shows e produções assinadas pela nossa equipe.</p>
+  </div>
+
+  <footer>
+    <div class="footer-top">
+      <div><div class="f-logo">Quinto Continente</div><div class="f-sub">Por Oceania Eventos</div><p class="f-desc">Excelência em entretenimento, gestão e grandes negócios.</p></div>
+      <div><div class="f-col-title">Serviços</div><ul class="f-links"><li><a href="../servicos/index.html#intermediacao">Intermediação de Shows</a></li><li><a href="../servicos/index.html#producao">Produção e Assessoria</a></li><li><a href="../servicos/index.html#especiais">Projetos Especiais</a></li><li><a href="../servicos/index.html#leis">Leis de Incentivo</a></li></ul></div>
+      <div><div class="f-col-title">Empresa</div><ul class="f-links"><li><a href="../sobre/index.html">Quem Somos</a></li><li><a href="../index.html#diferenciais">Diferenciais</a></li><li><a href="index.html">Galeria</a></li><li><a href="../artistas/index.html">Artistas</a></li><li><a href="../index.html#contato">Contato</a></li><li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li></ul></div>
+      <div><div class="f-col-title">Contato</div><ul class="f-links"><li><a href="mailto:contato@quintocontinente.com.br">contato@quintocontinente.com.br</a></li><li><a href="tel:+5511000000000">(11) 0000-0000</a></li><li><a href="#">São Paulo, SP</a></li></ul></div>
+    </div>
+    <div class="footer-bot"><p>© 2025 Quinto Continente — Por <a href="#">Oceania Eventos</a>. Todos os direitos reservados.</p><p><a href="#">Privacidade</a> &nbsp;·&nbsp; <a href="#">Termos</a></p></div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

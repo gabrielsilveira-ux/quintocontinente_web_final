@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quem Somos – Quinto Continente</title>
+  <meta name="description" content="Conheça a Quinto Continente, o hub estratégico da Oceania Eventos para parcerias artísticas de alto nível.">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/media.css">
+
+  <style>
+    /* ── Page Hero Quem Somos ─── */
+    .qs-hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      padding: calc(var(--nav-h) + 4rem) max(var(--site-pad), calc((100% - var(--max-w)) / 2)) 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .qs-hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(255,88,88,0.08) 0%, transparent 70%),
+                  linear-gradient(180deg, rgba(10,10,10,0) 50%, #0A0A0A 100%);
+    }
+    .qs-hero-bg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url('../assets/images/artist-placeholder.png') center/cover no-repeat;
+      opacity: 0.07;
+      filter: blur(4px);
+    }
+    .qs-hero-inner {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: flex-end;
+      width: 100%;
+    }
+    .qs-hero-left { display: flex; flex-direction: column; gap: 1.5rem; }
+    .qs-breadcrumb { display: flex; align-items: center; gap: .5rem; font-size: .75rem; color: var(--muted2); text-transform: uppercase; letter-spacing: .1em; }
+    .qs-breadcrumb a { color: var(--muted2); text-decoration: none; transition: color .2s; }
+    .qs-breadcrumb a:hover { color: var(--accent); }
+    .qs-breadcrumb span { color: var(--muted); }
+    .qs-label { display: inline-flex; align-items: center; gap: .6rem; font-size: .7rem; font-family: 'Space Grotesk', sans-serif; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); }
+    .qs-label::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+    .qs-hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; line-height: 1.1; color: var(--text); }
+    .qs-hero h1 em { font-style: normal; color: var(--accent); }
+    .qs-hero-sub { font-size: 1rem; font-weight: 300; color: var(--muted2); line-height: 1.75; max-width: 500px; }
+    .qs-hero-stats { display: flex; flex-direction: column; gap: 1.5rem; align-self: flex-end; }
+    .qs-stat-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line2);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem;
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .qs-stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .qs-stat-label { font-size: .8rem; font-weight: 400; color: var(--muted2); line-height: 1.5; }
+
+    /* ── Manifesto ─── */
+    .manifesto {
+      padding: 8rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .manifesto-quote {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--text);
+    }
+    .manifesto-quote em { font-style: normal; color: var(--accent); }
+    .manifesto-body { display: flex; flex-direction: column; gap: 1.5rem; }
+    .manifesto-body p { font-size: .95rem; font-weight: 300; line-height: 1.85; color: var(--muted2); }
+    .manifesto-body strong { color: var(--text); font-weight: 600; }
+
+    /* ── Stats Bar ─── */
+    .stats-bar {
+      background: var(--bg2);
+      border-top: 1px solid var(--line2);
+      border-bottom: 1px solid var(--line2);
+      padding: 5rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));
+    }
+    .stats-bar-inner {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+    .sb-item { text-align: center; }
+    .sb-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: .75rem;
+    }
+    .sb-num span { color: var(--accent); }
+    .sb-label { font-size: .78rem; font-weight: 400; color: var(--muted2); text-transform: uppercase; letter-spacing: .1em; }
+    .sb-divider { width: 1px; background: var(--line2); }
+
+    /* ── Timeline ─── */
+    .timeline-section {
+      padding: 8rem max(var(--site-pad), calc((100% - (var(--max-w) * 0.7)) / 2));
+    }
+    .tl-header { margin-bottom: 5rem; }
+    .tl-header .s-label { margin-bottom: 1rem; display: block; }
+    .tl-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; color: var(--text); }
+    .tl-list { position: relative; padding-left: 3rem; }
+    .tl-list::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 0; width: 1px; background: var(--line2); }
+    .tl-item { position: relative; padding-bottom: 4rem; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot {
+      position: absolute; left: -3rem;
+      top: 6px;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(255,88,88,.15);
+      transform: translateX(calc(-50% + .5px));
+    }
+    .tl-year { font-family: 'Space Grotesk', sans-serif; font-size: .7rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: .5rem; }
+    .tl-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: .6rem; }
+    .tl-desc { font-size: .875rem; font-weight: 300; line-height: 1.75; color: var(--muted2); max-width: 560px; }
+
+    /* ── DNA Cards ─── */
+    .dna-section {
+      padding: 8rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));
+      background: var(--bg2);
+    }
+    .dna-inner { width: 100%; }
+    .dna-header { margin-bottom: 4rem; }
+    .dna-header .s-label { margin-bottom: 1rem; display: block; }
+    .dna-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; color: var(--text); }
+    .dna-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+    .dna-card {
+      background: var(--bg3);
+      border: 1px solid var(--line2);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      transition: border-color .3s, transform .3s;
+    }
+    .dna-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .dna-icon {
+      width: 48px; height: 48px;
+      background: var(--accent-dim);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+    .dna-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .dna-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: .75rem; }
+    .dna-desc { font-size: .875rem; font-weight: 300; line-height: 1.75; color: var(--muted2); }
+
+    /* ── CTA Banner ─── */
+    .qs-cta {
+      padding: 8rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .qs-cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,88,88,0.07) 0%, transparent 70%);
+    }
+    .qs-cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+    .qs-cta h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; color: var(--text); margin-bottom: 1.5rem; line-height: 1.15; }
+    .qs-cta h2 em { font-style: normal; color: var(--accent); }
+    .qs-cta p { font-size: .95rem; font-weight: 300; color: var(--muted2); margin-bottom: 2.5rem; line-height: 1.75; }
+
+    /* ── Responsive ─── */
+    @media (max-width: 900px) {
+      .qs-hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .qs-hero-stats { flex-direction: row; flex-wrap: wrap; }
+      .qs-stat-card { flex: 1; min-width: 140px; }
+      .manifesto { grid-template-columns: 1fr; gap: 3rem; }
+      .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
+      .sb-divider { display: none; }
+      .dna-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">
+        <img src="../assets/images/logo.png" alt="Quinto Continente" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-family:Space Grotesk,sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)\'>Quinto Continente</span>')">
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="index.html" class="active">Quem Somos</a></li>
+        <li><a href="../artistas/index.html">Artistas</a></li>
+        <li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li>
+      </ul>
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <a href="../index.html#contato" class="nav-btn">Consultar Agenda</a>
+
+        <button class="nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-mobile">
+    <a href="../index.html">Home</a>
+    <a href="index.html" class="active">Quem Somos</a>
+    <a href="../artistas/index.html">Artistas</a>
+    <a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a>
+    <a href="../index.html#contato" style="color:var(--accent)">Consultar Agenda →</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="qs-hero">
+    <div class="qs-hero-bg"></div>
+    <div class="qs-hero-inner">
+      <div class="qs-hero-left reveal">
+        <div class="qs-breadcrumb">
+          <a href="../index.html">Home</a>
+          <span>/</span>
+          <span>Quem Somos</span>
+        </div>
+        <div class="qs-label">Nossa História</div>
+        <h1>Expertise que <em>transforma</em><br>entretenimento em negócios.</h1>
+        <p class="qs-hero-sub">Unimos a força operacional da Oceania Eventos à gestão estratégica de parcerias artísticas, conectando grandes nomes a grandes palcos.</p>
+      </div>
+      <div class="qs-hero-stats reveal d1">
+        <div class="qs-stat-card">
+          <div class="qs-stat-num">+200</div>
+          <div class="qs-stat-label">Shows realizados<br>em todo o Brasil</div>
+        </div>
+        <div class="qs-stat-card">
+          <div class="qs-stat-num">15+</div>
+          <div class="qs-stat-label">Anos de experiência<br>no mercado</div>
+        </div>
+        <div class="qs-stat-card">
+          <div class="qs-stat-num">360°</div>
+          <div class="qs-stat-label">Cobertura completa<br>do evento</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto">
+    <div class="manifesto-quote reveal">
+      Conectamos palcos a artistas.<br><em>Resultados</em> a negócios.
+    </div>
+    <div class="manifesto-body reveal d1">
+      <p>A Quinto Continente nasceu de uma necessidade latente do mercado: a <strong>profissionalização extrema</strong> na conexão entre contratantes e grandes artistas. Como braço estratégico da Oceania Eventos, herdamos o DNA de quem gerencia arenas e produz espetáculos para milhares de pessoas.</p>
+      <p>Nossa atuação vai muito além do agenciamento tradicional. Somos <strong>consultores de viabilidade técnica e comercial</strong>, garantindo que cada evento tenha o artista certo, com a estrutura impecável e a segurança jurídica que o mercado exige.</p>
+      <a href="../index.html#contato" class="btn-outline" style="display:inline-flex;align-items:center;gap:.75rem;margin-top:1rem;">
+        Fale com nossa equipe
+        <svg class="arr" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-bar-inner">
+      <div class="sb-item reveal">
+        <div class="sb-num"><span>+</span>200</div>
+        <div class="sb-label">Shows Realizados</div>
+      </div>
+      <div class="sb-item reveal d1">
+        <div class="sb-num">15<span>+</span></div>
+        <div class="sb-label">Anos de Mercado</div>
+      </div>
+      <div class="sb-item reveal d2">
+        <div class="sb-num">100<span>%</span></div>
+        <div class="sb-label">Cobertura Nacional</div>
+      </div>
+      <div class="sb-item reveal d3">
+        <div class="sb-num">360<span>°</span></div>
+        <div class="sb-label">Soluções Completas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <section class="timeline-section">
+    <div class="tl-header">
+      <span class="s-label">Nossa Trajetória</span>
+      <h2>Cada marco, um avanço.</h2>
+    </div>
+    <div class="tl-list">
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Início</div>
+        <div class="tl-title">Fundação da Oceania Eventos</div>
+        <div class="tl-desc">A Oceania Eventos nasce com foco na produção de grandes espetáculos e gestão de venues, acumulando mais de uma década de expertise no mercado nacional de entretenimento.</div>
+      </div>
+      <div class="tl-item reveal d1">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Expansão</div>
+        <div class="tl-title">Consolidação como gestora de arenas</div>
+        <div class="tl-desc">Com centenas de shows realizados e parceiros de alto escalão conquistados, a Oceania Eventos se consolida como referência em logística e produção de eventos de grande porte.</div>
+      </div>
+      <div class="tl-item reveal d2">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Inovação</div>
+        <div class="tl-title">Nasce a Quinto Continente</div>
+        <div class="tl-desc">Como hub estratégico dedicado à intermediação de artistas, a Quinto Continente é criada para oferecer um canal especializado, profissional e ágil para contratantes de todo o Brasil.</div>
+      </div>
+      <div class="tl-item reveal d3">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Hoje</div>
+        <div class="tl-title">Referência em inteligência de entretenimento</div>
+        <div class="tl-desc">Atuando em todo o território nacional, conectamos os maiores nomes da música brasileira a eventos corporativos, públicos e privados com excelência técnica e segurança jurídica.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DNA -->
+  <section class="dna-section">
+    <div class="dna-inner">
+      <div class="dna-header">
+        <span class="s-label">Nosso DNA</span>
+        <h2>Os pilares que nos definem.</h2>
+      </div>
+      <div class="dna-grid">
+        <div class="dna-card reveal">
+          <div class="dna-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="dna-title">Excelência Técnica</div>
+          <div class="dna-desc">Cada rider técnico é executado com rigor absoluto. Garantimos que todas as exigências operacionais e estruturais do artista sejam atendidas sem improvisação.</div>
+        </div>
+        <div class="dna-card reveal d1">
+          <div class="dna-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="dna-title">Segurança Jurídica</div>
+          <div class="dna-desc">A chancela institucional da Oceania Eventos em todas as etapas contratuais. Transparência total nos processos e proteção para ambas as partes em cada negociação.</div>
+        </div>
+        <div class="dna-card reveal d2">
+          <div class="dna-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          </div>
+          <div class="dna-title">Inteligência de Rota</div>
+          <div class="dna-desc">Estratégias logísticas que otimizam custos e viabilizam datas em diversas regiões do país. Planejamento inteligente que torna viável o que parecia impossível.</div>
+        </div>
+        <div class="dna-card reveal d3">
+          <div class="dna-icon">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="dna-title">Precisão nos Resultados</div>
+          <div class="dna-desc">Foco absoluto na entrega de um evento inesquecível e financeiramente saudável. Tratamos entretenimento como um negócio de precisão — porque é o que ele é.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="qs-cta">
+    <div class="qs-cta-inner">
+      <div class="s-label reveal" style="justify-content:center;">Próximo Passo</div>
+      <h2 class="reveal" style="margin-top:1rem;">Pronto para o <em>próximo grande show</em>?</h2>
+      <p class="reveal d1">Nossa equipe está disponível para formatar a melhor proposta estratégica para o seu evento. Entre em contato e receba uma consultoria sem compromisso.</p>
+      <a href="../index.html#contato" class="btn-main reveal d2">
+        Iniciar meu projeto
+        <svg class="arr" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="f-logo">Quinto Continente</div>
+        <div class="f-sub">Por Oceania Eventos</div>
+        <p class="f-desc">Excelência em entretenimento, gestão e grandes negócios.</p>
+      </div>
+      <div>
+        <div class="f-col-title">Serviços</div>
+        <ul class="f-links">
+          <li><a href="../servicos/index.html#intermediacao">Intermediação de Shows</a></li>
+          <li><a href="../servicos/index.html#producao">Produção e Assessoria</a></li>
+          <li><a href="../servicos/index.html#especiais">Projetos Especiais</a></li>
+          <li><a href="../servicos/index.html#leis">Leis de Incentivo</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="f-col-title">Empresa</div>
+        <ul class="f-links">
+          <li><a href="index.html">Quem Somos</a></li>
+          <li><a href="../index.html#diferenciais">Diferenciais</a></li>
+          <li><a href="../galeria/index.html">Galeria</a></li>
+          <li><a href="../artistas/index.html">Artistas</a></li>
+          <li><a href="../index.html#contato">Contato</a></li>
+          <li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="f-col-title">Contato</div>
+        <ul class="f-links">
+          <li><a href="mailto:contato@quintocontinente.com.br">contato@quintocontinente.com.br</a></li>
+          <li><a href="tel:+5511000000000">(11) 0000-0000</a></li>
+          <li><a href="#">São Paulo, SP</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <p>© 2025 Quinto Continente — Por <a href="#">Oceania Eventos</a>. Todos os direitos reservados.</p>
+      <p><a href="#">Privacidade</a> &nbsp;·&nbsp; <a href="#">Termos</a></p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

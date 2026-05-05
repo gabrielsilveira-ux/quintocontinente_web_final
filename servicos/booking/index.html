@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solicitar Booking – Quinto Continente</title>
+  <meta name="description" content="Formulário de solicitação de booking artístico. Preencha os dados do seu evento e receba uma proposta em até 24h.">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .booking-layout { display:grid; grid-template-columns:1fr 1.4fr; gap:6rem; align-items:start; padding:5rem 3rem 8rem; max-width:1200px; margin:0 auto; }
+    .booking-info-sticky { position:sticky; top:calc(var(--nav-h) + 2rem); }
+    .booking-checklist { margin-top:2.5rem; display:flex; flex-direction:column; gap:1rem; }
+    .bk-item { display:flex; align-items:flex-start; gap:1rem; padding:1.25rem; background:var(--bg3); border:1px solid var(--line2); border-radius:var(--radius-md); }
+    .bk-icon { width:32px; height:32px; border-radius:8px; border:1px solid var(--line2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .bk-icon svg { width:14px; height:14px; stroke:var(--accent); }
+    .bk-label { font-family:'Syne',sans-serif; font-size:.8rem; font-weight:600; color:var(--text); margin-bottom:.2rem; }
+    .bk-val { font-size:.78rem; font-weight:300; color:var(--muted2); }
+    .form-section-title { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--muted2); margin:2rem 0 1rem; padding-top:2rem; border-top:1px solid var(--line2); }
+    .form-section-title:first-of-type { margin-top:0; padding-top:0; border-top:none; }
+    .step-indicator { display:flex; gap:.5rem; margin-bottom:2.5rem; }
+    .step { flex:1; height:3px; border-radius:3px; background:var(--line2); transition:background .4s; }
+    .step.done { background:var(--accent); }
+    @media(max-width:900px){ .booking-layout{grid-template-columns:1fr;gap:3rem;padding:3rem 1.5rem 5rem} .booking-info-sticky{position:static} }
+    @media(max-width:768px){ .bk-item { padding: 1rem; } }
+  </style>
+  <script>if(localStorage.getItem('qc_theme')==='light') document.documentElement.setAttribute('data-theme','light');</script>
+</head>
+<body>
+  <nav id="nav">
+    <a href="../../index.html" class="nav-logo">
+      <img src="../../assets/images/logo.png" alt="Quinto Continente" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-family:Syne,sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)\'>Quinto Continente</span>')">
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="../../sobre/index.html">Quem Somos</a></li>
+      <li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li>
+    </ul>
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <a href="../../index.html#contato" class="nav-btn">Consultar Agenda</a>
+      <button class="theme-toggle" aria-label="Alternar tema" id="themeToggle"><svg id="themeIcon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      <button class="nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="nav-mobile">
+    <a href="../../index.html">Home</a>
+    <a href="../../sobre/index.html">Quem Somos</a>
+    <a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a>
+    <a href="../../index.html#contato" style="color:var(--accent)">Consultar Agenda →</a>
+  </div>
+  <div class="page-hero">
+    <div class="breadcrumb"><a href="../../index.html">Home</a><span>/</span><a href="../index.html">Serviços</a><span>/</span><span>Booking</span></div>
+    <div class="page-hero-label">Solicitar booking</div>
+    <h1>Preencha o briefing do seu evento.</h1>
+    <p class="page-hero-sub">Nossa equipe analisa os dados e retorna com uma proposta estratégica em até <strong>24 horas úteis</strong>.</p>
+  </div>
+  <div style="background:var(--bg)">
+    <div class="booking-layout">
+      <div class="booking-info-sticky">
+        <div class="s-label">Como funciona</div>
+        <h2 class="s-title" style="font-size:clamp(1.4rem,2vw,2rem);margin-bottom:.75rem">Do formulário ao contrato assinado.</h2>
+        <p style="font-size:.875rem;font-weight:300;line-height:1.8;color:var(--muted2)">Assim que recebermos seu briefing, iniciamos a consulta de disponibilidade e preparamos uma proposta com artistas que se encaixam no perfil do seu evento.</p>
+        <div class="booking-checklist">
+          <div class="bk-item"><div class="bk-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke-width="1.5"/><path d="M5.5 8l2 2 3-3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="bk-label">01 — Briefing</div><div class="bk-val">Você preenche este formulário com os dados do evento</div></div></div>
+          <div class="bk-item"><div class="bk-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h10" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="bk-label">02 — Proposta</div><div class="bk-val">Enviamos opções de artistas com cachet e condições</div></div></div>
+          <div class="bk-item"><div class="bk-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="bk-label">03 — Negociação</div><div class="bk-val">Alinhamos os detalhes técnicos, datas e valores</div></div></div>
+          <div class="bk-item"><div class="bk-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="2" stroke-width="1.5"/><path d="M6 6h4M6 9h2" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="bk-label">04 — Contrato</div><div class="bk-val">Assinatura e pagamento do sinal para confirmação</div></div></div>
+        </div>
+      </div>
+      <div class="form-box">
+        <div class="step-indicator" id="steps">
+          <div class="step done"></div><div class="step"></div><div class="step"></div>
+        </div>
+        <form data-form="booking">
+          <div class="form-section-title">Dados do contratante</div>
+          <div class="form-row">
+            <div class="fg"><label class="fl" for="b-nome">Nome completo</label><input class="fi" type="text" id="b-nome" placeholder="Seu nome" required></div>
+            <div class="fg"><label class="fl" for="b-empresa">Empresa / Organização</label><input class="fi" type="text" id="b-empresa" placeholder="Razão social ou nome fantasia"></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="fl" for="b-email">E-mail</label><input class="fi" type="email" id="b-email" placeholder="seu@email.com.br" required></div>
+            <div class="fg"><label class="fl" for="b-tel">WhatsApp</label><input class="fi" type="tel" id="b-tel" placeholder="(11) 9 0000-0000" required></div>
+          </div>
+          <div class="form-section-title">Dados do evento</div>
+          <div class="form-row">
+            <div class="fg"><label class="fl" for="b-tipo">Tipo de evento</label><select class="fs" id="b-tipo" required><option value="" disabled selected>Selecione</option><option>Show público (prefeitura / festa)</option><option>Evento corporativo</option><option>Evento privado / social</option><option>Festival</option><option>Casa de show / estabelecimento</option></select></div>
+            <div class="fg"><label class="fl" for="b-data">Data prevista</label><input class="fi" type="date" id="b-data" required></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="fl" for="b-cidade">Cidade / Estado</label><input class="fi" type="text" id="b-cidade" placeholder="Ex: Campinas, SP" required></div>
+            <div class="fg"><label class="fl" for="b-publico">Capacidade do público</label><select class="fs" id="b-publico"><option value="" disabled selected>Estimativa</option><option>Até 500 pessoas</option><option>500 a 2.000 pessoas</option><option>2.000 a 10.000 pessoas</option><option>Acima de 10.000 pessoas</option></select></div>
+          </div>
+          <div class="form-section-title">Preferência artística</div>
+          <div class="fg"><label class="fl" for="b-artista">Artista ou gênero de interesse</label><input class="fi" type="text" id="b-artista" placeholder="Ex: Sertanejo universitário, artista específico, etc."></div>
+          <div class="form-row">
+            <div class="fg"><label class="fl" for="b-orcamento">Faixa de investimento</label><select class="fs" id="b-orcamento"><option value="" disabled selected>Selecione</option><option>Até R$ 30.000</option><option>R$ 30.000 a R$ 100.000</option><option>R$ 100.000 a R$ 300.000</option><option>Acima de R$ 300.000</option><option>Prefiro não informar</option></select></div>
+            <div class="fg"><label class="fl" for="b-lei">Interesse em lei de incentivo?</label><select class="fs" id="b-lei"><option value="" disabled selected>Selecione</option><option>Sim, quero explorar essa opção</option><option>Não, custeio próprio</option><option>Tenho dúvidas sobre isso</option></select></div>
+          </div>
+          <div class="fg"><label class="fl" for="b-obs">Informações adicionais</label><textarea class="ft" id="b-obs" placeholder="Descreva qualquer detalhe importante sobre o evento…" rows="4"></textarea></div>
+          <button type="submit" class="btn-form">Enviar briefing e aguardar proposta <svg class="arr" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <p class="form-ok"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-top">
+      <div><div class="f-logo">Quinto Continente</div><div class="f-sub">Por Oceania Eventos</div><p class="f-desc">Excelência em entretenimento, gestão e grandes negócios.</p></div>
+      <div><div class="f-col-title">Serviços</div><ul class="f-links"><li><a href="../index.html#intermediacao">Intermediação de Shows</a></li><li><a href="../index.html#producao">Produção e Assessoria</a></li><li><a href="../index.html#especiais">Projetos Especiais</a></li><li><a href="../index.html#leis">Leis de Incentivo</a></li></ul></div>
+      <div><div class="f-col-title">Empresa</div><ul class="f-links"><li><a href="../../sobre/index.html">Quem Somos</a></li><li><a href="../../index.html#diferenciais">Diferenciais</a></li><li><a href="../../index.html#contato">Contato</a></li></ul></div>
+      <div><div class="f-col-title">Contato</div><ul class="f-links"><li><a href="mailto:contato@quintocontinente.com.br">contato@quintocontinente.com.br</a></li><li><a href="#">São Paulo, SP</a></li></ul></div>
+    </div>
+    <div class="footer-bot"><p>© 2025 Quinto Continente — Por <a href="#">Oceania Eventos</a>. Todos os direitos reservados.</p></div>
+  </footer>
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    var steps = document.querySelectorAll('#steps .step');
+    var inputs = document.querySelectorAll('form input, form select, form textarea');
+    inputs.forEach(function(inp){
+      inp.addEventListener('input',function(){
+        var filled=[].filter.call(inputs,function(i){return i.value}).length;
+        var pct=filled/inputs.length;
+        steps[0].classList.toggle('done',pct>0);
+        steps[1].classList.toggle('done',pct>0.4);
+        steps[2].classList.toggle('done',pct>0.8);
+      });
+    });
+  </script>
+</body>
+</html>
+
+
+
+

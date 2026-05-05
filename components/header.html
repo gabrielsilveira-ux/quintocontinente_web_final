@@ -1,0 +1,27 @@
+<!-- components/header.html -->
+<!-- Inclua via: components.js → loadComponent('#site-header', 'components/header.html') -->
+<nav id="nav">
+  <a href="/" class="nav-logo">
+    <img src="/assets/images/logo.png" alt="Quinto Continente">
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/sobre/">Quem Somos</a></li>
+    <li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li>
+  </ul>
+  <a href="/#contato" class="nav-btn">Consultar Agenda</a>
+  <button class="nav-hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<!-- Mobile overlay menu -->
+<div class="nav-mobile" role="dialog" aria-label="Menu de navegação">
+  <a href="/">Home</a>
+  <a href="/sobre/">Quem Somos</a>
+  <a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a>
+  <a href="/#contato" style="color:var(--accent)">Consultar Agenda →</a>
+</div>
+
+
+
+
