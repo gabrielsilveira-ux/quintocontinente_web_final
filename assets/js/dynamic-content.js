@@ -91,7 +91,7 @@
 
         slidesHtml += `
           <div class="banner-slide ${activeClass}">
-            <img src="${banner.imageUrl}" alt="${banner.title}" style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0; z-index:-1;">
+            <img src="${banner.imageUrl}" alt="${banner.title}" ${idx > 0 ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async" style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0; z-index:-1;">
             <div class="banner-overlay"></div>
             <div class="banner-content">
               <div class="banner-label"><span class="banner-label-dot"></span>${label}</div>
@@ -166,7 +166,7 @@
         itemsHtml += `
           <a href="artistas/artista.html?slug=${artist.slug}" class="artist-card" style="text-decoration:none;">
             <div class="artist-img">
-              <img src="${artist.imageUrl}" alt="${artist.name}" style="width:100%; height:100%; object-fit:cover;">
+              <img src="${artist.imageUrl}" alt="${artist.name}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div class="artist-info">
               <h3 class="artist-name">${artist.name}</h3>
@@ -201,7 +201,7 @@
         itemsHtml += `
           <a href="artista.html?slug=${artist.slug}" class="artist-card reveal vis" data-name="${artist.name}" style="text-decoration:none;">
             <div class="artist-img">
-              <img src="${artist.imageUrl}" alt="${artist.name}" style="width:100%; height:100%; object-fit:cover;">
+              <img src="${artist.imageUrl}" alt="${artist.name}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div class="artist-info">
               <h3 class="artist-name">${artist.name}</h3>
@@ -612,7 +612,7 @@
         if (sec.imageUrl) {
           var imageHtml = `
             <div class="reveal vis" style="border-radius: var(--radius-lg); overflow: hidden; height: 350px; border: 1px solid ${sec.bgType === 'WHITE' ? 'var(--line-dark)' : 'var(--line)'};">
-              <img src="${sec.imageUrl}" alt="${sec.title || 'Imagem'}" style="width:100%; height:100%; object-fit:cover;">
+              <img src="${sec.imageUrl}" alt="${sec.title || 'Imagem'}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
             </div>
           `;
 
