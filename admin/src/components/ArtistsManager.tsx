@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { compressImage } from "@/lib/imageCompressor";
 import {
   Plus,
   Edit2,
@@ -170,11 +171,12 @@ export function ArtistsManager({ initialArtists }: ArtistsManagerProps) {
     setIsUploading(true);
     setErrorMsg("");
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("bucket", "artists");
-
     try {
+      const compressedFile = await compressImage(file);
+      const formData = new FormData();
+      formData.append("file", compressedFile);
+      formData.append("bucket", "artists");
+
       const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
@@ -205,8 +207,9 @@ export function ArtistsManager({ initialArtists }: ArtistsManagerProps) {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        const compressedFile = await compressImage(file);
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", compressedFile);
         formData.append("bucket", "artists");
 
         const res = await fetch("/api/upload", {

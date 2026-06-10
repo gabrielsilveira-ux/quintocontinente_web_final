@@ -2,10 +2,6 @@
   "name": "quintocontinente-admin",
   "version": "1.0.0",
   "private": true,
-  "supportedArchitectures": {
-    "os": ["current", "linux"],
-    "cpu": ["current", "x64"]
-  },
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
@@ -23,7 +19,6 @@
     "next-auth": "^4.24.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "sharp": "^0.35.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { compressImage } from "@/lib/imageCompressor";
 import {
   Plus,
   Edit2,
@@ -86,11 +87,12 @@ export function BannersManager({ initialBanners }: BannersManagerProps) {
     setIsUploading(true);
     setErrorMsg("");
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("bucket", "banners");
-
     try {
+      const compressedFile = await compressImage(file);
+      const formData = new FormData();
+      formData.append("file", compressedFile);
+      formData.append("bucket", "banners");
+
       const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
