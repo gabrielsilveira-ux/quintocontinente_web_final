@@ -40,6 +40,11 @@ Este walkthrough descreve as atualizações de design, reestruturação de conte
   - Nova aba/coluna "Origem / Canal" exibindo badges de identificação rápidos (*Google Ads*, *Meta Ads*, *Orgânico*) de acordo com o meio de aquisição.
   - Seção detalhada de "Rastreamento de Tráfego (UTMs)" no modal de detalhes do Lead.
   - Filtro interativo por campanha UTM ativa na lista de contatos.
+- **Painel de Páginas & Seções (`PagesManager.tsx`):**
+  - Criação e gerenciamento de páginas institucionais com suporte a SEO (título, descrição, keywords).
+  - Gerenciamento completo de seções: título, subtítulo, conteúdo explicativo, upload de banners de imagem, link de vídeo e reordenação (mover para cima/baixo).
+  - Proteção de exclusão para slugs do sistema (`home`, `sobre`, `o-que-fazemos`, `contato`).
+  - Alternância de design das seções entre fundos claros (`WHITE` com classe `.section-white`) e escuros (`DARK` com classe `.section-dark`).
 
 ---
 
@@ -47,28 +52,38 @@ Este walkthrough descreve as atualizações de design, reestruturação de conte
 
 ```
 / (raiz)
-├── index.html                           # Menu atualizado, seções alternadas, SEO
+├── index.html                           # Menu atualizado, seções alternadas, SOBRE dinâmico, SEO
 ├── sitemap.xml                          # Sitemap para indexação
 ├── robots.txt                           # Regras de indexação (ignora caminhos /admin)
-├── sobre/index.html                     # Apresentação do Grupo Quinto Continente
-├── o-que-fazemos/index.html             # Apresentação de Serviços (Curadoria, Produção)
+├── sobre/index.html                     # Apresentação do Grupo Quinto Continente (seções dinâmicas)
+├── o-que-fazemos/index.html             # Apresentação de Serviços (seções dinâmicas)
 ├── contato/index.html                   # Página de conversão com formulário
 ├── artistas/
 │   ├── index.html                       # Grade de cards com links amigáveis
 │   └── artista.html                     # Template dinâmico (carrossel, bio, redes)
 ├── assets/
-│   ├── css/style.css                    # Design system (Editorial escuro/claro, botões)
-│   └── js/dynamic-content.js            # Lógica UTMs, GTM Data Layer e renderização de Artistas
+│   ├── css/style.css                    # Design system (Editorial escuro/claro, botões, overrides de contraste)
+│   └── js/dynamic-content.js            # Lógica UTMs, GTM Data Layer e renderização de Artistas/Páginas
 │
 └── admin/                               # Painel Administrativo Next.js
     ├── prisma/
-    │   ├── schema.prisma                # Estruturas atualizadas (Artist e Lead)
-    │   └── seed.ts                      # População de dados iniciais de artistas com slugs
+    │   ├── schema.prisma                # Estruturas atualizadas (Artist, Lead, Page e PageSection)
+    │   └── seed.ts                      # População de dados iniciais de artistas e páginas CMS padrão
     └── src/
-        ├── lib/schemas.ts               # Validação de formulários Zod
+        ├── lib/schemas.ts               # Validação de formulários Zod para leads, artistas e páginas
+        ├── app/
+        │   ├── api/
+        │   │   ├── paginas/                 # API GET/POST/PUT/DELETE para páginas e seções
+        │   │   │   ├── route.ts
+        │   │   │   └── secoes/route.ts
+        │   │   └── ...
+        │   └── dashboard/
+        │       └── paginas/                 # Rota do dashboard do CMS de páginas
+        │           └── page.tsx
         └── components/
             ├── ArtistsManager.tsx       # Mapeamento e upload completo de informações de Artistas
-            └── LeadsManager.tsx         # Painel de acompanhamento e rastreamento de campanhas
+            ├── LeadsManager.tsx         # Painel de acompanhamento e rastreamento de campanhas
+            └── PagesManager.tsx         # Gerenciador completo de páginas e seções do CMS
 ```
 
 ---

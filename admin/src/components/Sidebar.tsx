@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   User,
+  FileText,
 } from "lucide-react";
 
 export function Sidebar() {
@@ -25,6 +26,7 @@ export function Sidebar() {
   const menuItems = [
     { name: "Visão Geral", href: "/dashboard", icon: LayoutDashboard },
     { name: "Banners", href: "/dashboard/banners", icon: ImageIcon },
+    { name: "Gerenciar Páginas", href: "/dashboard/paginas", icon: FileText },
     { name: "Artistas", href: "/dashboard/artistas", icon: Music },
     { name: "Galeria", href: "/dashboard/galeria", icon: Images },
     { name: "Contatos (Leads)", href: "/dashboard/leads", icon: MailOpen },

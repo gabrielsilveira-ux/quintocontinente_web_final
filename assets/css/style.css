@@ -275,6 +275,55 @@ section {
   color: var(--muted-dark);
 }
 
+/* Custom local page styles adapted for white sections */
+.section-white .manifesto-quote {
+  color: var(--text-dark) !important;
+}
+.section-white .manifesto-quote em {
+  color: var(--accent) !important;
+}
+.section-white .manifesto-body p {
+  color: var(--muted-dark) !important;
+}
+.section-white .manifesto-body p strong {
+  color: var(--text-dark) !important;
+}
+.section-white .tl-list::before {
+  background: var(--line-dark) !important;
+}
+.section-white .tl-title {
+  color: var(--text-dark) !important;
+}
+.section-white .tl-desc {
+  color: var(--muted-dark) !important;
+}
+.section-white .tl-year {
+  color: var(--accent) !important;
+}
+.section-white .tl-dot {
+  box-shadow: 0 0 0 4px rgba(212,43,43,.10) !important;
+}
+.section-white .search-input {
+  background: #FFFFFF !important;
+  border-color: var(--line-dark) !important;
+  color: var(--text-dark) !important;
+}
+.section-white .search-input:focus {
+  border-color: var(--accent) !important;
+}
+.section-white .qs-cta h2 {
+  color: var(--text-dark) !important;
+}
+.section-white .qs-cta p {
+  color: var(--muted-dark) !important;
+}
+.section-white .s-label {
+  color: var(--accent) !important;
+}
+.section-white strong {
+  color: var(--text-dark) !important;
+}
+
 .section-dark {
   background: var(--bg);
   color: var(--text);

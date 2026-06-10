@@ -70,3 +70,23 @@ export const userSchema = z.object({
     .or(z.literal("")), // Permite senha vazia na edição (não altera)
   role: z.enum(["ADMIN", "EDITOR"]).default("ADMIN"),
 });
+
+// Esquema de Página
+export const pageSchema = z.object({
+  title: z.string().min(1, "O título da página é obrigatório").max(100, "Máximo de 100 caracteres"),
+  slug: z.string().min(1, "O slug é obrigatório").regex(/^[a-z0-9-]+$/, "O slug deve conter apenas letras minúsculas, números e hifens"),
+  description: z.string().optional().nullable(),
+  keywords: z.string().optional().nullable(),
+  active: z.boolean().default(true),
+});
+
+// Esquema de Seção de Página
+export const pageSectionSchema = z.object({
+  title: z.string().optional().nullable(),
+  subtitle: z.string().optional().nullable(),
+  content: z.string().optional().nullable(),
+  imageUrl: z.string().url("A URL da imagem é inválida").or(z.literal("")).optional().nullable(),
+  videoUrl: z.string().url("A URL do vídeo é inválida").or(z.literal("")).optional().nullable(),
+  bgType: z.enum(["DARK", "WHITE"]).default("DARK"),
+  order: z.preprocess((val) => Number(val ?? 0), z.number().int().nonnegative()),
+});

@@ -567,6 +567,89 @@
     setTimeout(update, 300);
   }
 
+  /* ── 7. Carregar Conteúdo Dinâmico das Páginas (CMS) ────── */
+  async function loadDynamicPageContent() {
+    var container = document.getElementById('dynamic-sections');
+    if (!container) return;
+
+    var pageSlug = document.body.dataset.page || '';
+    if (!pageSlug) {
+      var path = window.location.pathname;
+      if (path.indexOf('/sobre') !== -1) pageSlug = 'sobre';
+      else if (path.indexOf('/o-que-fazemos') !== -1) pageSlug = 'o-que-fazemos';
+      else if (path.indexOf('/contato') !== -1) pageSlug = 'contato';
+      else pageSlug = 'home';
+    }
+
+    try {
+      var res = await fetch(getApiUrl('/paginas?slug=' + pageSlug + '&active=true'));
+      if (!res.ok) throw new Error();
+      
+      var page = await res.json();
+      if (!page || !page.sections || page.sections.length === 0) return;
+
+      if (page.title && pageSlug !== 'home') {
+        document.title = page.title + ' — Quinto Continente | Agência de Artistas';
+      }
+      
+      var metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && page.description) {
+        metaDesc.setAttribute('content', page.description);
+      }
+
+      var html = '';
+      page.sections.forEach(function (sec, idx) {
+        var bgClass = sec.bgType === 'WHITE' ? 'section-white' : 'section-dark';
+        var num = (idx + 1).toString().padStart(2, '0');
+        var labelHtml = sec.subtitle ? `<div class="s-label">${num} / ${sec.subtitle}</div>` : `<div class="s-label">${num} / Seção</div>`;
+        var titleHtml = sec.title ? `<h2 class="s-title" style="margin-bottom: 1.5rem;">${sec.title}</h2>` : '';
+        
+        var paragraphs = sec.content ? sec.content.split('\n').filter(Boolean) : [];
+        var contentHtml = paragraphs.map(function(p) { 
+          return `<p class="s-sub" style="font-size: 1.05rem; line-height: 1.8; margin-top: 1rem;">${p}</p>`; 
+        }).join('');
+
+        if (sec.imageUrl) {
+          var imageHtml = `
+            <div class="reveal vis" style="border-radius: var(--radius-lg); overflow: hidden; height: 350px; border: 1px solid ${sec.bgType === 'WHITE' ? 'var(--line-dark)' : 'var(--line)'};">
+              <img src="${sec.imageUrl}" alt="${sec.title || 'Imagem'}" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+          `;
+
+          var gridStyle = 'display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;';
+          var isEven = idx % 2 === 0;
+          var col1 = isEven ? `<div>${labelHtml}${titleHtml}${contentHtml}</div>` : imageHtml;
+          var col2 = isEven ? imageHtml : `<div>${labelHtml}${titleHtml}${contentHtml}</div>`;
+
+          html += `
+            <section class="${bgClass}" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));">
+              <div class="container" style="${gridStyle}">
+                ${col1}
+                ${col2}
+              </div>
+            </section>
+          `;
+        } else {
+          html += `
+            <section class="${bgClass}" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2)); text-align: center;">
+              <div class="container" style="max-width: 800px; margin: 0 auto;">
+                ${labelHtml}
+                ${titleHtml}
+                <div style="text-align: left; max-width: 700px; margin: 0 auto;">
+                  ${contentHtml}
+                </div>
+              </div>
+            </section>
+          `;
+        }
+      });
+
+      container.innerHTML = html;
+    } catch (err) {
+      console.warn("Usando conteúdo HTML de fallback para a página " + pageSlug, err);
+    }
+  }
+
   /* ── Boot Inicializador ──────────────────────────────────── */
   function boot() {
     loadDynamicBanners();
@@ -576,6 +659,7 @@
     setupContactForm();
     loadArtistProfilePage();
     hookWhatsAppClicks();
+    loadDynamicPageContent();
   }
 
   if (document.readyState === 'loading') {

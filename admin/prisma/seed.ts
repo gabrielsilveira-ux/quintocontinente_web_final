@@ -145,6 +145,136 @@ async function main() {
     });
   }
 
+  // Novo: Adicionar páginas padrão se não houverem
+  const pageCount = await prisma.page.count();
+  if (pageCount === 0) {
+    console.log("Inserindo páginas padrão do CMS...");
+    
+    // 1. Página Home
+    const homePage = await prisma.page.create({
+      data: {
+        title: "Página Inicial",
+        slug: "home",
+        description: "Quinto Continente | Agência de Artistas - Intermediação de shows, curadoria e produção operacional 360°.",
+        keywords: "shows, contratação de artistas, nando reis, cpm 22, eventos corporativos",
+      }
+    });
+    await prisma.pageSection.createMany({
+      data: [
+        {
+          pageId: homePage.id,
+          title: "Grandes Shows, Resultados Reais",
+          subtitle: "Conectamos artistas de alto escalão ao seu evento com segurança jurídica e excelência operacional.",
+          content: "Nossa agência gerencia todas as etapas críticas: curadoria inteligente, negociação de cachês, conformidade fiscal e execução técnica no local.",
+          imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1200&auto=format&fit=crop",
+          bgType: "DARK",
+          order: 1
+        },
+        {
+          pageId: homePage.id,
+          title: "Quem Somos",
+          subtitle: "A força da Oceania Eventos focada em parcerias artísticas.",
+          content: "A Quinto Continente nasce como o hub estratégico da Oceania Eventos, consolidando anos de experiência na produção de grandes espetáculos e gestão de arenas. Nossa missão é simplificar a conexão entre contratantes e artistas de alto escalão, garantindo que a viabilidade comercial e a excelência técnica caminhem juntas.",
+          bgType: "WHITE",
+          order: 2
+        }
+      ]
+    });
+
+    // 2. Página Quem Somos
+    const sobrePage = await prisma.page.create({
+      data: {
+        title: "Quem Somos",
+        slug: "sobre",
+        description: "Conheça a Quinto Continente, hub estratégico especializado em parcerias artísticas e produção executiva.",
+        keywords: "oceania eventos, história, valores, corporativo",
+      }
+    });
+    await prisma.pageSection.createMany({
+      data: [
+        {
+          pageId: sobrePage.id,
+          title: "Vivemos e respiramos entretenimento.",
+          subtitle: "Para nós, show é coisa séria. Há mais de 25 anos, atuamos nos bastidores viabilizando sonhos.",
+          content: "Nascemos da necessidade de estruturar relações comerciais transparentes e tecnicamente impecáveis. Oferecemos segurança absoluta para contratantes e artistas.",
+          bgType: "WHITE",
+          order: 1
+        },
+        {
+          pageId: sobrePage.id,
+          title: "Nossos Valores",
+          subtitle: "DNA do Grupo Quinto Continente",
+          content: "Segurança jurídica em primeiro lugar. Rigor técnico inegociável. Curadoria transparente focada em conversão. Comprometimento operacional até o último acorde.",
+          bgType: "DARK",
+          order: 2
+        }
+      ]
+    });
+
+    // 3. Página O Que Fazemos
+    const servicosPage = await prisma.page.create({
+      data: {
+        title: "O Que Fazemos",
+        slug: "o-que-fazemos",
+        description: "Nossas soluções 360° para contratação, curadoria e produção operacional de shows.",
+        keywords: "curadoria artística, compliance de contratos, produção executiva",
+      }
+    });
+    await prisma.pageSection.createMany({
+      data: [
+        {
+          pageId: servicosPage.id,
+          title: "Inteligência de Mercado e Curadoria Artística",
+          subtitle: "Estudamos o perfil do seu evento e público para indicar a atração ideal.",
+          content: "Não indicamos apenas nomes. Analisamos dados de engajamento, rotas e custos para otimizar o investimento e garantir o sucesso do evento.",
+          imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=600&auto=format&fit=crop",
+          bgType: "WHITE",
+          order: 1
+        },
+        {
+          pageId: servicosPage.id,
+          title: "Intermediação de Contratos Seguros",
+          subtitle: "Compliance contratual e segurança jurídica garantidos em todas as negociações.",
+          content: "Garantimos conformidade jurídica sob a chancela da Oceania Eventos. Eliminamos imprevistos contratuais, cuidando de impostos, prazos e riders.",
+          imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=600&auto=format&fit=crop",
+          bgType: "DARK",
+          order: 2
+        },
+        {
+          pageId: servicosPage.id,
+          title: "Produção Executiva e Rigor Técnico",
+          subtitle: "Garantimos a execução perfeita de toda a infraestrutura técnica.",
+          content: "Gerenciamos riders técnicos de som, luz, camarins, e logística crítica (transporte, hotéis e alimentação) de forma profissional.",
+          imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=600&auto=format&fit=crop",
+          bgType: "WHITE",
+          order: 3
+        }
+      ]
+    });
+
+    // 4. Página Contato
+    const contatoPage = await prisma.page.create({
+      data: {
+        title: "Contato",
+        slug: "contato",
+        description: "Fale com nossa equipe técnica comercial para orçar e reservar a agenda de artistas.",
+        keywords: "contato, telefone, whatsapp, e-mail",
+      }
+    });
+    await prisma.pageSection.createMany({
+      data: [
+        {
+          pageId: contatoPage.id,
+          title: "Comercial e Atendimento",
+          subtitle: "Fale com nossos gerentes artísticos e receba uma cotação em até 24 horas.",
+          content: "Temos canais dedicados para orçamentos e dúvidas técnicas. Telefone/WhatsApp: (67) 99218-5103 | E-mail: contato@quintocontinente.com.br",
+          bgType: "WHITE",
+          order: 1
+        }
+      ]
+    });
+  }
+
   console.log("Semeadura concluída!");
 }
 
