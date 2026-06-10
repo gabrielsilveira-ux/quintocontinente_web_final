@@ -7,25 +7,19 @@
 
   var API_BASE = '/admin/api';
 
-  // Helper para verificar a profundidade do path (para ajustar links relativos das APIs se necessário)
+  // Helper para obter a URL da API (ajusta automaticamente entre local e produção)
   function getApiUrl(endpoint) {
-    // Se a página estiver em subpastas (ex: artistas/index.html), precisamos de "../admin/api"
-    var path = window.location.pathname;
-    var depth = (path.match(/\//g) || []).length;
-    
-    // Se for local file system (ex: C:/.../artistas/index.html)
-    if (window.location.protocol === 'file:') {
-      // Usaremos url absoluto local para fins de desenvolvimento
+    // Se for ambiente local (local file system ou localhost)
+    if (
+      window.location.protocol === 'file:' || 
+      window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1'
+    ) {
       return 'http://localhost:3000/api' + endpoint;
     }
 
-    var prefix = '';
-    // Ajusta a rota caso esteja em subdiretórios
-    if (path.indexOf('/artistas/') !== -1 || path.indexOf('/galeria/') !== -1 || path.indexOf('/servicos/') !== -1 || path.indexOf('/sobre/') !== -1) {
-      prefix = '../';
-    }
-    
-    return prefix + 'admin/api' + endpoint;
+    // Em produção na Vercel (aponta diretamente para o domínio do painel admin)
+    return 'https://quintocontinente-web-final-pb4v.vercel.app/api' + endpoint;
   }
 
   /* ── 1. Carregar Banners na Home ──────────────────────────── */
