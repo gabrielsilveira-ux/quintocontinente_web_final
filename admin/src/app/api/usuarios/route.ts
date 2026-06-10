@@ -113,6 +113,90 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PUT: Atualiza um colaborador (Apenas para ADMIN)
+export async function PUT(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user?.role !== "ADMIN") {
+      return NextResponse.json(
+        { error: "Não autorizado. Acesso restrito a administradores." },
+        { status: 403 }
+      );
+    }
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID do usuário é obrigatório." },
+        { status: 400 }
+      );
+    }
+
+    const body = await request.json();
+    const parsed = userSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Dados inválidos.", details: parsed.error.format() },
+        { status: 400 }
+      );
+    }
+
+    const { name, email, password, role } = parsed.data;
+
+    // Verifica se o email já está sendo usado por outro usuário
+    const existingUserWithEmail = await prisma.user.findFirst({
+      where: {
+        email,
+        id: { not: id }
+      }
+    });
+
+    if (existingUserWithEmail) {
+      return NextResponse.json(
+        { error: "Este e-mail já está cadastrado em outra conta." },
+        { status: 400 }
+      );
+    }
+
+    // Prepara os dados para atualização
+    const updateData: any = {
+      name,
+      email,
+      role
+    };
+
+    // Se a senha foi preenchida, criptografa e atualiza
+    if (password && password.trim() !== "") {
+      const salt = bcrypt.genSaltSync(10);
+      updateData.passwordHash = bcrypt.hashSync(password, salt);
+    }
+
+    // Atualiza o usuário
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: updateData,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      }
+    });
+
+    return NextResponse.json({ success: true, user: updatedUser });
+  } catch (error: any) {
+    console.error("Erro ao atualizar usuário:", error);
+    return NextResponse.json(
+      { error: "Erro interno no servidor." },
+      { status: 500 }
+    );
+  }
+}
+
 // DELETE: Exclui um colaborador (Apenas para ADMIN)
 export async function DELETE(request: NextRequest) {
   try {

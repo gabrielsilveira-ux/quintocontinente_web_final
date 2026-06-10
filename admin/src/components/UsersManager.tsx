@@ -12,6 +12,7 @@ import {
   Shield,
   Loader2,
   Calendar,
+  Edit2,
 } from "lucide-react";
 
 interface UserType {
@@ -31,6 +32,7 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
   const { data: session } = useSession();
   const [users, setUsers] = useState<UserType[]>(initialUsers);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<UserType | null>(null);
 
   // Estados do Formulário
   const [name, setName] = useState("");
@@ -43,6 +45,7 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleOpenCreate = () => {
+    setEditingUser(null);
     setName("");
     setEmail("");
     setPassword("");
@@ -51,10 +54,26 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
     setIsModalOpen(true);
   };
 
+  const handleOpenEdit = (user: UserType) => {
+    setEditingUser(user);
+    setName(user.name);
+    setEmail(user.email);
+    setPassword(""); // Senha vazia significa não alterar
+    setRole(user.role);
+    setErrorMsg("");
+    setIsModalOpen(true);
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.length < 6) {
+    
+    // Se for criação, a senha é obrigatória. Se for edição, ela é opcional.
+    if (!editingUser && password.length < 6) {
       setErrorMsg("A senha deve conter pelo menos 6 caracteres.");
+      return;
+    }
+    if (editingUser && password && password.length < 6) {
+      setErrorMsg("A nova senha deve conter pelo menos 6 caracteres.");
       return;
     }
 
@@ -64,13 +83,16 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
     const payload = {
       name,
       email,
-      password,
+      password: password || undefined,
       role,
     };
 
     try {
-      const res = await fetch("/api/usuarios", {
-        method: "POST",
+      const url = editingUser ? `/api/usuarios?id=${editingUser.id}` : "/api/usuarios";
+      const method = editingUser ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
@@ -80,7 +102,12 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
 
       setIsModalOpen(false);
       router.refresh();
-      setUsers([data.user, ...users]);
+
+      if (editingUser) {
+        setUsers(users.map((u) => (u.id === editingUser.id ? data.user : u)));
+      } else {
+        setUsers([data.user, ...users]);
+      }
     } catch (err: any) {
       console.error(err);
       setErrorMsg(err.message || "Falha ao salvar usuário. Verifique os dados.");
@@ -180,17 +207,27 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
                     </span>
                   </td>
                   <td className="py-4 px-6 text-right">
-                    {session?.user?.id !== user.id ? (
+                    <div className="flex items-center justify-end gap-2">
                       <button
-                        onClick={() => handleDelete(user.id, user.email)}
-                        className="p-1.5 rounded bg-surface text-muted2 hover:text-red-400 hover:bg-red-950/20 border border-line2 hover:border-red-950/50 transition-all opacity-0 group-hover:opacity-100"
-                        title="Excluir Colaborador"
+                        onClick={() => handleOpenEdit(user)}
+                        className="p-1.5 rounded bg-surface text-muted2 hover:text-accent hover:bg-accent/10 border border-line2 hover:border-accent/30 transition-all opacity-0 group-hover:opacity-100"
+                        title="Editar Colaborador / Alterar Senha"
                       >
-                        <Trash2 size={12} />
+                        <Edit2 size={12} />
                       </button>
-                    ) : (
-                      <span className="text-[10px] text-muted2 italic font-light pr-2">Sua conta</span>
-                    )}
+
+                      {session?.user?.id !== user.id ? (
+                        <button
+                          onClick={() => handleDelete(user.id, user.email)}
+                          className="p-1.5 rounded bg-surface text-muted2 hover:text-red-400 hover:bg-red-950/20 border border-line2 hover:border-red-950/50 transition-all opacity-0 group-hover:opacity-100"
+                          title="Excluir Colaborador"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      ) : (
+                        <span className="text-[10px] text-muted2 italic font-light pr-2">Sua conta</span>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -205,7 +242,7 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
           <div className="w-full max-w-md rounded-xl bg-bg-alt border border-line2 overflow-hidden flex flex-col glass-panel max-h-[90vh]">
             <div className="px-6 py-4 border-b border-line2 flex items-center justify-between">
               <h3 className="font-space font-bold text-text text-sm uppercase tracking-wider">
-                Novo Colaborador
+                {editingUser ? "Editar Colaborador" : "Novo Colaborador"}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -257,14 +294,14 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
               {/* Senha */}
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                  Senha Temporária (Mín. 6 caracteres)
+                  {editingUser ? "Nova Senha (deixe em branco para manter)" : "Senha Temporária (Mín. 6 caracteres)"}
                 </label>
                 <input
                   type="password"
-                  required
+                  required={!editingUser}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder={editingUser ? "Deixe em branco para não alterar" : "••••••••"}
                   className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
                   disabled={isSaving}
                 />
@@ -308,7 +345,7 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
                       Salvando...
                     </>
                   ) : (
-                    "Cadastrar"
+                    editingUser ? "Salvar Alterações" : "Cadastrar"
                   )}
                 </button>
               </div>
