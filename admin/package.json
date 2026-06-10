@@ -2,6 +2,10 @@
   "name": "quintocontinente-admin",
   "version": "1.0.0",
   "private": true,
+  "supportedArchitectures": {
+    "os": ["current", "linux"],
+    "cpu": ["current", "x64"]
+  },
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
