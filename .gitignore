@@ -1,0 +1,34 @@
+# Next.js build and development folders
+/admin/.next/
+/admin/node_modules/
+
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/build
+/dist
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+/admin/.env
+/admin/.env.local
+/admin/.env.development.local
+/admin/.env.test.local
+/admin/.env.production.local
+
+# Vercel
+.vercel
+
+# System Files
+.DS_Store
+Thumbs.db

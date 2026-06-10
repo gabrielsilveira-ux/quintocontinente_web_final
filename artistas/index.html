@@ -104,21 +104,6 @@
   </footer>
 
   <script src="../assets/js/main.js"></script>
-  <script>
-    const searchInput = document.getElementById('artistSearch');
-    const artistCards = document.querySelectorAll('.artist-card');
-
-    searchInput.addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase();
-      artistCards.forEach(card => {
-        const name = card.getAttribute('data-name').toLowerCase();
-        if (name.includes(term)) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-  </script>
+  <script src="../assets/js/dynamic-content.js"></script>
 </body>
 </html>

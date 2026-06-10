@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-bg text-text antialiased selection:bg-accent selection:text-white font-inter;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(255, 88, 88, 0.03) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(255, 88, 88, 0.02) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+/* Estilo para Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1E1E1E;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff5858;
+}
+
+/* Efeito Glow para Destaques */
+.glow-accent {
+  box-shadow: 0 0 25px rgba(255, 88, 88, 0.15);
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(22, 22, 22, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Custom animations */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.pulse-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
+}

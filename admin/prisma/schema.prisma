@@ -1,0 +1,65 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("ADMIN") // ADMIN, EDITOR
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Banner {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  imageUrl    String
+  linkUrl     String?
+  label       String?  @default("Destaque")
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Artist {
+  id        String   @id @default(uuid())
+  name      String
+  imageUrl  String
+  order     Int      @default(0)
+  featured  Boolean  @default(false) // Mostrar no carrossel/marquee da home
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryItem {
+  id        String   @id @default(uuid())
+  title     String?
+  imageUrl  String
+  category  String   @default("Geral") // ex: Shows, Eventos, Corporativos
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lead {
+  id             String   @id @default(uuid())
+  name           String
+  email          String
+  phone          String
+  eventType      String // ex: Público, Privado, Corporativo
+  artistInterest String? // ex: Nando Reis, CPM 22, etc.
+  status         String   @default("NOVO") // NOVO, EM_ATENDIMENTO, CONCLUIDO, ARQUIVADO
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

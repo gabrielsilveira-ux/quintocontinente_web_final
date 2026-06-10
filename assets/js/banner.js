@@ -2,7 +2,7 @@
    QUINTO CONTINENTE — banner.js
    Controle do banner rotativo
    ============================================================ */
-(function () {
+window.initBannerSlider = function () {
   'use strict';
 
   var INTERVAL = 6000; // ms entre transições automáticas
@@ -67,20 +67,22 @@
 
   /* ── Eventos: swipe (touch) ─────────────────────────────── */
   var touchStartX = 0;
-  slider.addEventListener('touchstart', function (e) {
-    touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-  slider.addEventListener('touchend', function (e) {
-    var dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 40) {
-      goTo(dx < 0 ? current + 1 : current - 1);
-      startAuto();
-    }
-  });
+  if (slider) {
+    slider.addEventListener('touchstart', function (e) {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    slider.addEventListener('touchend', function (e) {
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) {
+        goTo(dx < 0 ? current + 1 : current - 1);
+        startAuto();
+      }
+    });
 
-  /* ── Pausa ao hover ─────────────────────────────────────── */
-  slider.addEventListener('mouseenter', stopAuto);
-  slider.addEventListener('mouseleave', startAuto);
+    /* ── Pausa ao hover ─────────────────────────────────────── */
+    slider.addEventListener('mouseenter', stopAuto);
+    slider.addEventListener('mouseleave', startAuto);
+  }
 
   /* ── Teclado ────────────────────────────────────────────── */
   document.addEventListener('keydown', function (e) {
@@ -91,4 +93,19 @@
   /* ── Init ───────────────────────────────────────────────── */
   animateProgress();
   startAuto();
-})();
+};
+
+// Inicialização automática se não for carregado dinamicamente
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function () {
+    var slider = document.getElementById('bannerSlider');
+    if (slider && !slider.dataset.dynamic) {
+      window.initBannerSlider();
+    }
+  });
+} else {
+  var slider = document.getElementById('bannerSlider');
+  if (slider && !slider.dataset.dynamic) {
+    window.initBannerSlider();
+  }
+}
