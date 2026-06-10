@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+// @ts-expect-error - sharp types can fail resolution depending on bundler settings
+import sharp from "sharp";
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,12 +47,30 @@ export async function POST(request: NextRequest) {
     }
 
     // 5. Gera um nome de arquivo único para evitar colisões
-    const fileExt = file.name.split(".").pop();
-    const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+    const fileExt = file.name.split(".").pop() || "jpg";
+    let uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
 
-    // 6. Converte o arquivo para Buffer
+    // 6. Converte o arquivo para Buffer e tenta otimizar com Sharp
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const inputBuffer = Buffer.from(arrayBuffer);
+    
+    let buffer = inputBuffer;
+    let contentType = file.type;
+    
+    try {
+      buffer = await sharp(inputBuffer)
+        .resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toBuffer();
+      contentType = "image/webp";
+      
+      // Substitui a extensão original por .webp no nome final do arquivo
+      const baseName = uniqueFileName.substring(0, uniqueFileName.lastIndexOf("."));
+      uniqueFileName = `${baseName}.webp`;
+    } catch (sharpError) {
+      console.warn("Sharp falhou ao otimizar a imagem, enviando original:", sharpError);
+      buffer = inputBuffer;
+    }
 
     // 7. Envia o arquivo para a API de Storage do Supabase
     // URL de Upload: https://[project-id].supabase.co/storage/v1/object/[bucket]/[filename]
@@ -60,7 +80,7 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${supabaseKey}`,
-        "Content-Type": file.type,
+        "Content-Type": contentType,
       },
       body: buffer,
     });
