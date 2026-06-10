@@ -8,7 +8,7 @@ async function main() {
 
   // Email e senha padrão para o primeiro acesso
   const adminEmail = "admin@quintocontinente.com.br";
-  const defaultPassword = "QCAdmin2026!";
+  const defaultPassword = "QC_Admin_2026_SecureAccess_987!";
 
   // Verifica se o administrador já existe
   const existingUser = await prisma.user.findUnique({
