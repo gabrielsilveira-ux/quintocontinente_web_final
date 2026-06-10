@@ -6,12 +6,12 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --accent:     #ff5858;
-  --accent-dim: rgba(255,88,88,0.10);
-  --bg:         #0A0A0A;
-  --bg2:        #111111;
-  --bg3:        #161616;
-  --surface:    #1E1E1E;
+  --accent:     #D42B2B;
+  --accent-dim: rgba(212,43,43,0.10);
+  --bg:         #0C0C0C;
+  --bg2:        #121212;
+  --bg3:        #181818;
+  --surface:    #222222;
   --line:       rgba(255,255,255,0.06);
   --line2:      rgba(255,255,255,0.10);
   --text:       #EFEFEF;
@@ -24,6 +24,12 @@
   --nav-h:      88px;
   --site-pad:   clamp(1.5rem, 5vw, 4rem);
   --max-w:      1400px;
+
+  /* White Section Styling */
+  --bg-white:   #F7F6F4;
+  --text-dark:  #1A1A1A;
+  --muted-dark: #5C5C5C;
+  --line-dark:  rgba(0,0,0,0.08);
 }
 
 
@@ -172,6 +178,108 @@ section {
   padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2)); 
 }
 
+/* ── Alternância de Seções (Light/Dark) ────────────────────── */
+.section-white {
+  background: var(--bg-white);
+  color: var(--text-dark);
+}
+.section-white .s-title,
+.section-white .s-title *,
+.section-white h2,
+.section-white h3,
+.section-white h4,
+.section-white .card-title,
+.section-white .dif-title,
+.section-white .stat-title,
+.section-white .artist-name,
+.section-white .gallery-item-title {
+  color: var(--text-dark) !important;
+}
+.section-white .s-sub,
+.section-white .s-sub strong,
+.section-white p,
+.section-white p strong,
+.section-white .card-desc,
+.section-white .dif-desc,
+.section-white .stat-sub,
+.section-white .gallery-item-cat,
+.section-white .breadcrumb a,
+.section-white .breadcrumb span {
+  color: var(--muted-dark) !important;
+}
+.section-white .card,
+.section-white .dif,
+.section-white .artist-card,
+.section-white .gallery-item {
+  background: #FFFFFF;
+  border-color: var(--line-dark);
+}
+.section-white .card:hover,
+.section-white .dif:hover,
+.section-white .artist-card:hover,
+.section-white .gallery-item:hover {
+  background: #F0EFEF;
+}
+.section-white .cards-wrap {
+  background: var(--line-dark);
+  border-color: var(--line-dark);
+}
+.section-white .card-icon {
+  border-color: var(--line-dark);
+  background: rgba(0, 0, 0, 0.02);
+}
+.section-white .card:hover .card-icon {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.section-white .card-idx {
+  color: var(--muted-dark);
+}
+.section-white .btn-outline {
+  border-color: var(--line-dark);
+  color: var(--text-dark);
+}
+.section-white .btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.section-white .stat-row {
+  border-bottom-color: var(--line-dark);
+}
+.section-white .stat-row:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+.section-white .stat-box {
+  border-color: var(--line-dark);
+}
+.section-white .divider {
+  background: var(--line-dark);
+}
+.section-white .form-box {
+  background: #FFFFFF;
+  border-color: var(--line-dark);
+}
+.section-white .fi,
+.section-white .ft,
+.section-white .fs {
+  background: #FFFFFF;
+  border-color: var(--line-dark);
+  color: var(--text-dark);
+}
+.section-white .fi:focus,
+.section-white .ft:focus,
+.section-white .fs:focus {
+  border-color: var(--accent);
+}
+.section-white .fl {
+  color: var(--muted-dark);
+}
+
+.section-dark {
+  background: var(--bg);
+  color: var(--text);
+}
+
 section.hero { 
   padding-top: calc(var(--nav-h) + 5rem);
   padding-bottom: 5rem;
@@ -195,8 +303,7 @@ section.hero {
 }
 .hero-bg {
   position: absolute; inset: 0; z-index: 0;
-  background:
-    radial-gradient(circle at center, rgba(255,88,88,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 30%, rgba(212, 43, 43, 0.03) 0%, transparent 65%);
 }
 .hero-left {
   position: relative; z-index: 1;

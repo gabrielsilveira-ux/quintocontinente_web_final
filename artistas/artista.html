@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Dynamic Title & Description (Populated by JS, with fallbacks) -->
+  <title>Artista — Quinto Continente</title>
+  <meta name="description" id="meta-desc" content="Consulte informações, biografia, galeria de fotos e disponibilidade de agenda deste artista.">
+  <link rel="canonical" id="canonical-link" href="https://quintocontinente.com.br/artistas/artista.html">
+
+  <!-- Open Graph (Dynamic fallbacks) -->
+  <meta property="og:title" id="og-title" content="Artista — Quinto Continente">
+  <meta property="og:description" id="og-desc" content="Consulte informações, biografia, galeria de fotos e disponibilidade de agenda deste artista.">
+  <meta property="og:image" id="og-img" content="https://quintocontinente.com.br/assets/images/og-cover.jpg">
+  <meta property="og:url" id="og-url" content="https://quintocontinente.com.br/artistas/artista.html">
+  <meta property="og:type" content="profile">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- GEO Meta Tags -->
+  <meta name="geo.region" content="BR-SP">
+  <meta name="geo.placename" content="Campinas, São Paulo">
+  <meta name="geo.position" content="-22.9056;-47.0608">
+  <meta name="ICBM" content="-22.9056, -47.0608">
+
+  <!-- Google Fonts & Styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/media.css">
+
+  <style>
+    /* ── Artist Profile Page Styles ── */
+    .artist-hero {
+      position: relative;
+      min-height: 80vh;
+      display: flex;
+      align-items: flex-end;
+      padding: calc(var(--nav-h) + 4rem) max(var(--site-pad), calc((100% - var(--max-w)) / 2)) 5rem;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .artist-hero-bg {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: blur(2px) brightness(0.4);
+      transform: scale(1.05);
+      transition: background-image 0.5s ease-in-out;
+    }
+    .artist-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(12,12,12,0.3) 0%, rgba(12,12,12,0.8) 70%, var(--bg) 100%);
+    }
+    .artist-hero-content {
+      position: relative; z-index: 2;
+      max-width: 800px;
+    }
+    .artist-hero-genre {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .artist-hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 800; line-height: 1.0;
+      letter-spacing: -0.04em; color: var(--text);
+      margin-bottom: 2rem;
+    }
+
+    /* Bio Section */
+    .artist-bio-section {
+      padding: 8rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));
+    }
+    .artist-bio-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 2fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .artist-bio-img-container {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      border: 1px solid var(--line-dark);
+      background: #FFFFFF;
+    }
+    .artist-bio-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .artist-bio-text {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--muted-dark);
+    }
+    .artist-bio-text p {
+      margin-bottom: 1.5rem;
+    }
+    .artist-bio-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Slider Galeria */
+    .artist-gallery-section {
+      padding: 8rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));
+      background: var(--bg2);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .gallery-slider-container {
+      position: relative;
+      width: 100%;
+      margin-top: 3.5rem;
+      overflow: hidden;
+    }
+    .gallery-slider-track {
+      display: flex;
+      gap: 1.5rem;
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .gallery-slide {
+      flex: 0 0 320px;
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--bg3);
+      cursor: pointer;
+    }
+    .gallery-slide img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .gallery-slide:hover img {
+      transform: scale(1.05);
+    }
+    .slider-nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .slider-btn {
+      width: 44px; height: 44px;
+      border: 1px solid var(--line2);
+      border-radius: 50%;
+      background: var(--bg3);
+      color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .slider-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+    .slider-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: var(--line);
+      color: var(--muted);
+    }
+
+    /* Social Links */
+    .artist-social-section {
+      padding: 6rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));
+      text-align: center;
+    }
+    .artist-social-list {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      list-style: none;
+    }
+    .artist-social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dark);
+      text-decoration: none;
+      border: 1px solid var(--line-dark);
+      padding: 0.8rem 1.8rem;
+      border-radius: 100px;
+      transition: all 0.3s;
+    }
+    .artist-social-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 900px) {
+      .artist-bio-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .artist-bio-img-container { max-width: 400px; margin: 0 auto; }
+      .gallery-slide { flex: 0 0 280px; }
+      .artist-social-list { flex-direction: column; gap: 1rem; align-items: center; }
+      .artist-social-link { width: 100%; max-width: 300px; justify-content: center; }
+    }
+  </style>
+
+  <!-- GTM Container snippet (comentado - ativação pós-lançamento) -->
+  <!--
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+  -->
+
+  <!-- Setup Data Layer -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+</head>
+<body>
+  <!-- GTM Noscript snippet (comentado - ativação pós-lançamento) -->
+  <!--
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  -->
+
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">
+        <img src="../assets/images/logo.png" alt="Quinto Continente" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-family:Space Grotesk,sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)\'>Quinto Continente</span>')">
+      </a>
+      <ul class="nav-links">
+        <li><a href="../sobre/index.html">Quem Somos</a></li>
+        <li><a href="../o-que-fazemos/index.html">O Que Fazemos</a></li>
+        <li><a href="index.html" class="active">Artistas</a></li>
+        <li><a href="../contato/index.html">Contato</a></li>
+      </ul>
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <a href="https://wa.me/5567992185103?text=Ol%C3%A1%21+Tenho+interesse+em+contratar+um+artista+pela+Quinto+Continente.+Poderia+me+auxiliar%3F" target="_blank" rel="noopener" class="nav-btn" id="wa-nav-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 4px; margin-bottom: 2px;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.806-9.799.002-2.618-1.016-5.08-2.868-6.934C16.357 2.018 13.9 1 11.277 1 5.873 1 1.472 5.397 1.47 10.8c-.001 1.776.47 3.51 1.36 5.035l-.993 3.623 3.71-.973c1.464.798 2.874 1.204 4.51 1.201zM17.65 14.44c-.3-.15-1.78-.88-2.05-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.18.2-.35.23-.65.08-1.2-.6-1.95-1.09-2.73-2.43-.2-.35-.05-.54.1-.69.13-.13.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.53-.08-.15-.68-1.63-.93-2.24-.25-.6-.5-.52-.68-.53-.17-.01-.38-.01-.58-.01-.2 0-.53.07-.8.38-.28.3-1.08 1.05-1.08 2.57 0 1.52 1.1 2.99 1.25 3.19.15.2 2.15 3.29 5.22 4.61.73.31 1.3.5 1.74.64.74.23 1.4.2 1.93.12.59-.09 1.78-.73 2.03-1.43.25-.7.25-1.3.18-1.43-.07-.13-.28-.2-.58-.35z"/></svg>
+          WhatsApp
+        </a>
+        <button class="nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="nav-mobile">
+    <a href="../sobre/index.html">Quem Somos</a>
+    <a href="../o-que-fazemos/index.html">O Que Fazemos</a>
+    <a href="index.html" class="active">Artistas</a>
+    <a href="../contato/index.html">Contato</a>
+    <a href="https://wa.me/5567992185103?text=Ol%C3%A1%21+Tenho+interesse+em+contratar+um+artista+pela+Quinto+Continente.+Poderia+me+auxiliar%3F" target="_blank" rel="noopener" style="color:var(--accent)">WhatsApp</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="artist-hero">
+    <div class="artist-hero-bg" id="artist-hero-bg"></div>
+    <div class="artist-hero-overlay"></div>
+    <div class="artist-hero-content reveal">
+      <div class="breadcrumb"><a href="../index.html">Home</a><span>/</span><a href="index.html">Artistas</a><span>/</span><span id="breadcrumb-name">Artista</span></div>
+      <div class="artist-hero-genre" id="artist-genre">Carregando gênero...</div>
+      <h1 class="artist-hero-name" id="artist-name">Carregando...</h1>
+      <div style="display:flex; gap:1.5rem; flex-wrap:wrap;">
+        <a href="#contratar" class="btn-main">Consultar Agenda</a>
+        <a href="#bio" class="btn-outline">Ver Biografia</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIO (LIGHT SECTION) -->
+  <section class="artist-bio-section section-white" id="bio">
+    <div class="artist-bio-grid">
+      <div class="artist-bio-img-container reveal">
+        <img src="../assets/images/artist-placeholder.png" alt="Foto do Artista" class="artist-bio-img" id="artist-bio-img">
+      </div>
+      <div class="reveal d1">
+        <div class="s-label">Biografia</div>
+        <h2 class="s-title" style="margin-bottom: 2rem;" id="artist-title-bio">Sobre o Artista</h2>
+        <div class="artist-bio-text" id="artist-bio-text">
+          <p>Carregando biografia...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERIA (DARK SECTION) -->
+  <section class="artist-gallery-section section-dark" id="gallery-section" style="display: none;">
+    <div class="container">
+      <div class="s-label">Galeria</div>
+      <h2 class="s-title">Fotos & Mídia</h2>
+      
+      <div class="gallery-slider-container">
+        <div class="gallery-slider-track" id="gallery-track">
+          <!-- Dynamically populated slides -->
+        </div>
+      </div>
+
+      <div class="slider-nav">
+        <button class="slider-btn" id="prev-slide" aria-label="Slide anterior" disabled>
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn" id="next-slide" aria-label="Próximo slide" disabled>
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LINKS E SITE OFICIAL (LIGHT SECTION) -->
+  <section class="artist-social-section section-white" id="social-section" style="display: none;">
+    <div class="container">
+      <div class="s-label">Canais Oficiais</div>
+      <h2 class="s-title" style="margin: 0 auto;">Acesse as plataformas do artista</h2>
+      <ul class="artist-social-list" id="social-links-container">
+        <!-- Dynamically populated links -->
+      </ul>
+    </div>
+  </section>
+
+  <!-- CTA FINAL (LIGHT SECTION) -->
+  <section class="artist-cta-section section-white" id="contratar" style="text-align: center; padding: 8rem 2rem; border-top: 1px solid var(--line-dark);">
+    <div class="container" style="max-width: 700px; margin: 0 auto;">
+      <div class="s-label">Contratação</div>
+      <h2 class="s-title" style="margin: 0 auto 1.5rem;" id="cta-headline">Leve o show para a sua cidade</h2>
+      <p class="s-sub" style="font-size: 1.1rem; margin-bottom: 2.5rem;">
+        Entre em contato conosco e receba uma proposta detalhada com estimativa de custos e disponibilidade de rota.
+      </p>
+      <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+        <a href="" class="btn-main" id="dynamic-wa-cta" target="_blank" rel="noopener">Falar no WhatsApp</a>
+        <a href="" class="btn-outline" id="dynamic-form-cta">Solicitar Orçamento</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="f-logo">Quinto Continente</div>
+        <div class="f-sub">Por Oceania Eventos</div>
+        <p class="f-desc">Excelência em entretenimento, gestão e grandes negócios.</p>
+      </div>
+      <div>
+        <div class="f-col-title">Soluções</div>
+        <ul class="f-links">
+          <li><a href="../o-que-fazemos/index.html">Curadoria Artística</a></li>
+          <li><a href="../o-que-fazemos/index.html">Intermediação</a></li>
+          <li><a href="../o-que-fazemos/index.html">Produção Executiva</a></li>
+          <li><a href="../o-que-fazemos/index.html">Projetos Especiais</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="f-col-title">Empresa</div>
+        <ul class="f-links">
+          <li><a href="../sobre/index.html">Quem Somos</a></li>
+          <li><a href="../index.html#diferenciais">Diferenciais</a></li>
+          <li><a href="../galeria/index.html">Galeria</a></li>
+          <li><a href="index.html">Artistas</a></li>
+          <li><a href="../contato/index.html">Contato</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="f-col-title">Contato</div>
+        <ul class="f-links">
+          <li><a href="mailto:contato@quintocontinente.com.br">contato@quintocontinente.com.br</a></li>
+          <li><a href="tel:+5567992185103">(67) 99218-5103</a></li>
+          <li><a href="#">Campinas, SP</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <p>© 2026 Quinto Continente — Por <a href="#">Oceania Eventos</a>. Todos os direitos reservados.</p>
+      <p><a href="#">Privacidade</a> &nbsp;·&nbsp; <a href="#">Termos</a></p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/dynamic-content.js"></script>
+  <script>
+    // Dispatch scroll_75 dataLayer event
+    (function() {
+      var sent = false;
+      window.addEventListener('scroll', function() {
+        if (sent) return;
+        var h = document.documentElement,
+            b = document.body,
+            st = 'scrollTop',
+            sh = 'scrollHeight';
+        var percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+        if (percent >= 75) {
+          window.dataLayer.push({
+            event: 'page_scroll_75',
+            page: window.location.pathname
+          });
+          sent = true;
+        }
+      }, {passive: true});
+    })();
+  </script>
+</body>
+</html>

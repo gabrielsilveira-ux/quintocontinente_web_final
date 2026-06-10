@@ -10,6 +10,17 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const activeOnly = searchParams.get("active") === "true";
     const featuredOnly = searchParams.get("featured") === "true";
+    const slug = searchParams.get("slug");
+
+    if (slug) {
+      const artist = await prisma.artist.findUnique({
+        where: { slug },
+      });
+      if (!artist) {
+        return NextResponse.json({ error: "Artista não encontrado." }, { status: 404 });
+      }
+      return NextResponse.json(artist);
+    }
 
     const where: any = {};
     if (activeOnly) where.active = true;

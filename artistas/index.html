@@ -3,107 +3,226 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artistas – Quinto Continente</title>
-  <meta name="description" content="Conheça os grandes artistas parceiros da Quinto Continente.">
+  <title>Artistas — Quinto Continente | Agência de Artistas</title>
+  <meta name="description" content="Conheça os grandes artistas parceiros da Quinto Continente e consulte disponibilidade de agenda para shows em todo o país.">
+  <link rel="canonical" href="https://quintocontinente.com.br/artistas">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Artistas — Quinto Continente | Agência de Artistas">
+  <meta property="og:description" content="Conheça os grandes artistas parceiros da Quinto Continente e consulte disponibilidade de agenda para shows em todo o país.">
+  <meta property="og:image" content="https://quintocontinente.com.br/assets/images/og-cover.jpg">
+  <meta property="og:url" content="https://quintocontinente.com.br/artistas">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- GEO Meta Tags -->
+  <meta name="geo.region" content="BR-SP">
+  <meta name="geo.placename" content="Campinas, São Paulo">
+  <meta name="geo.position" content="-22.9056;-47.0608">
+  <meta name="ICBM" content="-22.9056, -47.0608">
+
+  <!-- Google Fonts & Styles -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/media.css">
 
+  <!-- GTM Container snippet (comentado - ativação pós-lançamento) -->
+  <!--
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+  -->
+
+  <!-- Setup Data Layer -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
 </head>
 <body>
+  <!-- GTM Noscript snippet (comentado - ativação pós-lançamento) -->
+  <!--
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  -->
+
   <nav id="nav">
     <div class="nav-inner">
       <a href="../index.html" class="nav-logo">
         <img src="../assets/images/logo.png" alt="Quinto Continente" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-family:Space Grotesk,sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)\'>Quinto Continente</span>')">
       </a>
       <ul class="nav-links">
-        <li><a href="../index.html">Home</a></li>
         <li><a href="../sobre/index.html">Quem Somos</a></li>
+        <li><a href="../o-que-fazemos/index.html">O Que Fazemos</a></li>
         <li><a href="index.html" class="active">Artistas</a></li>
-        <li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li>
+        <li><a href="../contato/index.html">Contato</a></li>
       </ul>
       <div style="display:flex; align-items:center; gap:1rem;">
-        <a href="../index.html#contato" class="nav-btn">Consultar Agenda</a>
-
+        <a href="https://wa.me/5567992185103?text=Ol%C3%A1%21+Tenho+interesse+em+contratar+um+artista+pela+Quinto+Continente.+Poderia+me+auxiliar%3F" target="_blank" rel="noopener" class="nav-btn" id="wa-nav-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 4px; margin-bottom: 2px;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.806-9.799.002-2.618-1.016-5.08-2.868-6.934C16.357 2.018 13.9 1 11.277 1 5.873 1 1.472 5.397 1.47 10.8c-.001 1.776.47 3.51 1.36 5.035l-.993 3.623 3.71-.973c1.464.798 2.874 1.204 4.51 1.201zM17.65 14.44c-.3-.15-1.78-.88-2.05-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.18.2-.35.23-.65.08-1.2-.6-1.95-1.09-2.73-2.43-.2-.35-.05-.54.1-.69.13-.13.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.53-.08-.15-.68-1.63-.93-2.24-.25-.6-.5-.52-.68-.53-.17-.01-.38-.01-.58-.01-.2 0-.53.07-.8.38-.28.3-1.08 1.05-1.08 2.57 0 1.52 1.1 2.99 1.25 3.19.15.2 2.15 3.29 5.22 4.61.73.31 1.3.5 1.74.64.74.23 1.4.2 1.93.12.59-.09 1.78-.73 2.03-1.43.25-.7.25-1.3.18-1.43-.07-.13-.28-.2-.58-.35z"/></svg>
+          WhatsApp
+        </a>
         <button class="nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
       </div>
     </div>
   </nav>
+
   <div class="nav-mobile">
-    <a href="../index.html">Home</a>
     <a href="../sobre/index.html">Quem Somos</a>
+    <a href="../o-que-fazemos/index.html">O Que Fazemos</a>
     <a href="index.html" class="active">Artistas</a>
-    <a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a>
-    <a href="../index.html#contato" style="color:var(--accent)">Consultar Agenda →</a>
+    <a href="../contato/index.html">Contato</a>
+    <a href="https://wa.me/5567992185103?text=Ol%C3%A1%21+Tenho+interesse+em+contratar+um+artista+pela+Quinto+Continente.+Poderia+me+auxiliar%3F" target="_blank" rel="noopener" style="color:var(--accent)">WhatsApp</a>
   </div>
 
-  <div class="page-hero">
+  <!-- HERO -->
+  <div class="page-hero section-dark">
     <div class="breadcrumb"><a href="../index.html">Home</a><span>/</span><span>Artistas</span></div>
     <div class="page-hero-label">Nossos Parceiros</div>
     <h1>Artistas que fazem a nossa história.</h1>
     <p class="page-hero-sub">Conectamos grandes nomes da música brasileira ao seu evento com excelência e segurança.</p>
   </div>
 
-  <section class="artists-page-section">
+  <!-- LISTAGEM (WHITE SECTION) -->
+  <section class="artists-page-section section-white">
     <div class="search-container reveal">
       <input type="text" id="artistSearch" class="search-input" placeholder="BUSCAR ARTISTAS...">
     </div>
 
     <div class="artists-grid" id="artistsGrid">
-      <div class="artist-card reveal" data-name="Nando Reis">
+      <!-- Fallback cards wrap in links -->
+      <a href="artista.html?slug=nando-reis" class="artist-card reveal" data-name="Nando Reis" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="Nando Reis" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">Nando Reis</h3></div>
-      </div>
-      <div class="artist-card reveal" data-name="Samuel Rosa">
+      </a>
+      <a href="artista.html?slug=samuel-rosa" class="artist-card reveal" data-name="Samuel Rosa" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="Samuel Rosa" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">Samuel Rosa</h3></div>
-      </div>
-      <div class="artist-card reveal" data-name="Paralamas do Sucesso">
+      </a>
+      <a href="artista.html?slug=paralamas-do-sucesso" class="artist-card reveal" data-name="Paralamas do Sucesso" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="Paralamas do Sucesso" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">Paralamas do Sucesso</h3></div>
-      </div>
-      <div class="artist-card reveal" data-name="Raimundos">
+      </a>
+      <a href="artista.html?slug=raimundos" class="artist-card reveal" data-name="Raimundos" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="Raimundos" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">Raimundos</h3></div>
-      </div>
-      <div class="artist-card reveal" data-name="CPM 22">
+      </a>
+      <a href="artista.html?slug=cpm-22" class="artist-card reveal" data-name="CPM 22" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="CPM 22" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">CPM 22</h3></div>
-      </div>
-      <div class="artist-card reveal" data-name="Detonautas">
+      </a>
+      <a href="artista.html?slug=detonautas" class="artist-card reveal" data-name="Detonautas" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="Detonautas" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">Detonautas</h3></div>
-      </div>
-      <div class="artist-card reveal" data-name="Jota Quest">
+      </a>
+      <a href="artista.html?slug=jota-quest" class="artist-card reveal" data-name="Jota Quest" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="Jota Quest" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">Jota Quest</h3></div>
-      </div>
-      <div class="artist-card reveal" data-name="Ira!">
+      </a>
+      <a href="artista.html?slug=ira" class="artist-card reveal" data-name="Ira!" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="Ira!" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">Ira!</h3></div>
-      </div>
-      <div class="artist-card reveal" data-name="Chico Chico">
+      </a>
+      <a href="artista.html?slug=chico-chico" class="artist-card reveal" data-name="Chico Chico" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="Chico Chico" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">Chico Chico</h3></div>
-      </div>
-      <div class="artist-card reveal" data-name="Anavitória">
+      </a>
+      <a href="artista.html?slug=anavitoria" class="artist-card reveal" data-name="Anavitória" style="text-decoration:none;">
         <div class="artist-img"><img src="../assets/images/artist-placeholder.png" alt="Anavitória" style="width:100%; height:100%; object-fit:cover;"></div>
         <div class="artist-info"><h3 class="artist-name">Anavitória</h3></div>
-      </div>
+      </a>
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
     <div class="footer-top">
-      <div><div class="f-logo">Quinto Continente</div><div class="f-sub">Por Oceania Eventos</div><p class="f-desc">Excelência em entretenimento, gestão e grandes negócios.</p></div>
-      <div><div class="f-col-title">Serviços</div><ul class="f-links"><li><a href="../servicos/index.html#intermediacao">Intermediação de Shows</a></li><li><a href="../servicos/index.html#producao">Produção e Assessoria</a></li><li><a href="../servicos/index.html#especiais">Projetos Especiais</a></li><li><a href="../servicos/index.html#leis">Leis de Incentivo</a></li></ul></div>
-      <div><div class="f-col-title">Empresa</div><ul class="f-links"><li><a href="../sobre/index.html">Quem Somos</a></li><li><a href="../index.html#diferenciais">Diferenciais</a></li><li><a href="../galeria/index.html">Galeria</a></li><li><a href="index.html">Artistas</a></li><li><a href="../index.html#contato">Contato</a></li><li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li></ul></div>
-      <div><div class="f-col-title">Contato</div><ul class="f-links"><li><a href="mailto:contato@quintocontinente.com.br">contato@quintocontinente.com.br</a></li><li><a href="tel:+5511000000000">(11) 0000-0000</a></li><li><a href="#">São Paulo, SP</a></li></ul></div>
+      <div>
+        <div class="f-logo">Quinto Continente</div>
+        <div class="f-sub">Por Oceania Eventos</div>
+        <p class="f-desc">Excelência em entretenimento, gestão e grandes negócios.</p>
+      </div>
+      <div>
+        <div class="f-col-title">Soluções</div>
+        <ul class="f-links">
+          <li><a href="../o-que-fazemos/index.html">Curadoria Artística</a></li>
+          <li><a href="../o-que-fazemos/index.html">Intermediação</a></li>
+          <li><a href="../o-que-fazemos/index.html">Produção Executiva</a></li>
+          <li><a href="../o-que-fazemos/index.html">Projetos Especiais</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="f-col-title">Empresa</div>
+        <ul class="f-links">
+          <li><a href="../sobre/index.html">Quem Somos</a></li>
+          <li><a href="../index.html#diferenciais">Diferenciais</a></li>
+          <li><a href="../galeria/index.html">Galeria</a></li>
+          <li><a href="index.html">Artistas</a></li>
+          <li><a href="../contato/index.html">Contato</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="f-col-title">Contato</div>
+        <ul class="f-links">
+          <li><a href="mailto:contato@quintocontinente.com.br">contato@quintocontinente.com.br</a></li>
+          <li><a href="tel:+5567992185103">(67) 99218-5103</a></li>
+          <li><a href="#">Campinas, SP</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="footer-bot"><p>© 2025 Quinto Continente — Por <a href="#">Oceania Eventos</a>. Todos os direitos reservados.</p><p><a href="#">Privacidade</a> &nbsp;·&nbsp; <a href="#">Termos</a></p></div>
+    <div class="footer-bot">
+      <p>© 2026 Quinto Continente — Por <a href="#">Oceania Eventos</a>. Todos os direitos reservados.</p>
+      <p><a href="#">Privacidade</a> &nbsp;·&nbsp; <a href="#">Termos</a></p>
+    </div>
   </footer>
+
+  <!-- JSON-LD ItemList Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Lista de Artistas Quinto Continente",
+    "numberOfItems": 10,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Nando Reis", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=nando-reis" },
+      { "@type": "ListItem", "position": 2, "name": "Samuel Rosa", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=samuel-rosa" },
+      { "@type": "ListItem", "position": 3, "name": "Paralamas do Sucesso", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=paralamas-do-sucesso" },
+      { "@type": "ListItem", "position": 4, "name": "Raimundos", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=raimundos" },
+      { "@type": "ListItem", "position": 5, "name": "CPM 22", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=cpm-22" },
+      { "@type": "ListItem", "position": 6, "name": "Detonautas", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=detonautas" },
+      { "@type": "ListItem", "position": 7, "name": "Jota Quest", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=jota-quest" },
+      { "@type": "ListItem", "position": 8, "name": "Ira!", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=ira" },
+      { "@type": "ListItem", "position": 9, "name": "Chico Chico", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=chico-chico" },
+      { "@type": "ListItem", "position": 10, "name": "Anavitória", "url": "https://quintocontinente.com.br/artistas/artista.html?slug=anavitoria" }
+    ]
+  }
+  </script>
 
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/dynamic-content.js"></script>
+  <script>
+    // Dispatch scroll_75 dataLayer event
+    (function() {
+      var sent = false;
+      window.addEventListener('scroll', function() {
+        if (sent) return;
+        var h = document.documentElement,
+            b = document.body,
+            st = 'scrollTop',
+            sh = 'scrollHeight';
+        var percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+        if (percent >= 75) {
+          window.dataLayer.push({
+            event: 'page_scroll_75',
+            page: window.location.pathname
+          });
+          sent = true;
+        }
+      }, {passive: true});
+    })();
+  </script>
 </body>
 </html>

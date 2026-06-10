@@ -32,14 +32,21 @@ model Banner {
 }
 
 model Artist {
-  id        String   @id @default(uuid())
-  name      String
-  imageUrl  String
-  order     Int      @default(0)
-  featured  Boolean  @default(false) // Mostrar no carrossel/marquee da home
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  name         String
+  slug         String   @unique
+  imageUrl     String
+  bio          String?
+  genre        String?
+  websiteUrl   String?
+  instagramUrl String?
+  spotifyUrl   String?
+  galleryUrls  String[]
+  order        Int      @default(0)
+  featured     Boolean  @default(false) // Mostrar no carrossel/marquee da home
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model GalleryItem {
@@ -61,6 +68,10 @@ model Lead {
   eventType      String // ex: Público, Privado, Corporativo
   artistInterest String? // ex: Nando Reis, CPM 22, etc.
   status         String   @default("NOVO") // NOVO, EM_ATENDIMENTO, CONCLUIDO, ARQUIVADO
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  utmContent     String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }

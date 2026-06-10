@@ -13,6 +13,9 @@ import {
   X,
   ExternalLink,
   MessageCircle,
+  TrendingUp,
+  Tag,
+  Search,
 } from "lucide-react";
 
 interface Lead {
@@ -24,6 +27,10 @@ interface Lead {
   artistInterest: string | null;
   status: string;
   createdAt: string;
+  utmSource?: string | null;
+  utmMedium?: string | null;
+  utmCampaign?: string | null;
+  utmContent?: string | null;
 }
 
 interface LeadsManagerProps {
@@ -34,6 +41,7 @@ export function LeadsManager({ initialLeads }: LeadsManagerProps) {
   const router = useRouter();
   const [leads, setLeads] = useState<Lead[]>(initialLeads);
   const [activeTab, setActiveTab] = useState("TODOS");
+  const [selectedCampaign, setSelectedCampaign] = useState("TODAS");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -46,10 +54,24 @@ export function LeadsManager({ initialLeads }: LeadsManagerProps) {
     { name: "Arquivados", value: "ARQUIVADO" },
   ];
 
-  // Filtra leads de acordo com a tab selecionada
-  const filteredLeads = leads.filter(
-    (lead) => activeTab === "TODOS" || lead.status === activeTab
+  // Extrair campanhas únicas para filtro
+  const uniqueCampaigns = Array.from(
+    new Set(
+      leads
+        .map((l) => l.utmCampaign)
+        .filter((c): c is string => !!c)
+    )
   );
+
+  // Filtra leads de acordo com a tab selecionada e campanha
+  const filteredLeads = leads.filter((lead) => {
+    const matchTab = activeTab === "TODOS" || lead.status === activeTab;
+    const matchCampaign =
+      selectedCampaign === "TODAS" ||
+      (selectedCampaign === "ORGANICO" && !lead.utmCampaign) ||
+      lead.utmCampaign === selectedCampaign;
+    return matchTab && matchCampaign;
+  });
 
   // Formata o telefone para link do WhatsApp (apenas números, adiciona prefixo 55 se necessário)
   const getWhatsAppLink = (lead: Lead) => {
@@ -144,14 +166,80 @@ export function LeadsManager({ initialLeads }: LeadsManagerProps) {
     }
   };
 
+  // Regras de detecção de UTM
+  const getUtmBadgeStyle = (lead: Lead) => {
+    const medium = lead.utmMedium?.toLowerCase() || "";
+    const source = lead.utmSource?.toLowerCase() || "";
+    
+    if (medium === "cpc" || source === "google") {
+      return "bg-amber-600/10 text-amber-400 border border-amber-500/20";
+    }
+    if (
+      source === "facebook" || 
+      source === "instagram" || 
+      source === "meta" ||
+      medium === "paid" || 
+      medium === "social"
+    ) {
+      return "bg-pink-600/10 text-pink-400 border border-pink-500/20";
+    }
+    if (lead.utmSource || lead.utmMedium) {
+      return "bg-purple-600/10 text-purple-400 border border-purple-500/20";
+    }
+    return "bg-zinc-700/20 text-zinc-400 border border-zinc-700/30";
+  };
+
+  const getUtmBadgeLabel = (lead: Lead) => {
+    const medium = lead.utmMedium?.toLowerCase() || "";
+    const source = lead.utmSource?.toLowerCase() || "";
+    
+    if (medium === "cpc" || source === "google") {
+      return "Google Ads";
+    }
+    if (
+      source === "facebook" || 
+      source === "instagram" || 
+      source === "meta" ||
+      medium === "paid" || 
+      medium === "social"
+    ) {
+      return "Meta Ads";
+    }
+    if (lead.utmSource || lead.utmMedium) {
+      return `${lead.utmSource || "Outro"} / ${lead.utmMedium || "Mídia"}`;
+    }
+    return "Orgânico";
+  };
+
   return (
     <div className="space-y-6">
       {/* Cabeçalho */}
-      <div>
-        <h2 className="text-xl font-space font-bold text-text">Caixa de Entrada (Leads)</h2>
-        <p className="text-xs text-muted2 mt-0.5">
-          Visualize briefings e gerencie o andamento dos contatos recebidos pelos formulários do site.
-        </p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-space font-bold text-text">Caixa de Entrada (Leads)</h2>
+          <p className="text-xs text-muted2 mt-0.5">
+            Visualize briefings e gerencie o andamento dos contatos recebidos pelos formulários do site.
+          </p>
+        </div>
+
+        {/* Filtro UTM por Campanha */}
+        <div className="flex items-center gap-2 bg-bg-card border border-line2 rounded-lg px-3 py-1.5 self-start md:self-auto">
+          <Tag size={13} className="text-muted2" />
+          <span className="text-[10px] uppercase font-bold text-muted2 tracking-wider">Campanha:</span>
+          <select
+            value={selectedCampaign}
+            onChange={(e) => setSelectedCampaign(e.target.value)}
+            className="bg-transparent text-text text-xs font-semibold outline-none cursor-pointer border-none p-0 focus:ring-0 max-w-[150px]"
+          >
+            <option value="TODAS" className="bg-bg text-text">Todas as origens</option>
+            <option value="ORGANICO" className="bg-bg text-text">Apenas Orgânico</option>
+            {uniqueCampaigns.map((camp) => (
+              <option key={camp} value={camp} className="bg-bg text-text">
+                {camp}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -186,6 +274,7 @@ export function LeadsManager({ initialLeads }: LeadsManagerProps) {
                   <th className="py-4 px-6">Cliente / Empresa</th>
                   <th className="py-4 px-6">Contato</th>
                   <th className="py-4 px-6">Interesse / Evento</th>
+                  <th className="py-4 px-6">Origem / Canal</th>
                   <th className="py-4 px-6">Status</th>
                   <th className="py-4 px-6">Data</th>
                   <th className="py-4 px-6 text-right">Ações</th>
@@ -212,6 +301,18 @@ export function LeadsManager({ initialLeads }: LeadsManagerProps) {
                         {lead.artistInterest || "Intermediação de Shows"}
                       </p>
                       <p className="text-[10px] text-muted2 font-light">Evento {lead.eventType}</p>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="flex flex-col gap-1 items-start">
+                        <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${getUtmBadgeStyle(lead)}`}>
+                          {getUtmBadgeLabel(lead)}
+                        </span>
+                        {lead.utmCampaign && (
+                          <span className="text-[9px] text-muted2 font-mono truncate max-w-[120px]" title={lead.utmCampaign}>
+                            {lead.utmCampaign}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-4 px-6">
                       <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${getStatusStyle(lead.status)}`}>
@@ -323,6 +424,50 @@ export function LeadsManager({ initialLeads }: LeadsManagerProps) {
                     <p className="text-xs text-text font-semibold text-accent">
                       {selectedLead.artistInterest || "Intermediação Geral"}
                     </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Rastreamento de Tráfego Pago (UTM) */}
+              <div className="space-y-4">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-accent flex items-center gap-2">
+                  <TrendingUp size={14} />
+                  Rastreamento de Tráfego (UTMs)
+                </h4>
+
+                <div className="bg-bg-card/50 border border-line2 p-4 rounded-xl space-y-3">
+                  <div className="flex items-center justify-between border-b border-line2 pb-2">
+                    <span className="text-[10px] text-muted2 uppercase font-medium">Canal de Origem:</span>
+                    <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${getUtmBadgeStyle(selectedLead)}`}>
+                      {getUtmBadgeLabel(selectedLead)}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-xs">
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-muted2 uppercase font-light">utm_source</span>
+                      <p className="font-mono text-text truncate bg-bg px-2 py-1 rounded border border-line2/50 min-h-[24px]">
+                        {selectedLead.utmSource || "-"}
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-muted2 uppercase font-light">utm_medium</span>
+                      <p className="font-mono text-text truncate bg-bg px-2 py-1 rounded border border-line2/50 min-h-[24px]">
+                        {selectedLead.utmMedium || "-"}
+                      </p>
+                    </div>
+                    <div className="space-y-1 col-span-2">
+                      <span className="text-[9px] text-muted2 uppercase font-light">utm_campaign</span>
+                      <p className="font-mono text-text truncate bg-bg px-2 py-1 rounded border border-line2/50 min-h-[24px]">
+                        {selectedLead.utmCampaign || "-"}
+                      </p>
+                    </div>
+                    <div className="space-y-1 col-span-2">
+                      <span className="text-[9px] text-muted2 uppercase font-light">utm_content</span>
+                      <p className="font-mono text-text truncate bg-bg px-2 py-1 rounded border border-line2/50 min-h-[24px]">
+                        {selectedLead.utmContent || "-"}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -23,7 +23,14 @@ export const bannerSchema = z.object({
 // Esquema de Artista
 export const artistSchema = z.object({
   name: z.string().min(1, "O nome do artista é obrigatório").max(100, "O nome deve ter no máximo 100 caracteres"),
+  slug: z.string().min(1, "O slug é obrigatório").regex(/^[a-z0-9-]+$/, "O slug deve conter apenas letras minúsculas, números e hifens"),
   imageUrl: z.string().min(1, "A imagem é obrigatória").url("A URL da imagem é inválida"),
+  bio: z.string().optional().nullable(),
+  genre: z.string().optional().nullable(),
+  websiteUrl: z.string().url("A URL é inválida").or(z.literal("")).optional().nullable(),
+  instagramUrl: z.string().url("A URL é inválida").or(z.literal("")).optional().nullable(),
+  spotifyUrl: z.string().url("A URL é inválida").or(z.literal("")).optional().nullable(),
+  galleryUrls: z.array(z.string()).default([]),
   order: z.preprocess((val) => Number(val ?? 0), z.number().int().nonnegative()),
   featured: z.boolean().default(false),
   active: z.boolean().default(true),
@@ -46,6 +53,10 @@ export const leadSchema = z.object({
   eventType: z.string().min(1, "Selecione o tipo de evento"),
   artistInterest: z.string().optional().nullable(),
   status: z.enum(["NOVO", "EM_ATENDIMENTO", "CONCLUIDO", "ARQUIVADO"]).default("NOVO"),
+  utmSource: z.string().optional().nullable(),
+  utmMedium: z.string().optional().nullable(),
+  utmCampaign: z.string().optional().nullable(),
+  utmContent: z.string().optional().nullable(),
 });
 
 // Esquema de Criação/Edição de Usuários (Colaboradores)

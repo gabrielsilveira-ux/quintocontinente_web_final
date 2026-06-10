@@ -9,7 +9,6 @@
 
   // Helper para obter a URL da API (ajusta automaticamente entre local e produção)
   function getApiUrl(endpoint) {
-    // Se for ambiente local (local file system ou localhost)
     if (
       window.location.protocol === 'file:' || 
       window.location.hostname === 'localhost' || 
@@ -17,17 +16,63 @@
     ) {
       return 'http://localhost:3000/api' + endpoint;
     }
-
-    // Em produção na Vercel (aponta diretamente para o domínio do painel admin)
     return 'https://quintocontinente-web-final-pb4v.vercel.app/api' + endpoint;
   }
+
+  // Helper para disparar eventos GTM no Data Layer
+  function trackEvent(eventName, eventData) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: eventName,
+      data: eventData || {}
+    });
+  }
+
+  // ── 0. Capturar e Preservar Parâmetros UTM ──────────────────
+  function captureAndStoreUtms() {
+    var params = new URLSearchParams(window.location.search);
+    var utmSource = params.get('utm_source');
+    var utmMedium = params.get('utm_medium');
+    var utmCampaign = params.get('utm_campaign');
+    var utmContent = params.get('utm_content');
+
+    if (utmSource) sessionStorage.setItem('utm_source', utmSource);
+    if (utmMedium) sessionStorage.setItem('utm_medium', utmMedium);
+    if (utmCampaign) sessionStorage.setItem('utm_campaign', utmCampaign);
+    if (utmContent) sessionStorage.setItem('utm_content', utmContent);
+  }
+
+  function getStoredUtms() {
+    return {
+      utmSource: sessionStorage.getItem('utm_source') || null,
+      utmMedium: sessionStorage.getItem('utm_medium') || null,
+      utmCampaign: sessionStorage.getItem('utm_campaign') || null,
+      utmContent: sessionStorage.getItem('utm_content') || null
+    };
+  }
+
+  // Monitora todos os cliques no site em botões do WhatsApp
+  function hookWhatsAppClicks() {
+    document.addEventListener('click', function(e) {
+      var target = e.target.closest('a[href*="wa.me"]');
+      if (target) {
+        trackEvent('whatsapp_click', {
+          link: target.href,
+          text: target.textContent.trim(),
+          page: window.location.pathname
+        });
+      }
+    });
+  }
+
+  // Executa captura de UTMs imediatamente
+  captureAndStoreUtms();
 
   /* ── 1. Carregar Banners na Home ──────────────────────────── */
   async function loadDynamicBanners() {
     var slider = document.getElementById('bannerSlider');
     if (!slider) return;
 
-    // Sinaliza para o banner.js original que o carregamento é dinâmico
     slider.dataset.dynamic = 'true';
 
     try {
@@ -37,7 +82,6 @@
       var banners = await res.json();
       if (!banners || banners.length === 0) throw new Error("Sem banners ativos");
 
-      // Monta os Slides
       var slidesHtml = '';
       banners.forEach(function (banner, idx) {
         var activeClass = idx === 0 ? 'active' : '';
@@ -64,15 +108,15 @@
         `;
       });
 
-      // Adiciona a barra de progresso e controles
       slidesHtml += `<div class="banner-progress" id="bannerProgress"></div>`;
       
-      // Monta os Controles / Dots
       var dotsHtml = '';
       banners.forEach(function (_, idx) {
         var activeClass = idx === 0 ? 'active' : '';
         dotsHtml += `<div class="banner-dot ${activeClass}" data-slide="${idx}"></div>`;
       });
+
+      var textLinkServicos = "o-que-fazemos/index.html";
 
       var controlsHtml = `
         <div class="banner-controls">
@@ -94,13 +138,11 @@
 
       slider.innerHTML = slidesHtml + controlsHtml;
 
-      // Executa a inicialização do script slider (banner.js)
       if (typeof window.initBannerSlider === 'function') {
         window.initBannerSlider();
       }
     } catch (err) {
       console.warn("Usando banners estáticos de fallback.", err);
-      // Se falhar, inicializa o slider com o HTML estático padrão
       if (typeof window.initBannerSlider === 'function') {
         window.initBannerSlider();
       }
@@ -122,18 +164,17 @@
       var itemsHtml = '';
       artists.forEach(function (artist) {
         itemsHtml += `
-          <div class="artist-card">
+          <a href="artistas/artista.html?slug=${artist.slug}" class="artist-card" style="text-decoration:none;">
             <div class="artist-img">
               <img src="${artist.imageUrl}" alt="${artist.name}" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div class="artist-info">
               <h3 class="artist-name">${artist.name}</h3>
             </div>
-          </div>
+          </a>
         `;
       });
 
-      // Duplica a lista para o efeito de rolagem infinita do marquee CSS
       track.innerHTML = itemsHtml + itemsHtml;
     } catch (err) {
       console.warn("Erro ao carregar artistas dinâmicos no marquee.", err);
@@ -158,20 +199,19 @@
       var itemsHtml = '';
       artists.forEach(function (artist) {
         itemsHtml += `
-          <div class="artist-card reveal vis" data-name="${artist.name}">
+          <a href="artista.html?slug=${artist.slug}" class="artist-card reveal vis" data-name="${artist.name}" style="text-decoration:none;">
             <div class="artist-img">
               <img src="${artist.imageUrl}" alt="${artist.name}" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div class="artist-info">
               <h3 class="artist-name">${artist.name}</h3>
             </div>
-          </div>
+          </a>
         `;
       });
 
       grid.innerHTML = itemsHtml;
 
-      // Vincula novamente a pesquisa local
       var searchInput = document.getElementById('artistSearch');
       if (searchInput) {
         searchInput.addEventListener('input', function (e) {
@@ -199,11 +239,7 @@
       if (!res.ok) throw new Error();
 
       allGalleryItems = await res.json();
-      
-      // Renderiza as abas de categoria no topo
       renderGalleryTabs();
-
-      // Renderiza todas as imagens inicialmente
       renderGalleryGrid('Todos');
     } catch (err) {
       console.warn("Erro ao carregar fotos da galeria.", err);
@@ -214,12 +250,10 @@
     var section = document.querySelector('.gallery-page-section');
     if (!section) return;
 
-    // Verifica se a div de abas já existe, se não, cria
     var tabsDiv = section.querySelector('.gallery-tabs');
     if (!tabsDiv) {
       tabsDiv = document.createElement('div');
       tabsDiv.className = 'gallery-tabs reveal vis';
-      // Insere antes do grid
       var grid = document.getElementById('galleryGrid');
       section.insertBefore(tabsDiv, grid);
     }
@@ -233,7 +267,6 @@
 
     tabsDiv.innerHTML = tabsHtml;
 
-    // Listener para as abas
     tabsDiv.querySelectorAll('.gallery-tab-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         tabsDiv.querySelectorAll('.gallery-tab-btn').forEach(function (b) { b.classList.remove('active'); });
@@ -248,7 +281,6 @@
     if (!grid) return;
 
     var filtered = allGalleryItems.filter(function (item) {
-      // Mapeia categorias do banco para o filtro do front
       var dbCat = item.category;
       if (category === 'Todos') return true;
       return dbCat === category;
@@ -276,14 +308,13 @@
     grid.innerHTML = gridHtml;
   }
 
-  /* ── 5. Integrar Formulário de Contato Real (CRM) ─────────── */
+  /* ── 5. Integrar Formulário de Contato Real (CRM + UTMs) ────── */
   function setupContactForm() {
     var form = document.querySelector('form[data-form="contato"]');
     if (!form) return;
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
-      // Interrompe imediatamente qualquer outro listener (como o mock de main.js)
       e.stopImmediatePropagation();
 
       var btn = form.querySelector('.btn-form');
@@ -300,12 +331,17 @@
         btn.textContent = 'Enviando...';
       }
 
+      var utms = getStoredUtms();
       var payload = {
         name: nameVal,
         email: emailVal,
         phone: telVal,
         eventType: typeVal,
-        artistInterest: artistVal
+        artistInterest: artistVal,
+        utmSource: utms.utmSource,
+        utmMedium: utms.utmMedium,
+        utmCampaign: utms.utmCampaign,
+        utmContent: utms.utmContent
       };
 
       try {
@@ -320,10 +356,22 @@
         var data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Erro ao enviar lead.');
 
+        // GA/GTM conversion event trigger
+        trackEvent('lead_form_submit', {
+          name: nameVal,
+          email: emailVal,
+          eventType: typeVal,
+          artistInterest: artistVal,
+          utmSource: utms.utmSource,
+          utmMedium: utms.utmMedium,
+          utmCampaign: utms.utmCampaign,
+          utmContent: utms.utmContent
+        });
+
         if (btn) btn.style.display = 'none';
         if (ok) {
           ok.style.display = 'block';
-          ok.style.color = '#ff5858';
+          ok.style.color = '#D42B2B';
           ok.textContent = '✓ Proposta enviada! Nossa equipe entrará em contato em breve.';
         }
         form.reset();
@@ -338,6 +386,187 @@
     });
   }
 
+  /* ── 6. Carregar Detalhes de um Artista (artista.html) ─────── */
+  async function loadArtistProfilePage() {
+    var nameEl = document.getElementById('artist-name');
+    if (!nameEl) return;
+
+    var params = new URLSearchParams(window.location.search);
+    var slug = params.get('slug');
+    if (!slug) {
+      nameEl.textContent = 'Artista não especificado';
+      return;
+    }
+
+    try {
+      var res = await fetch(getApiUrl('/artistas?slug=' + slug));
+      if (!res.ok) throw new Error("Artista não encontrado");
+
+      var artist = await res.json();
+      
+      document.getElementById('breadcrumb-name').textContent = artist.name;
+      document.getElementById('artist-name').textContent = artist.name;
+      
+      var genreEl = document.getElementById('artist-genre');
+      if (genreEl) genreEl.textContent = artist.genre || 'Gênero não informado';
+      
+      var bgEl = document.getElementById('artist-hero-bg');
+      if (bgEl) bgEl.style.backgroundImage = `url('${artist.imageUrl}')`;
+      
+      var bioImgEl = document.getElementById('artist-bio-img');
+      if (bioImgEl) bioImgEl.src = artist.imageUrl;
+      
+      var bioTextEl = document.getElementById('artist-bio-text');
+      if (bioTextEl && artist.bio) {
+        var paragraphs = artist.bio.split('\n').filter(Boolean);
+        bioTextEl.innerHTML = paragraphs.map(function(p) { return `<p>${p}</p>`; }).join('');
+      }
+
+      // Dynamic SEO tags
+      document.title = artist.name + ' — Quinto Continente | Agência de Artistas';
+      
+      var metaDesc = document.getElementById('meta-desc');
+      if (metaDesc) metaDesc.setAttribute('content', `Contrate ${artist.name} pela Quinto Continente. Veja biografia, galeria de fotos e solicite disponibilidade de cotação.`);
+      
+      var canonical = document.getElementById('canonical-link');
+      if (canonical) canonical.setAttribute('href', `https://quintocontinente.com.br/artistas/artista.html?slug=${artist.slug}`);
+      
+      var ogTitle = document.getElementById('og-title');
+      if (ogTitle) ogTitle.setAttribute('content', artist.name + ' — Quinto Continente | Agência de Artistas');
+      
+      var ogDesc = document.getElementById('og-desc');
+      if (ogDesc) ogDesc.setAttribute('content', `Contrate ${artist.name} pela Quinto Continente. Veja biografia, galeria de fotos e solicite disponibilidade de cotação.`);
+      
+      var ogImg = document.getElementById('og-img');
+      if (ogImg) ogImg.setAttribute('content', artist.imageUrl);
+
+      // JSON-LD dynamic injection
+      var schemaScript = document.createElement('script');
+      schemaScript.type = 'application/ld+json';
+      schemaScript.text = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "PerformingArtist",
+        "name": artist.name,
+        "image": artist.imageUrl,
+        "description": artist.bio,
+        "genre": artist.genre
+      });
+      document.head.appendChild(schemaScript);
+
+      // Trigger GTM artist_page_view event
+      trackEvent('artist_page_view', {
+        artistName: artist.name,
+        slug: artist.slug
+      });
+
+      // Render social links
+      var socialContainer = document.getElementById('social-links-container');
+      var hasSocial = false;
+      if (socialContainer) {
+        var socialHtml = '';
+        if (artist.websiteUrl) {
+          hasSocial = true;
+          socialHtml += `<li><a href="${artist.websiteUrl}" target="_blank" rel="noopener" class="artist-social-link">Website Oficial</a></li>`;
+        }
+        if (artist.instagramUrl) {
+          hasSocial = true;
+          socialHtml += `<li><a href="${artist.instagramUrl}" target="_blank" rel="noopener" class="artist-social-link">Instagram</a></li>`;
+        }
+        if (artist.spotifyUrl) {
+          hasSocial = true;
+          socialHtml += `<li><a href="${artist.spotifyUrl}" target="_blank" rel="noopener" class="artist-social-link">Spotify / Streaming</a></li>`;
+        }
+        socialContainer.innerHTML = socialHtml;
+        var socialSection = document.getElementById('social-section');
+        if (socialSection && hasSocial) socialSection.style.display = 'block';
+      }
+
+      // Render gallery slider
+      var trackEl = document.getElementById('gallery-track');
+      if (trackEl && artist.galleryUrls && artist.galleryUrls.length > 0) {
+        var slidesHtml = '';
+        artist.galleryUrls.forEach(function (url) {
+          slidesHtml += `
+            <div class="gallery-slide">
+              <img src="${url}" alt="Foto de ${artist.name}" loading="lazy">
+            </div>
+          `;
+        });
+        trackEl.innerHTML = slidesHtml;
+        var gallerySection = document.getElementById('gallery-section');
+        if (gallerySection) gallerySection.style.display = 'block';
+        setupSliderLogic(artist.galleryUrls.length);
+      }
+
+      // Hook Dynamic CTA links
+      var waCta = document.getElementById('dynamic-wa-cta');
+      if (waCta) {
+        var waText = encodeURIComponent(`Olá! Tenho interesse em contratar o show do artista ${artist.name} pela Quinto Continente. Gostaria de verificar disponibilidade de rota.`);
+        waCta.href = `https://wa.me/5567992185103?text=${waText}`;
+        waCta.addEventListener('click', function() {
+          trackEvent('artist_contact_click', {
+            artistName: artist.name,
+            channel: 'WhatsApp'
+          });
+        });
+      }
+
+      var formCta = document.getElementById('dynamic-form-cta');
+      if (formCta) {
+        formCta.href = `../contato/index.html?artista=${encodeURIComponent(artist.name)}`;
+        formCta.addEventListener('click', function() {
+          trackEvent('artist_contact_click', {
+            artistName: artist.name,
+            channel: 'Form'
+          });
+        });
+      }
+
+    } catch (err) {
+      console.error("Erro ao carregar perfil do artista:", err);
+      nameEl.textContent = 'Erro ao carregar informações';
+    }
+  }
+
+  // Slider navigation logic
+  function setupSliderLogic(totalSlides) {
+    var track = document.getElementById('gallery-track');
+    var btnPrev = document.getElementById('prev-slide');
+    var btnNext = document.getElementById('next-slide');
+    if (!track || !btnPrev || !btnNext) return;
+
+    var index = 0;
+    var slideWidth = 320 + 24; // Slide width + gap
+
+    function update() {
+      track.style.transform = `translateX(-${index * slideWidth}px)`;
+      btnPrev.disabled = index === 0;
+      
+      var visibleWidth = track.parentElement.clientWidth;
+      var maxIndex = Math.max(0, totalSlides - Math.floor(visibleWidth / slideWidth));
+      btnNext.disabled = index >= maxIndex;
+    }
+
+    btnPrev.addEventListener('click', function() {
+      if (index > 0) {
+        index--;
+        update();
+      }
+    });
+
+    btnNext.addEventListener('click', function() {
+      var visibleWidth = track.parentElement.clientWidth;
+      var maxIndex = Math.max(0, totalSlides - Math.floor(visibleWidth / slideWidth));
+      if (index < maxIndex) {
+        index++;
+        update();
+      }
+    });
+
+    window.addEventListener('resize', update);
+    setTimeout(update, 300);
+  }
+
   /* ── Boot Inicializador ──────────────────────────────────── */
   function boot() {
     loadDynamicBanners();
@@ -345,6 +574,8 @@
     loadArtistsPage();
     loadGalleryPage();
     setupContactForm();
+    loadArtistProfilePage();
+    hookWhatsAppClicks();
   }
 
   if (document.readyState === 'loading') {

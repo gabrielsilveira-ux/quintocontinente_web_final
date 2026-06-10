@@ -4,18 +4,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quinto Continente – Hub Estratégico de Entretenimento</title>
-  <meta name="description"
-    content="Conectamos grandes artistas ao seu palco com segurança operacional e expertise técnica da Oceania Eventos.">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap"
-    rel="stylesheet">
+  <title>Quinto Continente — Hub Estratégico de Entretenimento</title>
+  <meta name="description" content="Conectamos grandes artistas ao seu palco com segurança operacional e expertise técnica da Oceania Eventos.">
+  <link rel="canonical" href="https://quintocontinente.com.br">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Quinto Continente — Hub Estratégico de Entretenimento">
+  <meta property="og:description" content="Conectamos grandes artistas ao seu palco com segurança operacional e expertise técnica da Oceania Eventos.">
+  <meta property="og:image" content="https://quintocontinente.com.br/assets/images/og-cover.jpg">
+  <meta property="og:url" content="https://quintocontinente.com.br">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- GEO Meta Tags -->
+  <meta name="geo.region" content="BR-SP">
+  <meta name="geo.placename" content="Campinas, São Paulo">
+  <meta name="geo.position" content="-22.9056;-47.0608">
+  <meta name="ICBM" content="-22.9056, -47.0608">
+
+  <!-- Google Fonts & Styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/media.css">
 
+  <!-- GTM Container snippet (comentado - ativação pós-lançamento) -->
+  <!--
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+  -->
+
+  <!-- Setup Data Layer -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+
+  <!-- JSON-LD Organization & Website Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Quinto Continente",
+    "url": "https://quintocontinente.com.br",
+    "logo": "https://quintocontinente.com.br/assets/images/logo.png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+55-67-99218-5103",
+      "contactType": "sales",
+      "email": "contato@quintocontinente.com.br",
+      "areaServed": "BR",
+      "availableLanguage": "Portuguese"
+    },
+    "sameAs": [
+      "https://www.instagram.com/quintocontinente"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Quinto Continente",
+    "url": "https://quintocontinente.com.br",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://quintocontinente.com.br/artistas/index.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
 </head>
 
 <body>
+  <!-- GTM Noscript snippet (comentado - ativação pós-lançamento) -->
+  <!--
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  -->
+
   <nav id="nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">
@@ -23,24 +93,26 @@
           onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-family:Space Grotesk,sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)\'>Quinto Continente</span>')">
       </a>
       <ul class="nav-links">
-        <li><a href="index.html" class="active">Home</a></li>
         <li><a href="sobre/index.html">Quem Somos</a></li>
+        <li><a href="o-que-fazemos/index.html">O Que Fazemos</a></li>
         <li><a href="artistas/index.html">Artistas</a></li>
-        <li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li>
+        <li><a href="contato/index.html">Contato</a></li>
       </ul>
       <div style="display:flex; align-items:center; gap:1rem;">
-        <a href="#contato" class="nav-btn">Consultar Agenda</a>
-
+        <a href="https://wa.me/5567992185103?text=Ol%C3%A1%21+Tenho+interesse+em+contratar+um+artista+pela+Quinto+Continente.+Poderia+me+auxiliar%3F" target="_blank" rel="noopener" class="nav-btn" id="wa-nav-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 4px; margin-bottom: 2px;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.806-9.799.002-2.618-1.016-5.08-2.868-6.934C16.357 2.018 13.9 1 11.277 1 5.873 1 1.472 5.397 1.47 10.8c-.001 1.776.47 3.51 1.36 5.035l-.993 3.623 3.71-.973c1.464.798 2.874 1.204 4.51 1.201zM17.65 14.44c-.3-.15-1.78-.88-2.05-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.18.2-.35.23-.65.08-1.2-.6-1.95-1.09-2.73-2.43-.2-.35-.05-.54.1-.69.13-.13.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.53-.08-.15-.68-1.63-.93-2.24-.25-.6-.5-.52-.68-.53-.17-.01-.38-.01-.58-.01-.2 0-.53.07-.8.38-.28.3-1.08 1.05-1.08 2.57 0 1.52 1.1 2.99 1.25 3.19.15.2 2.15 3.29 5.22 4.61.73.31 1.3.5 1.74.64.74.23 1.4.2 1.93.12.59-.09 1.78-.73 2.03-1.43.25-.7.25-1.3.18-1.43-.07-.13-.28-.2-.58-.35z"/></svg>
+          WhatsApp
+        </a>
         <button class="nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
       </div>
     </div>
   </nav>
   <div class="nav-mobile">
-    <a href="index.html" class="active">Home</a>
     <a href="sobre/index.html">Quem Somos</a>
+    <a href="o-que-fazemos/index.html">O Que Fazemos</a>
     <a href="artistas/index.html">Artistas</a>
-    <a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a>
-    <a href="#contato" style="color:var(--accent)">Consultar Agenda</a>
+    <a href="contato/index.html">Contato</a>
+    <a href="https://wa.me/5567992185103?text=Ol%C3%A1%21+Tenho+interesse+em+contratar+um+artista+pela+Quinto+Continente.+Poderia+me+auxiliar%3F" target="_blank" rel="noopener" style="color:var(--accent)">WhatsApp</a>
   </div>
 
   <!-- HERO -->
@@ -228,7 +300,7 @@
   </div>
 
   <!-- SOBRE -->
-  <section class="sobre" id="sobre">
+  <section class="sobre section-white" id="sobre">
     <div class="s-label reveal">Quem Somos</div>
     <h2 class="s-title reveal">A força da Oceania Eventos focada em parcerias artísticas.</h2>
     <div class="sobre-inner">
@@ -272,34 +344,11 @@
     </div>
   </section>
 
-  <!-- VÍDEO DESTAQUE -->
-  <section class="video-section" id="video">
-    <div class="s-label reveal">Vídeo</div>
-    <h2 class="s-title reveal">Veja a Quinto Continente em ação.</h2>
-    <div class="video-wrap reveal d1">
-      <div class="video-ph-large">
-        <div class="video-ph-play"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5">
-            <polygon points="5,3 19,12 5,21" />
-          </svg></div>
-        <p>Cole aqui o iframe do YouTube, Vimeo<br>ou um vídeo MP4 da sua produção</p>
-      </div>
-      <div class="video-caption">
-        <div class="video-caption-text"><strong>Título do vídeo</strong> — Descrição breve do conteúdo e contexto do
-          evento ou produção apresentados aqui.</div>
-        <a href="#contato" class="btn-outline" style="white-space:nowrap;flex-shrink:0;">Fale conosco <svg class="arr"
-            width="13" height="13" viewBox="0 0 16 16" fill="none">
-            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round" />
-          </svg></a>
-      </div>
-    </div>
-  </section>
-
   <!-- SERVIÇOS -->
-  <section class="servicos" id="servicos">
+  <section class="servicos section-dark" id="servicos">
     <div class="servicos-hd">
       <div>
-        <div class="s-label reveal">Nossos Serviços</div>
+        <div class="s-label reveal">O Que Fazemos</div>
         <h2 class="s-title reveal">Soluções 360° para o mercado de entretenimento.</h2>
       </div>
       <p class="servicos-hd-note reveal">Cada entrega é construída com precisão técnica e visão estratégica.</p>
@@ -313,7 +362,7 @@
           </svg></div>
         <h3 class="card-title">Intermediação de Shows</h3>
         <p class="card-desc">Acesso direto a artistas parceiros do cenário nacional com negociações transparentes e
-          processos claros do início ao contrato.</p><a href="servicos/index.html#intermediacao" class="card-link">Ver
+          processos claros do início ao contrato.</p><a href="o-que-fazemos/index.html" class="card-link">Ver
           mais →</a>
       </div>
       <div class="card reveal d1">
@@ -325,7 +374,7 @@
           </svg></div>
         <h3 class="card-title">Produção e Assessoria</h3>
         <p class="card-desc">Planejamento ponta a ponta, do rider técnico à logística de camarim e palco. Cada detalhe
-          operacional cuidado com excelência.</p><a href="servicos/index.html#producao" class="card-link">Ver mais →</a>
+          operacional cuidado com excelência.</p><a href="o-que-fazemos/index.html" class="card-link">Ver mais →</a>
       </div>
       <div class="card reveal d2">
         <div class="card-bar"></div>
@@ -335,7 +384,7 @@
           </svg></div>
         <h3 class="card-title">Projetos Especiais</h3>
         <p class="card-desc">Criação de experiências personalizadas sob demanda para marcas e eventos exclusivos.
-          Conceituamos e executamos do zero.</p><a href="servicos/index.html#especiais" class="card-link">Ver mais →</a>
+          Conceituamos e executamos do zero.</p><a href="o-que-fazemos/index.html" class="card-link">Ver mais →</a>
       </div>
       <div class="card reveal d3">
         <div class="card-bar"></div>
@@ -348,13 +397,13 @@
           </svg></div>
         <h3 class="card-title">Leis de Incentivo</h3>
         <p class="card-desc">Consultoria especializada para viabilização de projetos via Proac e Lei Rouanet. Captação
-          de recursos com segurança jurídica.</p><a href="servicos/index.html#leis" class="card-link">Ver mais →</a>
+          de recursos com segurança jurídica.</p><a href="o-que-fazemos/index.html" class="card-link">Ver mais →</a>
       </div>
     </div>
   </section>
 
   <!-- DIFERENCIAIS -->
-  <section class="diferenciais" id="diferenciais">
+  <section class="diferenciais section-white" id="diferenciais">
     <div class="s-label reveal">Diferenciais</div>
     <h2 class="s-title reveal">Por que o mercado escolhe a Quinto Continente?</h2>
     <div class="cards-wrap card-grid-4" style="margin-top:4rem">
@@ -386,7 +435,7 @@
   </section>
 
   <!-- CONTATO -->
-  <section class="contato" id="contato">
+  <section class="contato section-dark" id="contato">
     <div class="s-label reveal">Contato</div>
     <h2 class="s-title reveal">Inicie o seu próximo grande projeto.</h2>
     <div class="contato-inner">
@@ -437,12 +486,12 @@
         <p class="f-desc">Excelência em entretenimento, gestão e grandes negócios.</p>
       </div>
       <div>
-        <div class="f-col-title">Serviços</div>
+        <div class="f-col-title">Soluções</div>
         <ul class="f-links">
-          <li><a href="servicos/index.html#intermediacao">Intermediação de Shows</a></li>
-          <li><a href="servicos/index.html#producao">Produção e Assessoria</a></li>
-          <li><a href="servicos/index.html#especiais">Projetos Especiais</a></li>
-          <li><a href="servicos/index.html#leis">Leis de Incentivo</a></li>
+          <li><a href="o-que-fazemos/index.html">Curadoria Artística</a></li>
+          <li><a href="o-que-fazemos/index.html">Intermediação</a></li>
+          <li><a href="o-que-fazemos/index.html">Produção Executiva</a></li>
+          <li><a href="o-que-fazemos/index.html">Projetos Especiais</a></li>
         </ul>
       </div>
       <div>
@@ -452,27 +501,47 @@
           <li><a href="#diferenciais">Diferenciais</a></li>
           <li><a href="galeria/index.html">Galeria</a></li>
           <li><a href="artistas/index.html">Artistas</a></li>
-          <li><a href="#contato">Contato</a></li>
-          <li><a href="https://blog.quintocontinente.com.br" target="_blank" rel="noopener">Blog</a></li>
+          <li><a href="contato/index.html">Contato</a></li>
         </ul>
       </div>
       <div>
         <div class="f-col-title">Contato</div>
         <ul class="f-links">
           <li><a href="mailto:contato@quintocontinente.com.br">contato@quintocontinente.com.br</a></li>
-          <li><a href="tel:+5511000000000">(11) 0000-0000</a></li>
-          <li><a href="#">São Paulo, SP</a></li>
+          <li><a href="tel:+5567992185103">(67) 99218-5103</a></li>
+          <li><a href="#">Campinas, SP</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bot">
-      <p>© 2025 Quinto Continente — Por <a href="#">Oceania Eventos</a>. Todos os direitos reservados.</p>
+      <p>© 2026 Quinto Continente — Por <a href="#">Oceania Eventos</a>. Todos os direitos reservados.</p>
       <p><a href="#">Privacidade</a> &nbsp;·&nbsp; <a href="#">Termos</a></p>
     </div>
   </footer>
   <script src="assets/js/main.js"></script>
   <script src="assets/js/banner.js"></script>
   <script src="assets/js/dynamic-content.js"></script>
+  <script>
+    // Dispatch scroll_75 dataLayer event
+    (function() {
+      var sent = false;
+      window.addEventListener('scroll', function() {
+        if (sent) return;
+        var h = document.documentElement,
+            b = document.body,
+            st = 'scrollTop',
+            sh = 'scrollHeight';
+        var percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+        if (percent >= 75) {
+          window.dataLayer.push({
+            event: 'page_scroll_75',
+            page: window.location.pathname
+          });
+          sent = true;
+        }
+      }, {passive: true});
+    })();
+  </script>
 </body>
 
 </html>

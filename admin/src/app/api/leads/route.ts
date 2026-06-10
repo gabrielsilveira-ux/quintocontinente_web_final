@@ -54,6 +54,10 @@ export async function POST(request: NextRequest) {
         eventType: parsed.data.eventType,
         artistInterest: parsed.data.artistInterest || null,
         status: "NOVO", // Sempre entra como novo
+        utmSource: parsed.data.utmSource || null,
+        utmMedium: parsed.data.utmMedium || null,
+        utmCampaign: parsed.data.utmCampaign || null,
+        utmContent: parsed.data.utmContent || null,
       },
     });
 

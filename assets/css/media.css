@@ -16,7 +16,7 @@
 .diferenciais { background:var(--bg3); }
 .dif { background:var(--bg3); padding:2.25rem 1.75rem; transition:background .3s; }
 .dif:hover { background:var(--surface); }
-.dif-title { font-family:'Syne',sans-serif; font-size:.95rem; font-weight:700; color:var(--text); margin-bottom:.7rem; }
+.dif-title { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:700; color:var(--text); margin-bottom:.7rem; }
 .dif-desc  { font-size:.82rem; font-weight:300; line-height:1.72; color:var(--muted2); }
 .contato { background:var(--bg2); }
 .contato-inner { display:grid; grid-template-columns:1fr 1.5fr; gap:6rem; align-items:start; margin-top:4rem; }
@@ -72,7 +72,7 @@
 }
 .banner-ph-icon svg { width: 28px; height: 28px; }
 .banner-ph span {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: .65rem; font-weight: 600;
   letter-spacing: .15em; text-transform: uppercase;
   color: var(--muted);
@@ -97,7 +97,7 @@
 }
 .banner-label {
   display: inline-flex; align-items: center; gap: .5rem;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: .6rem; font-weight: 700;
   letter-spacing: .22em; text-transform: uppercase;
   color: var(--accent); margin-bottom: .75rem;
@@ -108,7 +108,7 @@
   animation: pulse 2s infinite;
 }
 .banner-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(1.4rem, 2.8vw, 2.6rem); font-weight: 800;
   line-height: 1.05; letter-spacing: -.03em;
   color: var(--text); max-width: 560px;
@@ -217,7 +217,7 @@
 }
 .midia-ph svg { width: 28px; height: 28px; }
 .midia-ph span {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: .6rem; font-weight: 700;
   letter-spacing: .15em; text-transform: uppercase;
 }
@@ -233,7 +233,7 @@
 }
 .midia-item:hover .midia-hover { opacity: 1; }
 .midia-hover-label {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: .65rem; font-weight: 700;
   letter-spacing: .15em; text-transform: uppercase;
   color: var(--text);
@@ -288,7 +288,7 @@
 }
 .video-ph-play svg { width: 32px; height: 32px; }
 .video-ph-large p {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: .72rem; font-weight: 700;
   letter-spacing: .15em; text-transform: uppercase;
   color: var(--muted); text-align: center;

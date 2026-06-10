@@ -2,5 +2,4 @@ User-agent: *
 Disallow: /admin/
 Disallow: /admin/*
 
-# Altere para a URL real do seu sitemap se disponível
-# Sitemap: https://www.quintocontinente.com.br/sitemap.xml
+Sitemap: https://quintocontinente.com.br/sitemap.xml
