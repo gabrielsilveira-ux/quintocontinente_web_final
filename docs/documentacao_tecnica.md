@@ -326,3 +326,58 @@ CREATE TABLE IF NOT EXISTS "Lead" (
 -- 6. Índices de Otimização e Restrição
 CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");
 ```
+
+---
+
+## 8. Estratégia de Navegação e Conversão
+
+### 8.1. Estrutura do Menu Principal
+
+O menu do site foi definido com 4 itens essenciais, sem redundâncias:
+
+```
+[ Logo ]     QUEM SOMOS  |  O QUE FAZEMOS  |  ARTISTAS  |  CONTATO     [ WhatsApp ↗ ]
+```
+
+**Itens removidos do menu anterior:**
+- **Home** — desnecessário, o logo já cumpre essa função em toda navegação web
+- **Blog** — removido do menu principal para manter o foco na jornada de conversão (pode ser acessado por rodapé se necessário)
+
+---
+
+### 8.2. Decisão: Botão WhatsApp no lugar do CTA genérico
+
+**Decisão aprovada em:** 10/06/2026
+
+**Contexto:** O site anterior exibia um botão CTA tipo pílula ("Consultar Agenda") no cabeçalho, ao lado do menu. Esse botão foi identificado como redundante com o item **CONTATO** que já estava no menu, gerando confusão em vez de conversão.
+
+**Solução adotada:** O botão CTA foi substituído por um **botão de WhatsApp**, com link direto para conversa no app com mensagem pré-preenchida.
+
+**Justificativa estratégica:**
+
+| Canal | Perfil do Lead | Função |
+| :--- | :--- | :--- |
+| **Botão WhatsApp (nav)** | Lead quente — já decidiu entrar em contato | Conversa imediata, sem fricção |
+| **Formulário (página Contato)** | Lead qualificado — quer formalizar a solicitação | Captura de dados estruturados para o CRM |
+
+Os dois canais são **complementares**, não concorrentes:
+- O WhatsApp captura quem quer resposta agora, no celular, no modo decisão.
+- O formulário captura dados estruturados (nome, empresa, telefone, tipo de evento, artista de interesse) que alimentam diretamente o painel administrativo de Leads — gerando rastreabilidade, histórico e organização do funil de vendas.
+
+> **Os formulários de contato são mantidos integralmente.** Removê-los significaria perder a camada de CRM que organiza e prioriza o atendimento comercial da equipe.
+
+---
+
+### 8.3. Implementação do Link WhatsApp
+
+O link gerado segue o padrão da API oficial do WhatsApp:
+
+```
+https://wa.me/55[DDD][NÚMERO]?text=[MENSAGEM_CODIFICADA]
+```
+
+**Mensagem pré-preenchida sugerida:**
+> "Olá! Tenho interesse em contratar um artista pela Quinto Continente. Poderia me auxiliar?"
+
+> [!IMPORTANT]
+> O número de WhatsApp comercial precisa ser fornecido para que o link seja gerado definitivamente no código. Enquanto isso, o campo permanece como placeholder `wa.me/55119XXXXXXXX`.
