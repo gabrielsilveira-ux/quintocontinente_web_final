@@ -1,234 +1,90 @@
-# Walkthrough: Painel Administrativo Quinto Continente
+# Walkthrough: Redesign Visual, Conteúdo & Painel Administrativo Quinto Continente
 
-Este documento descreve todas as alterações e novas implementações realizadas para criar o painel administrativo em Next.js integrado ao site institucional da **Quinto Continente**.
+Este walkthrough descreve as atualizações de design, reestruturação de conteúdo, estratégias de SEO/Tracking e expansão do painel administrativo Next.js para a **Quinto Continente**.
 
 ---
 
-## O que foi desenvolvido
+## 1. O que foi Implementado
 
-Desenvolvemos um painel administrativo completo e moderno (modo escuro premium alinhado à identidade visual) dentro da pasta `/admin`, utilizando a stack solicitada. Além disso, criamos a integração dinâmica que permite que o site estático atual consuma as informações cadastradas nesse painel de forma transparente.
+### A. Novo Design System ("Editorial Sofisticado")
+- **Paleta de Cores:** Transição entre seções claras (`.section-white` com fundo `#F7F6F4`) e escuras (`.section-dark` com fundo `#0C0C0C`), reduzindo sombras neon artificiais por bordas finas e contraste harmônico.
+- **Tipografia:** Uso padronizado de **Space Grotesk** para títulos de impacto e **Inter** para textos de leitura fluida.
+- **Menu e CTAs:** Navegação unificada com Quem Somos, O Que Fazemos, Artistas e Contato. Introdução do botão direto de WhatsApp com link parametrizado. Remoção completa de referências a "Blog".
 
-### Estrutura de Arquivos Criada/Modificada
+### B. Páginas Estáticas e Dinâmicas
+- **Quem Somos (`sobre/index.html`):** Branding refinado baseado no histórico corporativo e de DNA de 25 anos do grupo Quinto Continente.
+- **O Que Fazemos (`o-que-fazemos/index.html`):** Apresentação qualificada dos serviços (Curadoria Artística, Contratação, Produção Executiva, Projetos Especiais).
+- **Template Dinâmico de Artistas (`artistas/artista.html`):** Roteamento cliente amigável (`artista.html?slug={slug}`) populando dinamicamente:
+  - Biografia e gênero musical do artista.
+  - Links oficiais de plataformas (Spotify, Instagram, Site Oficial).
+  - Slider interativo de fotos (galeria do artista).
+  - Tags de SEO/GEO dinâmicas e marcação JSON-LD `PerformingArtist` em tempo real.
+- **Página de Contato (`contato/index.html`):** Formulário integrado de captação de briefings (leads) conectado diretamente ao banco de dados administrativo.
+
+### C. Sistema de Tracking & UTMs
+- **Captura Automática:** O script `dynamic-content.js` analisa parâmetros UTM (`utm_source`, `utm_medium`, `utm_campaign`, `utm_content`) e armazena-os de forma persistente em `sessionStorage` para repassá-los ao submeter formulários.
+- **Data Layer & GTM:** Estruturação para disparar eventos (`lead_form_submit`, `whatsapp_click`, `artist_page_view`) na camada `window.dataLayer`. O código do container GTM já está embutido e comentado no HTML, pronto para ativação pós-lançamento.
+
+### D. Banco de Dados e APIs (Supabase + Prisma)
+- **Modelagem de Artistas:** Adicionados campos `slug`, `bio`, `genre`, `websiteUrl`, `instagramUrl`, `spotifyUrl` e `galleryUrls` (fotos extras).
+- **Modelagem de Leads:** Adicionados campos de tráfego pago `utmSource`, `utmMedium`, `utmCampaign` e `utmContent`.
+- **Sincronização:** Banco de dados do Supabase atualizado com sucesso através de `npx prisma db push`.
+
+### E. Painel Administrativo Next.js (Dashboard CMS)
+- **Painel de Artistas (`ArtistsManager.tsx`):**
+  - Layout dividido em Abas interativas: *Dados Básicos*, *Bio & Links* e *Galeria*.
+  - Geração automática de `slug` de URL a partir do nome digitado.
+  - Módulo de upload múltiplo de fotos para a galeria do artista.
+  - Painel de seleção de fotos da galeria geral do site (`/api/galeria`) para reuso rápido.
+- **Painel de Leads (`LeadsManager.tsx`):**
+  - Nova aba/coluna "Origem / Canal" exibindo badges de identificação rápidos (*Google Ads*, *Meta Ads*, *Orgânico*) de acordo com o meio de aquisição.
+  - Seção detalhada de "Rastreamento de Tráfego (UTMs)" no modal de detalhes do Lead.
+  - Filtro interativo por campanha UTM ativa na lista de contatos.
+
+---
+
+## 2. Estrutura de Arquivos Criada ou Modificada
 
 ```
 / (raiz)
-├── .gitignore                      # [MODIFICADO] Ignora arquivos .env, dependências e build local
-├── index.html                      # [MODIFICADO] Injeta dynamic-content.js e mantém fallback estático
-├── robots.txt                      # [NOVO] Configura regras de indexação global (desativa indexação de /admin/*)
+├── index.html                           # Menu atualizado, seções alternadas, SEO
+├── sitemap.xml                          # Sitemap para indexação
+├── robots.txt                           # Regras de indexação (ignora caminhos /admin)
+├── sobre/index.html                     # Apresentação do Grupo Quinto Continente
+├── o-que-fazemos/index.html             # Apresentação de Serviços (Curadoria, Produção)
+├── contato/index.html                   # Página de conversão com formulário
 ├── artistas/
-│   └── index.html                  # [MODIFICADO] Injeta dynamic-content.js e remove busca em JS estático
-├── galeria/
-│   └── index.html                  # [MODIFICADO] Adiciona seção de grid e injeta dynamic-content.js
-├── docs/
-│   ├── plano_implementacao.md      # [NOVO] Cópia do plano de design aprovado
-│   └── walkthrough.md              # [NOVO] Este documento de acompanhamento e configuração
+│   ├── index.html                       # Grade de cards com links amigáveis
+│   └── artista.html                     # Template dinâmico (carrossel, bio, redes)
+├── assets/
+│   ├── css/style.css                    # Design system (Editorial escuro/claro, botões)
+│   └── js/dynamic-content.js            # Lógica UTMs, GTM Data Layer e renderização de Artistas
 │
-└── admin/                          # [NOVO] Projeto Next.js do Painel Administrativo
+└── admin/                               # Painel Administrativo Next.js
     ├── prisma/
-    │   ├── schema.prisma           # Modelos de dados (User, Banner, Artist, GalleryItem, Lead)
-    │   └── seed.ts                 # Cria o admin inicial padrão e dados de fallback
-    ├── src/
-    │   ├── components/
-    │   │   ├── Providers.tsx       # SessionProvider do NextAuth.js
-    │   │   ├── Sidebar.tsx         # Sidebar de navegação responsiva e elegante
-    │   │   ├── LoginForm.tsx       # Formulário de login com validações Zod no cliente
-    │   │   ├── BannersManager.tsx  # CRUD de Banners com upload integrado
-    │   │   ├── ArtistsManager.tsx  # CRUD de Artistas com pesquisa e upload
-    │   │   ├── GalleryManager.tsx  # CRUD de Galeria com filtros e upload
-    │   │   ├── LeadsManager.tsx    # CRM de Leads de contato integrado ao WhatsApp/E-mail
-    │   │   └── UsersManager.tsx    # Controle de administradores e colaboradores
-    │   ├── lib/
-    │   │   ├── db.ts               # Singleton do Prisma Client
-    │   │   ├── auth.ts             # [NOVO] Configuração centralizada do NextAuth.js (evita erro de compilação em rotas)
-    │   │   └── schemas.ts          # Definições de validação estritas Zod
-    │   ├── types/
-    │   │   └── next-auth.d.ts      # Tipagens customizadas do NextAuth (id e role)
-    │   └── app/
-    │       ├── globals.css         # Importações do Tailwind CSS e estilos premium (corrigida cor 'text')
-    │       ├── layout.tsx          # Layout global e configuração de fontes do Google (robots noindex/nofollow adicionados)
-    │       ├── robots.ts           # [NOVO] Configura exclusão automática de indexação do Next.js
-    │       ├── page.tsx            # Tela de login com validação de sessão server-side
-    │       ├── dashboard/
-    │       │   ├── layout.tsx      # Layout protegido do painel lateral e cabeçalho
-    │       │   ├── page.tsx        # Visão Geral (Overview) com estatísticas e leads recentes
-    │       │   ├── banners/        # Interface de gerenciamento de Banners
-    │       │   ├── artistas/       # Interface de gerenciamento de Artistas
-    │       │   ├── galeria/        # Interface de gerenciamento de Fotos da Galeria
-    │       │   ├── leads/          # CRM de Leads de contato
-    │       │   └── usuarios/       # Interface de controle de colaboradores (apenas ADMIN)
-    │       └── api/
-    │           ├── auth/[...nextauth]  # Configurações JWT do NextAuth.js (rebatizado de %5B...nextauth%5D)
-    │           ├── upload/             # API de Upload direto para o Supabase Storage
-    │           ├── banners/            # API de Banners (GET público, POST/PUT/DELETE protegido)
-    │           ├── artistas/           # API de Artistas (GET público, POST/PUT/DELETE protegido)
-    │           ├── galeria/            # API de Galeria (GET público, POST/PUT/DELETE protegido)
-    │           ├── leads/              # API de Leads (POST público para contato, GET/PUT/DELETE protegido)
-    │           └── usuarios/           # API de Usuários (GET/POST/DELETE protegido para ADMIN)
+    │   ├── schema.prisma                # Estruturas atualizadas (Artist e Lead)
+    │   └── seed.ts                      # População de dados iniciais de artistas com slugs
+    └── src/
+        ├── lib/schemas.ts               # Validação de formulários Zod
+        └── components/
+            ├── ArtistsManager.tsx       # Mapeamento e upload completo de informações de Artistas
+            └── LeadsManager.tsx         # Painel de acompanhamento e rastreamento de campanhas
 ```
 
 ---
 
-## Padrões de Segurança Implementados
+## 3. Validação e Qualidade de Compilação
 
-1. **Autenticação e Sessão:** O painel usa **NextAuth.js** com criptografia JWT. Nenhum cookie de sessão é acessível pelo JavaScript do cliente (protegidos via flag `httpOnly`), mitigando ataques XSS.
-2. **Criptografia de Senhas:** Senhas são salvas no banco Supabase apenas sob o formato de hash criptográfico seguro gerado pelo **bcryptjs** (rodando em 10 salt rounds).
-3. **Controle de Acesso em Rotas de API (Server-side):** Todas as rotas de API modificadoras (POST, PUT, DELETE) e rotas de upload fazem checagem prévia de sessão usando `getServerSession` do NextAuth. Se um usuário não autenticado tentar fazer requisições HTTP diretas, receberá status de erro `401 Unauthorized`.
-4. **Validação Estrita com Zod:** Todos os payloads de API são interceptados no servidor e validados contra esquemas do **Zod**, rejeitando qualquer entrada maliciosa ou fora de tipo. No cliente, o Zod valida os campos antes do envio, gerando feedback de erro sem requisições desnecessárias.
-5. **Prevenção de Autoexclusão:** A interface de colaboradores e a API de usuários barram tentativas de um administrador logado excluir sua própria conta, evitando travamentos de acesso.
-6. **Políticas de Acesso Supabase Storage:** O endpoint de upload utiliza a chave privada de servidor do Supabase (`SUPABASE_SERVICE_ROLE_KEY`), mantendo o bucket seguro no cliente.
+Todos os testes de tipagem e integridade do projeto Next.js na pasta `/admin` foram realizados:
+- **TypeScript:** Validado via `npx tsc --noEmit` resultando em zero erros de tipagem.
+- **Compilação Next.js:** O comando `npm run build` compilou com sucesso em um pacote de produção otimizado com todas as rotas estáticas e dinâmicas devidamente otimizadas.
 
 ---
 
-## Como Configurar e Executar Localmente
+## 4. Instruções de Ativação Pós-Lançamento (GTM)
 
-### Passo 1: Configurar Variáveis de Ambiente
-
-Crie um arquivo `.env` dentro da pasta `admin/` com as chaves a seguir:
-
-```env
-# Banco de Dados (Supabase PostgreSQL Connection String)
-DATABASE_URL="postgresql://postgres:[senha]@db.[id-projeto].supabase.co:5432/postgres?pgbouncer=true&connection_limit=1"
-DIRECT_URL="postgresql://postgres:[senha]@db.[id-projeto].supabase.co:5432/postgres"
-
-# NextAuth.js
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="gerar-chave-aleatoria-longa-e-segura"
-
-# Supabase Storage (para upload de fotos)
-NEXT_PUBLIC_SUPABASE_URL="https://[id-projeto].supabase.co"
-SUPABASE_SERVICE_ROLE_KEY="sua-chave-service-role-privada-do-supabase"
-```
-
-### Passo 2: Executar Comandos de Configuração
-
-Navegue até a pasta `/admin` e instale as dependências:
-
-```bash
-cd admin
-npm install
-```
-
-Sincronize a estrutura de tabelas do Prisma com seu banco Supabase e crie o usuário administrador inicial:
-
-```bash
-npx prisma db push
-npx prisma db seed
-```
-
-> [!NOTE]
-> O comando `seed` criará o usuário administrador inicial:
-> * **E-mail:** `admin@quintocontinente.com.br`
-> * **Senha:** `QC_Admin_2026_SecureAccess_987!`
->
-> Faça login com esses dados e altere a senha imediatamente na primeira sessão por segurança.
-
-### Passo 3: Executar o Servidor de Desenvolvimento
-
-Inicie o servidor de desenvolvimento do Next.js:
-
-```bash
-npm run dev
-```
-
-O painel administrativo estará acessível em `http://localhost:3000` (ou `http://localhost:3000/admin` se configurado redirecionamento no deploy).
-
-### Passo 4: Buckets no Supabase Storage
-
-No painel do Supabase, vá em **Storage** e crie os buckets a seguir, marcando a opção de **Bucket Público** (para que as imagens possam ser exibidas no site institucional) e definindo limites de tamanho recomendados (restringir tamanho máximo do arquivo):
-- **`banners`**: Limite recomendado de **5 MB** (`5242880` bytes) — Ideal para banners horizontais em alta resolução.
-- **`artists`**: Limite recomendado de **2 MB** (`2097152` bytes) — Adequado para fotos de miniaturas/perfil dos artistas.
-- **`gallery`**: Limite recomendado de **3 MB** (`3145728` bytes) — Adequado para fotos de cobertura de eventos/shows.
-
----
-
-## Verificação da Integração Dinâmica
-
-Para testar localmente que o site estático consome as APIs do Next.js:
-1. Com o Next.js rodando na porta `3000`, abra o arquivo `index.html` em seu navegador.
-2. O script `dynamic-content.js` identificará que está em ambiente de desenvolvimento local e consumirá automaticamente a API do Next.js rodando em `http://localhost:3000/api`.
-3. Preencha o formulário de contato do site estático e clique em "Solicitar Atendimento".
-4. Verifique no painel administrativo em `http://localhost:3000/dashboard/leads` se a solicitação foi gravada com sucesso no banco de dados e exibe o status de **NOVO**!
-
----
-
-## Estrutura SQL das Tabelas (DDL)
-
-Caso prefira configurar as tabelas manualmente através do **SQL Editor** do Supabase, execute o seguinte script:
-
-```sql
--- Criar Tabela de Usuários (Administradores/Colaboradores)
-CREATE TABLE IF NOT EXISTS "User" (
-    "id" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "passwordHash" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "role" TEXT NOT NULL DEFAULT 'ADMIN',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- Criar Tabela de Banners
-CREATE TABLE IF NOT EXISTS "Banner" (
-    "id" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT,
-    "imageUrl" TEXT NOT NULL,
-    "linkUrl" TEXT,
-    "label" TEXT DEFAULT 'Destaque',
-    "order" INTEGER NOT NULL DEFAULT 0,
-    "active" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Banner_pkey" PRIMARY KEY ("id")
-);
-
--- Criar Tabela de Artistas
-CREATE TABLE IF NOT EXISTS "Artist" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "imageUrl" TEXT NOT NULL,
-    "order" INTEGER NOT NULL DEFAULT 0,
-    "featured" BOOLEAN NOT NULL DEFAULT false,
-    "active" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Artist_pkey" PRIMARY KEY ("id")
-);
-
--- Criar Tabela de Itens da Galeria
-CREATE TABLE IF NOT EXISTS "GalleryItem" (
-    "id" TEXT NOT NULL,
-    "title" TEXT,
-    "imageUrl" TEXT NOT NULL,
-    "category" TEXT NOT NULL DEFAULT 'Geral',
-    "order" INTEGER NOT NULL DEFAULT 0,
-    "active" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "GalleryItem_pkey" PRIMARY KEY ("id")
-);
-
--- Criar Tabela de Leads de Contato (CRM)
-CREATE TABLE IF NOT EXISTS "Lead" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
-    "eventType" TEXT NOT NULL,
-    "artistInterest" TEXT,
-    "status" TEXT NOT NULL DEFAULT 'NOVO',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Lead_pkey" PRIMARY KEY ("id")
-);
-
--- Criar Índice Único para e-mail do Usuário
-CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");
-```
-
+Para colocar o rastreamento do Google Tag Manager para rodar:
+1. Acesse o [Google Tag Manager](https://tagmanager.google.com) e crie um container do tipo **Web**.
+2. Substitua o ID de exemplo nos blocos comentados de `<head>` e `<body>` de todas as páginas estáticas pelo seu ID real (formato: `GTM-XXXXXXX`).
+3. Descomente as linhas de inclusão do script do GTM nas páginas.
+4. Configure no GTM os gatilhos escutando os eventos do `dataLayer` (ex: gatilho de evento personalizado para `lead_form_submit` e `whatsapp_click`).
