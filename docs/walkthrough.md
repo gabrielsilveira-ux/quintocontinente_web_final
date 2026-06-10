@@ -118,7 +118,7 @@ npx prisma db seed
 > [!NOTE]
 > O comando `seed` criará o usuário administrador inicial:
 > * **E-mail:** `admin@quintocontinente.com.br`
-> * **Senha:** `QCAdmin2026!`
+> * **Senha:** `QC_Admin_2026_SecureAccess_987!`
 >
 > Faça login com esses dados e altere a senha imediatamente na primeira sessão por segurança.
 
