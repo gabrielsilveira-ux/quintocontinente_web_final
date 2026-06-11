@@ -741,6 +741,67 @@
       return pageSlug !== 'home' || sec.order !== 0;
     });
     contentSections.forEach(function (sec, idx) {
+      if (sec.bgType === 'GRID') {
+        var cardData = [];
+        try {
+          cardData = JSON.parse(sec.content);
+        } catch (e) {
+          console.warn("Erro ao fazer parse dos cards de serviços:", e);
+        }
+        
+        var cardsHtml = '';
+        var icons = [
+          `<svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke-width="1.5" stroke-linecap="round" /></svg>`,
+          `<svg viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke-width="1.5" /><path d="M5 3V2M11 3V2M2 7h12" stroke-width="1.5" stroke-linecap="round" /></svg>`,
+          `<svg viewBox="0 0 16 16" fill="none"><polygon points="8,2 14,13 2,13" stroke-width="1.5" stroke-linejoin="round" /></svg>`,
+          `<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke-width="1.5" /><path d="M5.5 8.5S6 10 8 10s2.5-1.5 2.5-1.5" stroke-width="1.5" stroke-linecap="round" /><circle cx="6" cy="6.5" r=".8" fill="currentColor" stroke="none" /><circle cx="10" cy="6.5" r=".8" fill="currentColor" stroke="none" /></svg>`
+        ];
+
+        cardData.forEach(function (card, cIdx) {
+          var cardNum = (cIdx + 1).toString().padStart(2, '0');
+          var cardIcon = icons[cIdx % icons.length];
+          cardsHtml += `
+            <div class="card reveal vis" style="opacity: 1; transform: translate(0);">
+              <div class="card-bar"></div>
+              <div class="card-idx">${cardNum} / 04</div>
+              <div class="card-icon">${cardIcon}</div>
+              <h3 class="card-title">${card.title}</h3>
+              <p class="card-desc">${card.desc}</p>
+              <a href="${sec.videoUrl || '/o-que-fazemos/'}" class="card-link">Ver mais →</a>
+            </div>
+          `;
+        });
+
+        var ctaHtml = '';
+        if (sec.imageUrl && sec.videoUrl) {
+          ctaHtml = `
+            <div style="text-align: center; margin-top: 4rem;">
+              <a href="${sec.videoUrl}" class="btn-main reveal vis" style="opacity: 1; transform: translate(0);">
+                ${sec.imageUrl}
+                <svg class="arr" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          `;
+        }
+
+        html += `
+          <section class="servicos section-dark" id="servicos" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));">
+            <div class="servicos-hd">
+              <div>
+                <div class="s-label reveal vis" style="opacity: 1; transform: translate(0);">${sec.subtitle || 'O Que Fazemos'}</div>
+                <h2 class="s-title reveal vis" style="opacity: 1; transform: translate(0);">${sec.title || 'Seu parceiro estratégico em todas as etapas.'}</h2>
+              </div>
+              <p class="servicos-hd-note reveal vis" style="opacity: 1; transform: translate(0);">Cada entrega é construída com precisão técnica e visão estratégica.</p>
+            </div>
+            <div class="cards-wrap card-grid-2">
+              ${cardsHtml}
+            </div>
+            ${ctaHtml}
+          </section>
+        `;
+        return; // Pula para a próxima seção
+      }
+
       var bgClass = sec.bgType === 'WHITE' ? 'section-white' : 'section-dark';
       var num = (idx + 1).toString().padStart(2, '0');
       var labelHtml = sec.subtitle ? `<div class="s-label">${num} / ${sec.subtitle}</div>` : `<div class="s-label">${num} / Seção</div>`;

@@ -72,6 +72,14 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
   const [sectionBgType, setSectionBgType] = useState("DARK"); // DARK or WHITE
   const [sectionOrder, setSectionOrder] = useState(0);
 
+  // Grid Cards state
+  const [gridCards, setGridCards] = useState([
+    { title: "", desc: "" },
+    { title: "", desc: "" },
+    { title: "", desc: "" },
+    { title: "", desc: "" }
+  ]);
+
   // Loading States
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -268,6 +276,12 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     setSectionVideoUrl("");
     setSectionBgType("DARK");
     setSectionOrder((selectedPage.sections?.length || 0) + 1);
+    setGridCards([
+      { title: "", desc: "" },
+      { title: "", desc: "" },
+      { title: "", desc: "" },
+      { title: "", desc: "" }
+    ]);
     setErrorMsg("");
     setIsSectionModalOpen(true);
   };
@@ -282,6 +296,40 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     setSectionVideoUrl(section.videoUrl || "");
     setSectionBgType(section.bgType);
     setSectionOrder(section.order);
+    
+    // Parse grid cards if layout is GRID
+    if (section.bgType === "GRID" && section.content) {
+      try {
+        const parsed = JSON.parse(section.content);
+        if (Array.isArray(parsed)) {
+          const items = [...parsed];
+          while (items.length < 4) items.push({ title: "", desc: "" });
+          setGridCards(items.slice(0, 4));
+        } else {
+          setGridCards([
+            { title: "", desc: "" },
+            { title: "", desc: "" },
+            { title: "", desc: "" },
+            { title: "", desc: "" }
+          ]);
+        }
+      } catch (e) {
+        setGridCards([
+          { title: "", desc: "" },
+          { title: "", desc: "" },
+          { title: "", desc: "" },
+          { title: "", desc: "" }
+        ]);
+      }
+    } else {
+      setGridCards([
+        { title: "", desc: "" },
+        { title: "", desc: "" },
+        { title: "", desc: "" },
+        { title: "", desc: "" }
+      ]);
+    }
+    
     setErrorMsg("");
     setIsSectionModalOpen(true);
   };
@@ -328,7 +376,7 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     const payload = {
       title: sectionTitle.trim() || null,
       subtitle: sectionSubtitle.trim() || null,
-      content: sectionContent.trim() || null,
+      content: sectionBgType === "GRID" ? JSON.stringify(gridCards) : (sectionContent.trim() || null),
       imageUrl: sectionImageUrl.trim() || null,
       videoUrl: sectionVideoUrl.trim() || null,
       bgType: sectionBgType,
@@ -917,89 +965,146 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                 />
               </div>
 
-              {/* Conteúdo / Texto Principal */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                  Conteúdo / Descrição do Bloco
-                </label>
-                <textarea
-                  value={sectionContent}
-                  onChange={(e) => setSectionContent(e.target.value)}
-                  placeholder="Texto explicativo ou de apoio..."
-                  rows={4}
-                  className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2 outline-none transition-all resize-y"
-                  disabled={isSaving}
-                />
-              </div>
+              {/* Conteúdo / Texto Principal (Não exibe se for GRID) */}
+              {sectionBgType !== "GRID" && (
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
+                    Conteúdo / Descrição do Bloco
+                  </label>
+                  <textarea
+                    value={sectionContent}
+                    onChange={(e) => setSectionContent(e.target.value)}
+                    placeholder="Texto explicativo ou de apoio..."
+                    rows={4}
+                    className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2 outline-none transition-all resize-y"
+                    disabled={isSaving}
+                  />
+                </div>
+              )}
 
-              {/* Configuração de Imagem/Banner */}
+              {/* Editor de Cards para o Layout GRID */}
+              {sectionBgType === "GRID" && (
+                <div className="space-y-4 border border-line2 rounded-xl p-4 bg-bg/50">
+                  <div className="font-space font-bold text-accent uppercase tracking-wider text-[10px] mb-2">
+                    ✏ Configuração dos 4 Cards de Soluções
+                  </div>
+                  {[0, 1, 2, 3].map((cardIdx) => (
+                    <div key={cardIdx} className="space-y-2 pb-3 border-b border-line2/50 last:border-b-0 last:pb-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-muted2">Card 0{cardIdx + 1}</span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-2">
+                        <input
+                          type="text"
+                          value={gridCards[cardIdx]?.title || ""}
+                          onChange={(e) => {
+                            const updated = [...gridCards];
+                            updated[cardIdx] = { ...updated[cardIdx], title: e.target.value };
+                            setGridCards(updated);
+                          }}
+                          placeholder={`Título do Card 0${cardIdx + 1}`}
+                          className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded px-2.5 py-1.5 outline-none transition-all"
+                          disabled={isSaving}
+                        />
+                        <textarea
+                          value={gridCards[cardIdx]?.desc || ""}
+                          onChange={(e) => {
+                            const updated = [...gridCards];
+                            updated[cardIdx] = { ...updated[cardIdx], desc: e.target.value };
+                            setGridCards(updated);
+                          }}
+                          placeholder={`Descrição do Card 0${cardIdx + 1}`}
+                          rows={2}
+                          className="w-full bg-bg border border-line2 focus:border-accent text-text text-[10px] rounded px-2.5 py-1.5 outline-none transition-all resize-none"
+                          disabled={isSaving}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Configuração de Imagem/Banner (Só exibe ou muda label dependendo do GRID) */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted2 block">
-                  Imagem / Banner do Bloco
+                  {sectionBgType === "GRID" ? "Texto do Botão CTA (ex: Conheça nossas soluções)" : "Imagem / Banner do Bloco"}
                 </label>
 
-                {sectionImageUrl && (
-                  <div className="flex items-center gap-4 p-3 border border-line2 rounded-lg bg-bg">
-                    <div className="w-16 h-12 rounded overflow-hidden border border-line2 shrink-0 bg-black/20">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={sectionImageUrl} alt="Preview" className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <button
-                        type="button"
-                        onClick={() => setSectionImageUrl("")}
-                        className="text-xs text-red-400 hover:text-red-300 font-semibold"
-                      >
-                        Remover Mídia
-                      </button>
-                    </div>
-                  </div>
-                )}
+                {sectionBgType === "GRID" ? (
+                  <input
+                    type="text"
+                    value={sectionImageUrl}
+                    onChange={(e) => setSectionImageUrl(e.target.value)}
+                    placeholder="Texto do botão..."
+                    className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
+                    disabled={isSaving}
+                  />
+                ) : (
+                  <>
+                    {sectionImageUrl && (
+                      <div className="flex items-center gap-4 p-3 border border-line2 rounded-lg bg-bg">
+                        <div className="w-16 h-12 rounded overflow-hidden border border-line2 shrink-0 bg-black/20">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={sectionImageUrl} alt="Preview" className="w-full h-full object-cover" />
+                        </div>
+                        <div>
+                          <button
+                            type="button"
+                            onClick={() => setSectionImageUrl("")}
+                            className="text-xs text-red-400 hover:text-red-300 font-semibold"
+                          >
+                            Remover Mídia
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
-                {!sectionImageUrl && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <label className="flex flex-col items-center justify-center p-3 border border-dashed border-line2 hover:border-accent/40 rounded-lg bg-bg cursor-pointer hover:bg-bg-alt/30 transition-all text-center">
-                      {isUploading ? (
-                        <Loader2 className="animate-spin text-accent mb-1.5" size={16} />
-                      ) : (
-                        <Upload className="text-muted2 mb-1.5" size={16} />
-                      )}
-                      <span className="text-[9px] font-semibold text-text">
-                        {isUploading ? "Enviando..." : "Upload de Banner"}
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleSectionImageUpload}
-                        className="hidden"
-                        disabled={isUploading || isSaving}
-                      />
-                    </label>
+                    {!sectionImageUrl && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label className="flex flex-col items-center justify-center p-3 border border-dashed border-line2 hover:border-accent/40 rounded-lg bg-bg cursor-pointer hover:bg-bg-alt/30 transition-all text-center">
+                          {isUploading ? (
+                            <Loader2 className="animate-spin text-accent mb-1.5" size={16} />
+                          ) : (
+                            <Upload className="text-muted2 mb-1.5" size={16} />
+                          )}
+                          <span className="text-[9px] font-semibold text-text">
+                            {isUploading ? "Enviando..." : "Upload de Banner"}
+                          </span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleSectionImageUpload}
+                            className="hidden"
+                            disabled={isUploading || isSaving}
+                          />
+                        </label>
 
-                    <div className="flex flex-col justify-center p-2.5 border border-line2 rounded-lg bg-bg space-y-1.5">
-                      <span className="text-[9px] font-semibold text-muted2">Cole URL de Imagem</span>
-                      <input
-                        type="url"
-                        placeholder="https://exemplo.com/foto.jpg"
-                        onChange={(e) => setSectionImageUrl(e.target.value)}
-                        className="w-full bg-bg-alt border border-line2 focus:border-accent text-text text-[10px] rounded px-2.5 py-1.5 outline-none transition-all"
-                        disabled={isSaving}
-                      />
-                    </div>
-                  </div>
+                        <div className="flex flex-col justify-center p-2.5 border border-line2 rounded-lg bg-bg space-y-1.5">
+                          <span className="text-[9px] font-semibold text-muted2">Cole URL de Imagem</span>
+                          <input
+                            type="url"
+                            placeholder="https://exemplo.com/foto.jpg"
+                            onChange={(e) => setSectionImageUrl(e.target.value)}
+                            className="w-full bg-bg-alt border border-line2 focus:border-accent text-text text-[10px] rounded px-2.5 py-1.5 outline-none transition-all"
+                            disabled={isSaving}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
-              {/* Link do Vídeo */}
+              {/* Link do Vídeo / Link do CTA */}
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                  URL de Vídeo (Opcional)
+                  {sectionBgType === "GRID" ? "Link do Botão CTA (ex: /o-que-fazemos/)" : "URL de Vídeo (Opcional)"}
                 </label>
                 <input
-                  type="url"
+                  type="text"
                   value={sectionVideoUrl}
                   onChange={(e) => setSectionVideoUrl(e.target.value)}
-                  placeholder="https://youtube.com/watch?v=..."
+                  placeholder={sectionBgType === "GRID" ? "Ex: /o-que-fazemos/" : "https://youtube.com/watch?v=..."}
                   className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
                   disabled={isSaving}
                 />
@@ -1009,7 +1114,7 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                    Fundo da Seção
+                    Layout / Fundo da Seção
                   </label>
                   <select
                     value={sectionBgType}
@@ -1019,6 +1124,7 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                   >
                     <option value="DARK">Escuro (Dark)</option>
                     <option value="WHITE">Claro (White)</option>
+                    <option value="GRID">Grade de Cards (GRID)</option>
                   </select>
                 </div>
 
