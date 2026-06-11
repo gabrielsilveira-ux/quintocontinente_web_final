@@ -802,7 +802,7 @@
         html += `
           <section class="hero-internal section-dark">
             <div class="hero-internal-bg" style="background-image: url('${sec.imageUrl || ''}')"></div>
-            <div class="hero-internal-inner reveal">
+            <div class="hero-internal-inner reveal vis" style="opacity:1;transform:translate(0);">
               <div class="s-label">${labelText}</div>
               <h1>${mainText}</h1>
               ${subTextDesc ? `<p class="hero-internal-sub">${subTextDesc}</p>` : ''}
