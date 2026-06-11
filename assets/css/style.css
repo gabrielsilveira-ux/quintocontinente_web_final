@@ -511,20 +511,20 @@ section.hero {
 }
 .card-link:hover { gap: 0.8rem; }
 
-/* ── Service Cards (GRID layout — clean redesign) ──────────── */
+/* ── Service Cards (GRID layout — clean off-white redesign) ── */
 .svc-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
 }
 .svc-card {
-  background: var(--bg2);
-  border: 1px solid var(--line2);
+  background: #F3F1EE;
+  border: 1px solid rgba(0,0,0,0.06);
   border-radius: var(--radius-lg);
   padding: 2.5rem 2.25rem;
   position: relative;
   overflow: hidden;
-  transition: background .3s, border-color .3s, transform .3s;
+  transition: background .3s, border-color .3s, transform .3s, box-shadow .3s;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -536,42 +536,46 @@ section.hero {
   width: 3px;
   background: var(--accent);
   opacity: 0;
-  transition: opacity .3s;
+  transition: opacity .35s;
 }
-.svc-card:hover { background: var(--bg3); border-color: rgba(212,43,43,.25); transform: translateY(-2px); }
+.svc-card:hover {
+  background: #FAFAF8;
+  border-color: rgba(212,43,43,.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+}
 .svc-card:hover::before { opacity: 1; }
 
 .svc-icon-wrap {
   width: 52px; height: 52px;
   border-radius: var(--radius-md);
-  background: var(--bg3);
-  border: 1px solid var(--line2);
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.08);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem;
   flex-shrink: 0;
   transition: background .3s, border-color .3s;
 }
 .svc-card:hover .svc-icon-wrap {
-  background: var(--accent-dim);
-  border-color: rgba(212,43,43,.3);
+  background: rgba(212,43,43,0.08);
+  border-color: rgba(212,43,43,.2);
 }
 .svc-icon-wrap svg {
   width: 22px; height: 22px;
-  stroke: var(--muted2);
+  stroke: #444444;
   transition: stroke .3s;
 }
 .svc-card:hover .svc-icon-wrap svg { stroke: var(--accent); }
 
 .svc-title {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.1rem; font-weight: 700;
-  color: var(--text);
+  font-size: 1.05rem; font-weight: 700;
+  color: #141414;
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 .svc-desc {
-  font-size: 0.85rem; font-weight: 300;
-  line-height: 1.78; color: var(--muted2);
+  font-size: 0.84rem; font-weight: 400;
+  line-height: 1.78; color: #555555;
   flex: 1;
 }
 

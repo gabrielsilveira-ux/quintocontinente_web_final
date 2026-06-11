@@ -994,61 +994,59 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                         <span className="text-[9px] font-bold uppercase tracking-wider text-muted2">Card 0{cardIdx + 1}</span>
                       </div>
                       <div className="grid grid-cols-1 gap-2">
-                        {/* Icon selector */}
-                        <div className="space-y-1">
-                          <label className="text-[9px] font-semibold uppercase tracking-wider text-muted2">Ícone (emoji ou deixe em branco para o padrão)</label>
-                          <div className="flex items-center gap-2">
-                            <div className="flex gap-1.5">
-                              {["🎵", "🎤", "🎸", "🎭", "🎬", "🎪", "⭐", "🏆", "📋", "🤝", "🎯", "💼"].map((emoji) => (
-                                <button
-                                  key={emoji}
-                                  type="button"
-                                  onClick={() => {
-                                    const updated = [...gridCards];
-                                    updated[cardIdx] = { ...updated[cardIdx], icon: emoji };
-                                    setGridCards(updated);
-                                  }}
-                                  className={`w-7 h-7 rounded text-sm flex items-center justify-center border transition-all ${
-                                    gridCards[cardIdx]?.icon === emoji
-                                      ? "border-accent bg-accent/10"
-                                      : "border-line2 hover:border-accent/50 bg-bg"
-                                  }`}
-                                  title={emoji}
-                                  disabled={isSaving}
-                                >
-                                  {emoji}
-                                </button>
-                              ))}
-                            </div>
-                            <input
-                              type="text"
-                              value={gridCards[cardIdx]?.icon || ""}
-                              onChange={(e) => {
-                                const updated = [...gridCards];
-                                updated[cardIdx] = { ...updated[cardIdx], icon: e.target.value };
-                                setGridCards(updated);
-                              }}
-                              placeholder="Emoji ou deixe vazio"
-                              className="flex-1 bg-bg border border-line2 focus:border-accent text-text text-xs rounded px-2.5 py-1.5 outline-none transition-all"
-                              disabled={isSaving}
-                              maxLength={8}
-                            />
-                            {gridCards[cardIdx]?.icon && (
+                        {/* SVG Icon selector */}
+                        <div className="space-y-1.5">
+                          <label className="text-[9px] font-semibold uppercase tracking-wider text-muted2">Ícone (clique para selecionar)</label>
+                          <div className="grid grid-cols-6 gap-1.5">
+                            {([
+                              { key: "search",    label: "Busca",       svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg> },
+                              { key: "mic",       label: "Microfone",   svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="20" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> },
+                              { key: "star",      label: "Destaque",    svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg> },
+                              { key: "contract",  label: "Contrato",    svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg> },
+                              { key: "handshake", label: "Negociação",  svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 17l-5-5 2-2 3 3 7-7 2 2-9 9z"/><path d="M20.5 7.5l-1.5-1.5"/><path d="M3.5 16.5l1.5 1.5"/></svg> },
+                              { key: "calendar",  label: "Agenda",      svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> },
+                              { key: "award",     label: "Prêmio",      svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="9" r="6"/><polyline points="9,22 12,17 15,22"/><line x1="12" y1="15" x2="12" y2="17"/></svg> },
+                              { key: "globe",     label: "Global",      svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> },
+                              { key: "zap",       label: "Energia",     svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg> },
+                              { key: "film",      label: "Produção",    svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="17" y1="7" x2="22" y2="7"/></svg> },
+                              { key: "users",     label: "Equipe",      svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
+                              { key: "settings",  label: "Gestão",      svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> },
+                            ] as const).map(({ key, label, svg }) => (
                               <button
+                                key={key}
                                 type="button"
                                 onClick={() => {
                                   const updated = [...gridCards];
-                                  updated[cardIdx] = { ...updated[cardIdx], icon: "" };
+                                  updated[cardIdx] = { ...updated[cardIdx], icon: gridCards[cardIdx]?.icon === key ? "" : key };
                                   setGridCards(updated);
                                 }}
-                                className="text-muted2 hover:text-accent text-xs px-1 transition-colors"
-                                title="Limpar ícone"
+                                title={label}
                                 disabled={isSaving}
+                                className={`w-full aspect-square rounded-lg flex flex-col items-center justify-center gap-0.5 border transition-all p-1 ${
+                                  gridCards[cardIdx]?.icon === key
+                                    ? "border-accent bg-accent/10 text-accent"
+                                    : "border-line2 hover:border-muted2 bg-bg text-muted2"
+                                }`}
                               >
-                                ✕
+                                <span className="w-4 h-4 block [&>svg]:w-full [&>svg]:h-full">{svg}</span>
+                                <span className="text-[7px] font-medium uppercase tracking-wider leading-none mt-0.5">{label}</span>
                               </button>
-                            )}
+                            ))}
                           </div>
+                          {gridCards[cardIdx]?.icon && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = [...gridCards];
+                                updated[cardIdx] = { ...updated[cardIdx], icon: "" };
+                                setGridCards(updated);
+                              }}
+                              className="text-muted2 hover:text-accent text-[9px] transition-colors flex items-center gap-1"
+                              disabled={isSaving}
+                            >
+                              ✕ Limpar (usar padrão automático)
+                            </button>
+                          )}
                         </div>
                         <input
                           type="text"
