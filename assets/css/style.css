@@ -769,7 +769,7 @@ footer {
 .marquee-track {
   display: flex;
   gap: 2rem;
-  animation: marquee 60s linear infinite;
+  animation: marquee 150s linear infinite;
 }
 @keyframes marquee {
   0% { transform: translateX(0); }

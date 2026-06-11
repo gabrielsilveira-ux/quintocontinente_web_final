@@ -896,13 +896,13 @@
           var cLink = parts[1];
           ctaHtml = `
             <div class="reveal vis" style="opacity:1;transform:translate(0);margin-top:2rem;">
-              <a href="${cLink}" class="btn-outline" style="border-color:${sec.bgType && sec.bgType.includes('WHITE') ? 'var(--line-dark)' : 'var(--line)'};">${cText}</a>
+              <a href="${cLink}" class="btn-main">${cText}</a>
             </div>
           `;
         } else if (sec.videoUrl) {
           ctaHtml = `
             <div class="reveal vis" style="opacity:1;transform:translate(0);margin-top:2rem;">
-              <a href="${sec.videoUrl}" class="btn-outline" style="border-color:${sec.bgType && sec.bgType.includes('WHITE') ? 'var(--line-dark)' : 'var(--line)'};">Saiba Mais</a>
+              <a href="${sec.videoUrl}" class="btn-main">Saiba Mais</a>
             </div>
           `;
         }
@@ -925,13 +925,13 @@
           var parts = sec.videoUrl.split('|');
           ctaHtml = `
             <div class="reveal vis" style="opacity:1;transform:translate(0);margin-top:2rem;">
-              <a href="${parts[1]}" class="btn-outline" style="border-color:${sec.bgType && sec.bgType.includes('WHITE') ? 'var(--line-dark)' : 'var(--line)'};">${parts[0]}</a>
+              <a href="${parts[1]}" class="btn-main">${parts[0]}</a>
             </div>
           `;
         } else if (sec.videoUrl) {
           ctaHtml = `
             <div class="reveal vis" style="opacity:1;transform:translate(0);margin-top:2rem;">
-              <a href="${sec.videoUrl}" class="btn-outline" style="border-color:${sec.bgType && sec.bgType.includes('WHITE') ? 'var(--line-dark)' : 'var(--line)'};">Saiba Mais</a>
+              <a href="${sec.videoUrl}" class="btn-main">Saiba Mais</a>
             </div>
           `;
         }
