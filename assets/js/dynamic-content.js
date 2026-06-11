@@ -174,7 +174,7 @@
     track.innerHTML = '';
 
     // Create a string of HTML for all artists
-    let itemsHtml = '';
+    let baseHtml = '';
     artists.forEach(function (artist) {
       // Usar a mesma lógica de imagem de fallback do PHP/Next
       var imageUrl = artist.imageUrl;
@@ -183,7 +183,7 @@
         imageUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 350' style='background: %23181818;'></svg>";
       }
       
-      itemsHtml += `
+      baseHtml += `
         <a href="artistas/artista.html?slug=${artist.slug}" class="artist-card" style="text-decoration:none;">
           <div class="artist-img">
             <img src="${imageUrl}" alt="${artist.name}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
@@ -194,6 +194,15 @@
         </a>
       `;
     });
+
+    // Multiplicamos a lista base para garantir que ela seja maior que a tela (desktop)
+    let itemsHtml = '';
+    let currentCount = 0;
+    while (currentCount < 12) {
+      itemsHtml += baseHtml;
+      currentCount += artists.length;
+    }
+
     // Duplicate to achieve a seamless loop
     track.innerHTML = itemsHtml + itemsHtml;
   }
