@@ -1009,51 +1009,56 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                 </div>
               )}
 
-              {/* Título da Seção */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                  Título Principal (H2)
-                </label>
-                <input
-                  type="text"
-                  value={sectionTitle}
-                  onChange={(e) => setSectionTitle(e.target.value)}
-                  placeholder="Ex: Inteligência de Mercado"
-                  className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
-                  disabled={isSaving}
-                />
-              </div>
+              {/* Fields specific to non-HERO layouts */}
+              {sectionBgType !== "HERO_BANNER" && (
+                <>
+                  {/* Título da Seção */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
+                      Título Principal (H2)
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionTitle}
+                      onChange={(e) => setSectionTitle(e.target.value)}
+                      placeholder="Ex: Inteligência de Mercado"
+                      className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
+                      disabled={isSaving}
+                    />
+                  </div>
 
-              {/* Subtítulo */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                  Subtítulo / Chamada Secundária
-                </label>
-                <input
-                  type="text"
-                  value={sectionSubtitle}
-                  onChange={(e) => setSectionSubtitle(e.target.value)}
-                  placeholder="Ex: Curadoria de Artistas sob Medida"
-                  className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
-                  disabled={isSaving}
-                />
-              </div>
+                  {/* Subtítulo */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
+                      Subtítulo / Chamada Secundária
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionSubtitle}
+                      onChange={(e) => setSectionSubtitle(e.target.value)}
+                      placeholder="Ex: Curadoria de Artistas sob Medida"
+                      className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
+                      disabled={isSaving}
+                    />
+                  </div>
 
-              {/* Conteúdo / Texto Principal (Não exibe se for GRID ou DIFERENCIAIS) */}
-              {!sectionBgType.includes("GRID") && !sectionBgType.includes("DIFERENCIAIS") && (
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                    Conteúdo / Descrição do Bloco
-                  </label>
-                  <textarea
-                    value={sectionContent}
-                    onChange={(e) => setSectionContent(e.target.value)}
-                    placeholder="Texto explicativo ou de apoio..."
-                    rows={4}
-                    className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2 outline-none transition-all resize-y"
-                    disabled={isSaving}
-                  />
-                </div>
+                  {/* Conteúdo / Texto Principal (Não exibe se for GRID ou DIFERENCIAIS) */}
+                  {!sectionBgType.includes("GRID") && !sectionBgType.includes("DIFERENCIAIS") && (
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
+                        Conteúdo / Descrição do Bloco
+                      </label>
+                      <textarea
+                        value={sectionContent}
+                        onChange={(e) => setSectionContent(e.target.value)}
+                        placeholder="Texto explicativo ou de apoio..."
+                        rows={4}
+                        className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2 outline-none transition-all resize-y"
+                        disabled={isSaving}
+                      />
+                    </div>
+                  )}
+                </>
               )}
 
               {/* Editor de Cards para o Layout GRID */}
@@ -1324,8 +1329,10 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                   </div>
                 )}
               </div>
+              </>
+              )}
 
-              {/* Ordem de Exibição */}
+                {/* Ordem de Exibição */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
@@ -1343,6 +1350,7 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                     <option value="GRID_WHITE">Grade de Soluções (Claro)</option>
                     <option value="DIFERENCIAIS">Diferenciais 4 Cards (Escuro)</option>
                     <option value="DIFERENCIAIS_WHITE">Diferenciais 4 Cards (Claro)</option>
+                    <option value="HERO_BANNER">Banner Rotativo (Hero)</option>
                   </select>
                 </div>
 

@@ -170,12 +170,23 @@
 
   /* ── 2. Carregar Marquee de Artistas na Home ───────────────── */
   function renderMarquee(track, artists) {
-    var itemsHtml = '';
+    if (!track) return;
+    track.innerHTML = '';
+
+    // Create a string of HTML for all artists
+    let itemsHtml = '';
     artists.forEach(function (artist) {
+      // Usar a mesma lógica de imagem de fallback do PHP/Next
+      var imageUrl = artist.imageUrl;
+      if (!imageUrl || imageUrl.trim() === '') {
+        // Fallback genérico para teste visual
+        imageUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 350' style='background: %23181818;'></svg>";
+      }
+      
       itemsHtml += `
         <a href="artistas/artista.html?slug=${artist.slug}" class="artist-card" style="text-decoration:none;">
           <div class="artist-img">
-            <img src="${artist.imageUrl}" alt="${artist.name}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
+            <img src="${imageUrl}" alt="${artist.name}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
           </div>
           <div class="artist-info">
             <h3 class="artist-name">${artist.name}</h3>
@@ -183,6 +194,7 @@
         </a>
       `;
     });
+    // Duplicate to achieve a seamless loop
     track.innerHTML = itemsHtml + itemsHtml;
   }
 
@@ -741,6 +753,15 @@
       return pageSlug !== 'home' || sec.order !== 0;
     });
     contentSections.forEach(function (sec, idx) {
+      if (sec.bgType === 'HERO_BANNER') {
+        html += `
+          <div class="banner-section">
+            <div class="banner-slider" id="bannerSlider"></div>
+          </div>
+        `;
+        return;
+      }
+
       if (sec.bgType && sec.bgType.includes('GRID')) {
         var bgClass = sec.bgType.includes('WHITE') ? 'section-white' : 'section-dark';
         var cardData = [];
@@ -922,6 +943,13 @@
     });
 
     container.innerHTML = html;
+
+    // Se o slider do banner foi injetado, inicializamos o banner rotativo
+    if (html.includes('id="bannerSlider"')) {
+      if (typeof loadDynamicBanners === 'function') {
+        loadDynamicBanners();
+      }
+    }
   }
 
   async function loadDynamicPageContent() {
@@ -969,7 +997,6 @@
 
   /* ── Boot Inicializador ──────────────────────────────────── */
   function boot() {
-    loadDynamicBanners();
     loadMarqueeArtists();
     loadArtistsPage();
     loadGalleryPage();

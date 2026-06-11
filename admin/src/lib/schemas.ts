@@ -93,7 +93,8 @@ export const pageSectionSchema = z.object({
     "GRID", 
     "GRID_WHITE", 
     "DIFERENCIAIS", 
-    "DIFERENCIAIS_WHITE"
+    "DIFERENCIAIS_WHITE",
+    "HERO_BANNER"
   ]).default("DARK"),
   order: z.preprocess((val) => Number(val ?? 0), z.number().int().nonnegative()),
 });
