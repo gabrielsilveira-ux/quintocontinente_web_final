@@ -1210,13 +1210,50 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                 </div>
               )}
 
-              {/* Configuração de Imagem/Banner (Só exibe ou muda label dependendo do GRID/DIFERENCIAIS) */}
+              {/* Configuração de Imagem/Banner/Ícone */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted2 block">
-                  {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? "Texto do Botão CTA (ex: Conheça nossas soluções) [Deixe em branco para ocultar]" : "Imagem / Banner do Bloco"}
+                  {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") 
+                    ? "Texto do Botão CTA (ex: Conheça nossas soluções) [Deixe em branco para ocultar]" 
+                    : sectionBgType.includes("TEXT_ICON") 
+                      ? "Ícone da Seção" 
+                      : "Imagem / Banner do Bloco"}
                 </label>
 
-                {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? (
+                {sectionBgType.includes("TEXT_ICON") ? (
+                  <div className="grid grid-cols-6 gap-1.5 p-3 border border-line2 rounded-lg bg-bg">
+                    {([
+                      { key: "eye",         label: "Curadoria",   svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> },
+                      { key: "vinyl",       label: "Música",      svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 22a10 10 0 0 1-7.07-17.07"/></svg> },
+                      { key: "crown",       label: "Excelência",  svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 20h20"/><path d="M4 20V10l4 4 4-8 4 8 4-4v10"/></svg> },
+                      { key: "sparkle",     label: "Especial",    svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> },
+                      { key: "compass",     label: "Estratégia",  svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg> },
+                      { key: "waveform",    label: "Produção",    svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12h2M4 8v8M7 12h2M9 5v14M12 12h2M14 4v16M17 12h2M19 7v10M22 12h0"/></svg> },
+                      { key: "diamond",     label: "Qualidade",   svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M12 3l4 6-4 12-4-12z"/></svg> },
+                      { key: "lightning",   label: "Impacto",     svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M13 8l-4 5h6l-4 5"/></svg> },
+                      { key: "signature",   label: "Contrato",    svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/><polygon points="18,2 22,6 12,16 8,16 8,12 18,2"/></svg> },
+                      { key: "spotlight",   label: "Show",        svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V4a1 1 0 0 1 1-1z"/><path d="M5 8l2.5 2.5M17 8l-2.5 2.5M12 10c-3.3 0-6 2.7-6 6h12c0-3.3-2.7-6-6-6z"/><path d="M6 22h12"/></svg> },
+                      { key: "layers",      label: "Projetos",    svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12,2 22,8.5 12,15 2,8.5"/><polyline points="2,12 12,18.5 22,12"/><polyline points="2,15.5 12,22 22,15.5"/></svg> },
+                      { key: "fingerprint", label: "Identidade",  svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17.1 12.7c0-2.8-2.3-5.1-5.1-5.1s-5.1 2.3-5.1 5.1"/><path d="M19.7 11.6c0-4.3-3.5-7.7-7.7-7.7s-7.7 3.5-7.7 7.7"/><path d="M12 19v-6"/><path d="M9 22l1.5-5.5"/><path d="M15 22l-1.5-5.5"/></svg> },
+                    ] as const).map(({ key, label, svg }) => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setSectionImageUrl(sectionImageUrl === key ? "" : key)}
+                        title={label}
+                        disabled={isSaving}
+                        className={`w-full aspect-square rounded-lg flex flex-col items-center justify-center gap-0.5 border transition-all p-1 ${
+                          sectionImageUrl === key
+                            ? "border-accent bg-accent/10 text-accent"
+                            : "border-line2 hover:border-muted2 bg-bg text-muted2"
+                        }`}
+                      >
+                        <span className="w-4 h-4 block [&>svg]:w-full [&>svg]:h-full">{svg}</span>
+                        <span className="text-[7px] font-medium uppercase tracking-wider leading-none mt-0.5">{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? (
                   <input
                     type="text"
                     value={sectionImageUrl}
@@ -1283,7 +1320,7 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
 
               {/* Link do Vídeo / Link do CTA */}
               <div className="space-y-1.5">
-                {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? (
+                {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") || sectionBgType.includes("TEXT_ICON") ? (
                   <>
                     <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
                       Link do Botão CTA (ex: /o-que-fazemos/)
@@ -1349,6 +1386,8 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                     <option value="GRID_WHITE">Grade de Soluções (Claro)</option>
                     <option value="DIFERENCIAIS">Diferenciais 4 Cards (Escuro)</option>
                     <option value="DIFERENCIAIS_WHITE">Diferenciais 4 Cards (Claro)</option>
+                    <option value="TEXT_ICON_DARK">Texto + Ícone (Escuro)</option>
+                    <option value="TEXT_ICON_WHITE">Texto + Ícone (Claro)</option>
                     <option value="HERO_BANNER">Banner Rotativo (Home)</option>
                     <option value="HERO_INTERNAL">Banner Hero Interno (Topo)</option>
                   </select>

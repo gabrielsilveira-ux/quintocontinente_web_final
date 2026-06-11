@@ -907,19 +907,46 @@
       var bgClass = sec.bgType && sec.bgType.includes('WHITE') ? 'section-white' : 'section-dark';
       var num = (idx + 1).toString().padStart(2, '0');
       var labelHtml = sec.subtitle ? `<div class="s-label">${num} / ${sec.subtitle}</div>` : `<div class="s-label">${num} / Seção</div>`;
-      var titleHtml = sec.title ? `<h2 class="s-title" style="margin-bottom: 1.5rem;">${sec.title}</h2>` : '';
+      var titleHtml = sec.title ? `<h2 class="s-title">${sec.title}</h2>` : '';
       
       var paragraphs = sec.content ? sec.content.split('\n').filter(Boolean) : [];
-      var contentHtml = paragraphs.map(function(p) { 
-        return `<p class="s-sub" style="font-size: 1.05rem; line-height: 1.8; margin-top: 1rem;">${p}</p>`; 
-      }).join('');
+      var parsedContent = paragraphs.map(function(p) { return `<p>${p}</p>`; }).join('');
+      var contentHtml = `<div class="s-sub" style="margin-bottom:1.5rem;">${parsedContent}</div>`;
 
-      if (sec.imageUrl) {
-        var imageHtml = `
-          <div class="reveal vis" style="border-radius: var(--radius-lg); overflow: hidden; height: 350px; border: 1px solid ${sec.bgType === 'WHITE' ? 'var(--line-dark)' : 'var(--line)'};">
-            <img src="${sec.imageUrl}" alt="${sec.title || 'Imagem'}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
-          </div>
-        `;
+      var isTextIcon = sec.bgType && sec.bgType.includes('TEXT_ICON');
+
+      if (sec.imageUrl || isTextIcon) {
+        var mediaHtml = '';
+        if (isTextIcon) {
+          var svgIcons = {
+            eye:         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+            vinyl:       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 22a10 10 0 0 1-7.07-17.07"/></svg>`,
+            crown:       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V10l4 4 4-8 4 8 4-4v10"/></svg>`,
+            sparkle:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>`,
+            compass:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>`,
+            waveform:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2M4 8v8M7 12h2M9 5v14M12 12h2M14 4v16M17 12h2M19 7v10M22 12h0"/></svg>`,
+            diamond:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M12 3l4 6-4 12-4-12z"/></svg>`,
+            lightning:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M13 8l-4 5h6l-4 5"/></svg>`,
+            signature:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/><polygon points="18,2 22,6 12,16 8,16 8,12 18,2"/></svg>`,
+            spotlight:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V4a1 1 0 0 1 1-1z"/><path d="M5 8l2.5 2.5M17 8l-2.5 2.5M12 10c-3.3 0-6 2.7-6 6h12c0-3.3-2.7-6-6-6z"/><path d="M6 22h12"/></svg>`,
+            layers:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 22,8.5 12,15 2,8.5"/><polyline points="2,12 12,18.5 22,12"/><polyline points="2,15.5 12,22 22,15.5"/></svg>`,
+            fingerprint: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.1 12.7c0-2.8-2.3-5.1-5.1-5.1s-5.1 2.3-5.1 5.1"/><path d="M19.7 11.6c0-4.3-3.5-7.7-7.7-7.7s-7.7 3.5-7.7 7.7"/><path d="M12 19v-6"/><path d="M9 22l1.5-5.5"/><path d="M15 22l-1.5-5.5"/></svg>`
+          };
+          var iconContent = svgIcons[sec.imageUrl] || svgIcons['compass'];
+          mediaHtml = `
+            <div class="reveal vis" style="background: ${sec.bgType === 'TEXT_ICON_WHITE' ? 'var(--line-dark)' : 'var(--line-dark)'}; border-radius: var(--radius-lg); height: 350px; display: flex; align-items: center; justify-content: center; border: 1px solid ${sec.bgType === 'TEXT_ICON_WHITE' ? 'var(--line-dark)' : 'var(--line-dark)'};">
+              <div style="width: 48px; height: 48px; color: ${sec.bgType === 'TEXT_ICON_WHITE' ? 'var(--muted-dark)' : 'var(--muted-dark)'};">
+                ${iconContent}
+              </div>
+            </div>
+          `;
+        } else {
+          mediaHtml = `
+            <div class="reveal vis" style="border-radius: var(--radius-lg); overflow: hidden; height: 350px; border: 1px solid ${sec.bgType === 'WHITE' ? 'var(--line-dark)' : 'var(--line)'};">
+              <img src="${sec.imageUrl}" alt="${sec.title || 'Imagem'}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+          `;
+        }
 
         var ctaHtml = '';
         if (sec.videoUrl && sec.videoUrl.includes('|')) {
@@ -940,8 +967,8 @@
         }
 
         var isEven = idx % 2 === 0;
-        var col1 = isEven ? `<div>${labelHtml}${titleHtml}${contentHtml}${ctaHtml}</div>` : imageHtml;
-        var col2 = isEven ? imageHtml : `<div>${labelHtml}${titleHtml}${contentHtml}${ctaHtml}</div>`;
+        var col1 = isEven ? `<div>${labelHtml}${titleHtml}${contentHtml}${ctaHtml}</div>` : mediaHtml;
+        var col2 = isEven ? mediaHtml : `<div>${labelHtml}${titleHtml}${contentHtml}${ctaHtml}</div>`;
 
         html += `
           <section class="${bgClass}" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));">

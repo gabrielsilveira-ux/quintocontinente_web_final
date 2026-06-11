@@ -96,7 +96,9 @@ export const pageSectionSchema = z.object({
     "DIFERENCIAIS", 
     "DIFERENCIAIS_WHITE",
     "HERO_BANNER",
-    "HERO_INTERNAL"
+    "HERO_INTERNAL",
+    "TEXT_ICON_DARK",
+    "TEXT_ICON_WHITE"
   ]).default("DARK"),
   order: z.preprocess((val) => Number(val ?? 0), z.number().int().nonnegative()),
 });
