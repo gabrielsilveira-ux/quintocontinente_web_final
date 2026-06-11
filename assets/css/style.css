@@ -724,6 +724,57 @@ footer {
 .blog-strip-text { font-size: 0.9rem; font-weight: 300; color: var(--muted2); line-height: 1.6; }
 .blog-strip-text strong { color: var(--text); font-weight: 500; }
 
+/* ── Hero Internal ─────────────────────────────────────────── */
+.hero-internal {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: calc(var(--nav-h) + 4rem) max(var(--site-pad), calc((100% - var(--max-w)) / 2)) 5rem;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+.hero-internal-bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  filter: blur(1px);
+}
+.hero-internal::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, var(--bg) 0%, rgba(12,12,12,0.8) 50%, rgba(12,12,12,0) 100%),
+              linear-gradient(180deg, rgba(12,12,12,0.3) 0%, var(--bg) 100%);
+  z-index: 1;
+}
+.hero-internal-inner {
+  position: relative; z-index: 2;
+  width: 100%;
+  max-width: 800px;
+  display: flex; flex-direction: column; gap: 1.5rem;
+}
+.hero-internal .s-label { justify-content: flex-start; }
+.hero-internal h1 { 
+  font-family: 'Space Grotesk', sans-serif; 
+  font-size: clamp(2.5rem, 6vw, 4.5rem); 
+  font-weight: 800; 
+  line-height: 1.05; 
+  color: var(--text); 
+}
+.hero-internal h1 em { font-style: normal; color: var(--accent); }
+.hero-internal-sub { 
+  font-size: 1.1rem; 
+  font-weight: 300; 
+  color: var(--muted); 
+  line-height: 1.6; 
+  max-width: 600px; 
+}
+.hero-internal-actions { 
+  display: flex; gap: 1rem; margin-top: 1.5rem; 
+  flex-wrap: wrap;
+}
+
 /* ── Dynamic Text Sections ─────────────────────────────────── */
 .txt-grid {
   display: grid;

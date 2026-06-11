@@ -97,7 +97,7 @@ model PageSection {
   content     String?  @db.Text
   imageUrl    String?
   videoUrl    String?
-  bgType      String   @default("DARK") // "DARK", "WHITE", "GRID", "GRID_WHITE", "DIFERENCIAIS", "DIFERENCIAIS_WHITE", "HERO_BANNER"
+  bgType      String   @default("DARK") // "DARK", "WHITE", "GRID", "GRID_WHITE", "DIFERENCIAIS", "DIFERENCIAIS_WHITE", "HERO_BANNER", "HERO_INTERNAL"
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

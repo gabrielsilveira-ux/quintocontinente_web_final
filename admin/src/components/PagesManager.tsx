@@ -1349,7 +1349,8 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                     <option value="GRID_WHITE">Grade de Soluções (Claro)</option>
                     <option value="DIFERENCIAIS">Diferenciais 4 Cards (Escuro)</option>
                     <option value="DIFERENCIAIS_WHITE">Diferenciais 4 Cards (Claro)</option>
-                    <option value="HERO_BANNER">Banner Rotativo (Hero)</option>
+                    <option value="HERO_BANNER">Banner Rotativo (Home)</option>
+                    <option value="HERO_INTERNAL">Banner Hero Interno (Topo)</option>
                   </select>
                 </div>
 

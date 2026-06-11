@@ -771,6 +771,48 @@
         return;
       }
 
+      if (sec.bgType === 'HERO_INTERNAL') {
+        var heroCtaHtml = '';
+        if (sec.videoUrl && sec.videoUrl.includes('|')) {
+          var parts = sec.videoUrl.split('|');
+          heroCtaHtml += `<a href="${parts[1]}" class="btn-main">${parts[0]} <svg class="arr" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>`;
+        }
+        if (sec.content && sec.content.includes('|')) {
+          // The old fallback used 'content' for the secondary CTA text
+          var contentParts = sec.content.split('|');
+          heroCtaHtml += `<a href="${contentParts[1] || '#'}" class="btn-outline">${contentParts[0]}</a>`;
+        } else if (sec.content && sec.content.trim() !== '') {
+          // If it's just regular content
+          // Well, for HERO_INTERNAL, subtitle is subtitle. Content can be extra text or CTA.
+          // Let's check how we populated the database. Content was "A Quinto Continente...|Ver Artistas"
+          var parts = sec.content.split('|');
+          var subText = parts[0];
+          var secCtaText = parts[1];
+          if (secCtaText) {
+             heroCtaHtml += `<a href="/artistas/" class="btn-outline">${secCtaText}</a>`;
+          }
+          sec.content = subText; // We will use this in hero-internal-sub if needed. Or we just use subtitle.
+        }
+
+        // We use 'content' for the paragraph text if subtitle is the small red label
+        var labelText = sec.subtitle || 'Em Destaque';
+        var mainText = sec.title || '';
+        var subTextDesc = sec.content ? sec.content.split('|')[0] : '';
+
+        html += `
+          <section class="hero-internal section-dark">
+            <div class="hero-internal-bg" style="background-image: url('${sec.imageUrl || ''}')"></div>
+            <div class="hero-internal-inner reveal">
+              <div class="s-label">${labelText}</div>
+              <h1>${mainText}</h1>
+              ${subTextDesc ? `<p class="hero-internal-sub">${subTextDesc}</p>` : ''}
+              ${heroCtaHtml ? `<div class="hero-internal-actions">${heroCtaHtml}</div>` : ''}
+            </div>
+          </section>
+        `;
+        return;
+      }
+
       if (sec.bgType && sec.bgType.includes('GRID')) {
         var bgClass = sec.bgType.includes('WHITE') ? 'section-white' : 'section-dark';
         var cardData = [];
