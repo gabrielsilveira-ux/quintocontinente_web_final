@@ -14,7 +14,7 @@
       window.location.hostname === 'localhost' || 
       window.location.hostname === '127.0.0.1'
     ) {
-      return 'http://localhost:3000/api' + endpoint;
+      return 'http://127.0.0.1:3000/api' + endpoint;
     }
     return 'https://quintocontinente-web-final-pb4v.vercel.app/api' + endpoint;
   }
@@ -702,8 +702,45 @@
       metaDesc.setAttribute('content', page.description);
     }
 
+    // Injetar Hero da Home dinamicamente se existir (ordem 0)
+    var heroSection = page.sections.find(function(s) { return s.order === 0; });
+    if (heroSection && pageSlug === 'home') {
+      var heroTitleEl = document.querySelector('.hero h1');
+      var heroSubEl = document.querySelector('.hero .hero-sub');
+      var heroBgEl = document.querySelector('.hero .hero-bg');
+      var heroCtaMain = document.querySelector('.hero .hero-actions .btn-main');
+      var heroCtaSec = document.querySelector('.hero .hero-actions .btn-outline');
+
+      if (heroTitleEl && heroSection.title) {
+        heroTitleEl.innerHTML = heroSection.title;
+      }
+      if (heroSubEl && heroSection.subtitle) {
+        heroSubEl.innerHTML = heroSection.subtitle;
+      }
+      if (heroBgEl && heroSection.imageUrl) {
+        heroBgEl.style.backgroundImage = `linear-gradient(180deg, rgba(10, 10, 10, 0.6) 0%, rgba(10, 10, 10, 0.8) 100%), url('${heroSection.imageUrl}')`;
+        heroBgEl.style.backgroundSize = 'cover';
+        heroBgEl.style.backgroundPosition = 'center center';
+        heroBgEl.style.backgroundRepeat = 'no-repeat';
+      }
+      if (heroCtaMain && heroCtaSec && heroSection.content) {
+        var ctaParts = heroSection.content.split('|');
+        if (ctaParts[0]) {
+          var svgIcon = heroCtaMain.querySelector('svg');
+          heroCtaMain.textContent = ctaParts[0].trim() + ' ';
+          if (svgIcon) heroCtaMain.appendChild(svgIcon);
+        }
+        if (ctaParts[1]) {
+          heroCtaSec.textContent = ctaParts[1].trim();
+        }
+      }
+    }
+
     var html = '';
-    page.sections.forEach(function (sec, idx) {
+    var contentSections = page.sections.filter(function (sec) {
+      return pageSlug !== 'home' || sec.order !== 0;
+    });
+    contentSections.forEach(function (sec, idx) {
       var bgClass = sec.bgType === 'WHITE' ? 'section-white' : 'section-dark';
       var num = (idx + 1).toString().padStart(2, '0');
       var labelHtml = sec.subtitle ? `<div class="s-label">${num} / ${sec.subtitle}</div>` : `<div class="s-label">${num} / Seção</div>`;

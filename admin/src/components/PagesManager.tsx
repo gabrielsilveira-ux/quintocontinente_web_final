@@ -618,6 +618,11 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                         
                         {/* Tags e Info */}
                         <div className="flex flex-wrap items-center gap-2">
+                          {selectedPage.slug === "home" && section.order === 0 && (
+                            <span className="px-2 py-0.5 rounded text-[8px] font-bold bg-red-500/10 text-red-500 border border-red-500/20">
+                              Hero da Página Inicial
+                            </span>
+                          )}
                           <span className="px-2 py-0.5 rounded text-[8px] font-bold bg-bg text-muted2 border border-line2">
                             Ordem: {section.order}
                           </span>
@@ -861,6 +866,24 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
               {errorMsg && (
                 <div className="p-3 rounded-lg bg-red-950/20 border border-red-900/50 text-red-400 text-xs text-center font-medium">
                   {errorMsg}
+                </div>
+              )}
+
+              {/* Dicas para o Hero */}
+              {selectedPage?.slug === "home" && Number(sectionOrder) === 0 && (
+                <div className="p-4 rounded-xl bg-red-950/10 border border-red-900/30 text-[11px] text-muted2 space-y-2">
+                  <div className="font-space font-bold text-accent uppercase tracking-wider text-[10px]">
+                    ★ Diretrizes do Hero (Banner Principal)
+                  </div>
+                  <p className="leading-relaxed">
+                    Esta seção de <strong>Ordem 0</strong> controla o topo da página inicial:
+                  </p>
+                  <ul className="list-disc pl-4 space-y-1">
+                    <li><strong>Título Principal (H2)</strong>: Será a Headline (ex: <i>A experiência de quem vive...</i>). Use a tag HTML <code>&lt;br&gt;</code> para quebras de linha.</li>
+                    <li><strong>Subtítulo</strong>: Será a Subheadline / texto de apoio do banner.</li>
+                    <li><strong>Conteúdo</strong>: Textos dos dois botões separados por pipe (ex: <code>Solicitar Atendimento | Quem somos</code>).</li>
+                    <li><strong>Imagem do Bloco</strong>: Será a imagem de fundo em tela cheia do Hero.</li>
+                  </ul>
                 </div>
               )}
 
