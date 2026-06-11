@@ -80,6 +80,14 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     { title: "", desc: "", icon: "" }
   ]);
 
+  // Dif Cards state (Diferenciais)
+  const [difCards, setDifCards] = useState([
+    { pill: "", title: "", desc: "" },
+    { pill: "", title: "", desc: "" },
+    { pill: "", title: "", desc: "" },
+    { pill: "", title: "", desc: "" }
+  ]);
+
   // Loading States
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -275,12 +283,18 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     setSectionImageUrl("");
     setSectionVideoUrl("");
     setSectionBgType("DARK");
-    setSectionOrder((selectedPage.sections?.length || 0) + 1);
+    setSectionOrder(Number(selectedPage?.sections?.length || 0));
     setGridCards([
       { title: "", desc: "", icon: "" },
       { title: "", desc: "", icon: "" },
       { title: "", desc: "", icon: "" },
       { title: "", desc: "", icon: "" }
+    ]);
+    setDifCards([
+      { pill: "", title: "", desc: "" },
+      { pill: "", title: "", desc: "" },
+      { pill: "", title: "", desc: "" },
+      { pill: "", title: "", desc: "" }
     ]);
     setErrorMsg("");
     setIsSectionModalOpen(true);
@@ -297,13 +311,13 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     setSectionBgType(section.bgType);
     setSectionOrder(section.order);
     
-    // Parse grid cards if layout is GRID
+    // Parse grid cards se o layout for GRID
     if (section.bgType === "GRID" && section.content) {
       try {
         const parsed = JSON.parse(section.content);
         if (Array.isArray(parsed)) {
           const items = [...parsed];
-          while (items.length < 4) items.push({ title: "", desc: "" });
+          while (items.length < 4) items.push({ title: "", desc: "", icon: "" });
           setGridCards(items.slice(0, 4));
         } else {
           setGridCards([
@@ -327,6 +341,39 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
         { title: "", desc: "", icon: "" },
         { title: "", desc: "", icon: "" },
         { title: "", desc: "", icon: "" }
+      ]);
+    }
+
+    // Parse dif cards se o layout for DIFERENCIAIS
+    if (section.bgType === "DIFERENCIAIS" && section.content) {
+      try {
+        const parsed = JSON.parse(section.content);
+        if (Array.isArray(parsed)) {
+          const items = [...parsed];
+          while (items.length < 4) items.push({ pill: "", title: "", desc: "" });
+          setDifCards(items.slice(0, 4));
+        } else {
+          setDifCards([
+            { pill: "", title: "", desc: "" },
+            { pill: "", title: "", desc: "" },
+            { pill: "", title: "", desc: "" },
+            { pill: "", title: "", desc: "" }
+          ]);
+        }
+      } catch (e) {
+        setDifCards([
+          { pill: "", title: "", desc: "" },
+          { pill: "", title: "", desc: "" },
+          { pill: "", title: "", desc: "" },
+          { pill: "", title: "", desc: "" }
+        ]);
+      }
+    } else {
+      setDifCards([
+        { pill: "", title: "", desc: "" },
+        { pill: "", title: "", desc: "" },
+        { pill: "", title: "", desc: "" },
+        { pill: "", title: "", desc: "" }
       ]);
     }
     
@@ -373,10 +420,14 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     setIsSaving(true);
     setErrorMsg("");
 
+    let contentPayload = sectionContent.trim() || null;
+    if (sectionBgType === "GRID") contentPayload = JSON.stringify(gridCards);
+    if (sectionBgType === "DIFERENCIAIS") contentPayload = JSON.stringify(difCards);
+
     const payload = {
       title: sectionTitle.trim() || null,
       subtitle: sectionSubtitle.trim() || null,
-      content: sectionBgType === "GRID" ? JSON.stringify(gridCards) : (sectionContent.trim() || null),
+      content: contentPayload,
       imageUrl: sectionImageUrl.trim() || null,
       videoUrl: sectionVideoUrl.trim() || null,
       bgType: sectionBgType,
@@ -965,8 +1016,8 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                 />
               </div>
 
-              {/* Conteúdo / Texto Principal (Não exibe se for GRID) */}
-              {sectionBgType !== "GRID" && (
+              {/* Conteúdo / Texto Principal (Não exibe se for GRID ou DIFERENCIAIS) */}
+              {sectionBgType !== "GRID" && sectionBgType !== "DIFERENCIAIS" && (
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
                     Conteúdo / Descrição do Bloco
@@ -1078,13 +1129,67 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                 </div>
               )}
 
-              {/* Configuração de Imagem/Banner (Só exibe ou muda label dependendo do GRID) */}
+              {/* Editor de Cards para o Layout DIFERENCIAIS */}
+              {sectionBgType === "DIFERENCIAIS" && (
+                <div className="space-y-4 border border-line2 rounded-xl p-4 bg-bg/50">
+                  <div className="font-space font-bold text-accent uppercase tracking-wider text-[10px] mb-2">
+                    ✏ Configuração dos 4 Diferenciais
+                  </div>
+                  {[0, 1, 2, 3].map((cardIdx) => (
+                    <div key={`dif-${cardIdx}`} className="space-y-2 pb-3 border-b border-line2/50 last:border-b-0 last:pb-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-muted2">Diferencial 0{cardIdx + 1}</span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-2">
+                        <input
+                          type="text"
+                          value={difCards[cardIdx]?.pill || ""}
+                          onChange={(e) => {
+                            const updated = [...difCards];
+                            updated[cardIdx] = { ...updated[cardIdx], pill: e.target.value };
+                            setDifCards(updated);
+                          }}
+                          placeholder="Tag (ex: Institucional, Logística)"
+                          className="w-full bg-bg border border-line2 focus:border-accent text-accent font-semibold text-[10px] rounded px-2.5 py-1.5 outline-none transition-all uppercase tracking-wider"
+                          disabled={isSaving}
+                        />
+                        <input
+                          type="text"
+                          value={difCards[cardIdx]?.title || ""}
+                          onChange={(e) => {
+                            const updated = [...difCards];
+                            updated[cardIdx] = { ...updated[cardIdx], title: e.target.value };
+                            setDifCards(updated);
+                          }}
+                          placeholder={`Título Principal 0${cardIdx + 1}`}
+                          className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded px-2.5 py-1.5 outline-none transition-all"
+                          disabled={isSaving}
+                        />
+                        <textarea
+                          value={difCards[cardIdx]?.desc || ""}
+                          onChange={(e) => {
+                            const updated = [...difCards];
+                            updated[cardIdx] = { ...updated[cardIdx], desc: e.target.value };
+                            setDifCards(updated);
+                          }}
+                          placeholder={`Descrição curta explicativa...`}
+                          rows={2}
+                          className="w-full bg-bg border border-line2 focus:border-accent text-text text-[10px] rounded px-2.5 py-1.5 outline-none transition-all resize-none"
+                          disabled={isSaving}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Configuração de Imagem/Banner (Só exibe ou muda label dependendo do GRID/DIFERENCIAIS) */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted2 block">
-                  {sectionBgType === "GRID" ? "Texto do Botão CTA (ex: Conheça nossas soluções)" : "Imagem / Banner do Bloco"}
+                  {sectionBgType === "GRID" || sectionBgType === "DIFERENCIAIS" ? "Texto do Botão CTA (ex: Conheça nossas soluções) [Deixe em branco para ocultar]" : "Imagem / Banner do Bloco"}
                 </label>
 
-                {sectionBgType === "GRID" ? (
+                {sectionBgType === "GRID" || sectionBgType === "DIFERENCIAIS" ? (
                   <input
                     type="text"
                     value={sectionImageUrl}
@@ -1152,13 +1257,13 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
               {/* Link do Vídeo / Link do CTA */}
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                  {sectionBgType === "GRID" ? "Link do Botão CTA (ex: /o-que-fazemos/)" : "URL de Vídeo (Opcional)"}
+                  {sectionBgType === "GRID" || sectionBgType === "DIFERENCIAIS" ? "Link do Botão CTA (ex: /o-que-fazemos/)" : "URL de Vídeo (Opcional)"}
                 </label>
                 <input
                   type="text"
                   value={sectionVideoUrl}
                   onChange={(e) => setSectionVideoUrl(e.target.value)}
-                  placeholder={sectionBgType === "GRID" ? "Ex: /o-que-fazemos/" : "https://youtube.com/watch?v=..."}
+                  placeholder={sectionBgType === "GRID" || sectionBgType === "DIFERENCIAIS" ? "Ex: /o-que-fazemos/" : "https://youtube.com/watch?v=..."}
                   className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
                   disabled={isSaving}
                 />
@@ -1178,7 +1283,8 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                   >
                     <option value="DARK">Escuro (Dark)</option>
                     <option value="WHITE">Claro (White)</option>
-                    <option value="GRID">Grade de Cards (GRID)</option>
+                    <option value="GRID">Grade de Soluções (GRID)</option>
+                    <option value="DIFERENCIAIS">Diferenciais (4 Cards)</option>
                   </select>
                 </div>
 

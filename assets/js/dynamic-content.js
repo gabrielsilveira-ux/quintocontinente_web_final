@@ -808,6 +808,38 @@
         return; // Pula para a próxima seção
       }
 
+      if (sec.bgType === 'DIFERENCIAIS') {
+        var difData = [];
+        try {
+          difData = JSON.parse(sec.content);
+        } catch (e) {
+          console.warn("Erro ao fazer parse dos cards de diferenciais:", e);
+        }
+
+        var difCardsHtml = '';
+        difData.forEach(function (card, cIdx) {
+          var delayClass = cIdx === 0 ? '' : ' d' + cIdx;
+          difCardsHtml += `
+            <div class="dif reveal vis${delayClass}" style="opacity:1;transform:translate(0);">
+              <div class="dif-pill">${card.pill || 'TAG'}</div>
+              <h4 class="dif-title">${card.title || ''}</h4>
+              <p class="dif-desc">${card.desc || ''}</p>
+            </div>
+          `;
+        });
+
+        html += `
+          <section class="diferenciais section-white" id="diferenciais" style="padding:7rem max(var(--site-pad),calc((100% - var(--max-w))/2));">
+            <div class="s-label reveal vis" style="opacity:1;transform:translate(0);">${sec.subtitle || 'Diferenciais'}</div>
+            <h2 class="s-title reveal vis" style="opacity:1;transform:translate(0);">${sec.title || ''}</h2>
+            <div class="cards-wrap card-grid-4" style="margin-top:4rem">
+              ${difCardsHtml}
+            </div>
+          </section>
+        `;
+        return; // Pula para a próxima seção
+      }
+
       var bgClass = sec.bgType === 'WHITE' ? 'section-white' : 'section-dark';
       var num = (idx + 1).toString().padStart(2, '0');
       var labelHtml = sec.subtitle ? `<div class="s-label">${num} / ${sec.subtitle}</div>` : `<div class="s-label">${num} / Seção</div>`;
