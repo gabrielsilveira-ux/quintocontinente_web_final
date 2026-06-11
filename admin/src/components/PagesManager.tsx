@@ -69,6 +69,8 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
   const [sectionContent, setSectionContent] = useState("");
   const [sectionImageUrl, setSectionImageUrl] = useState("");
   const [sectionVideoUrl, setSectionVideoUrl] = useState("");
+  const [sectionCtaText, setSectionCtaText] = useState("");
+  const [sectionCtaLink, setSectionCtaLink] = useState("");
   const [sectionBgType, setSectionBgType] = useState("DARK"); // DARK or WHITE
   const [sectionOrder, setSectionOrder] = useState(0);
 
@@ -282,6 +284,8 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     setSectionContent("");
     setSectionImageUrl("");
     setSectionVideoUrl("");
+    setSectionCtaText("");
+    setSectionCtaLink("");
     setSectionBgType("DARK");
     setSectionOrder(Number(selectedPage?.sections?.length || 0));
     setGridCards([
@@ -307,7 +311,17 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     setSectionSubtitle(section.subtitle || "");
     setSectionContent(section.content || "");
     setSectionImageUrl(section.imageUrl || "");
-    setSectionVideoUrl(section.videoUrl || "");
+    
+    if (!section.bgType.includes("GRID") && !section.bgType.includes("DIFERENCIAIS") && section.videoUrl && section.videoUrl.includes("|")) {
+      const parts = section.videoUrl.split("|");
+      setSectionCtaText(parts[0] || "");
+      setSectionCtaLink(parts[1] || "");
+      setSectionVideoUrl("");
+    } else {
+      setSectionVideoUrl(section.videoUrl || "");
+      setSectionCtaText("");
+      setSectionCtaLink("");
+    }
     setSectionBgType(section.bgType);
     setSectionOrder(section.order);
     
@@ -424,12 +438,21 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     if (sectionBgType.includes("GRID")) contentPayload = JSON.stringify(gridCards);
     if (sectionBgType.includes("DIFERENCIAIS")) contentPayload = JSON.stringify(difCards);
 
+    let finalVideoUrl = sectionVideoUrl.trim() || null;
+    if (!sectionBgType.includes("GRID") && !sectionBgType.includes("DIFERENCIAIS")) {
+      if (sectionCtaText.trim() && sectionCtaLink.trim()) {
+        finalVideoUrl = `${sectionCtaText.trim()}|${sectionCtaLink.trim()}`;
+      } else if (sectionCtaLink.trim()) {
+        finalVideoUrl = sectionCtaLink.trim();
+      }
+    }
+
     const payload = {
       title: sectionTitle.trim() || null,
       subtitle: sectionSubtitle.trim() || null,
       content: contentPayload,
       imageUrl: sectionImageUrl.trim() || null,
-      videoUrl: sectionVideoUrl.trim() || null,
+      videoUrl: finalVideoUrl,
       bgType: sectionBgType,
       order: Number(sectionOrder),
     };
@@ -1256,17 +1279,50 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
 
               {/* Link do Vídeo / Link do CTA */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                  {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? "Link do Botão CTA (ex: /o-que-fazemos/)" : "URL de Vídeo (Opcional)"}
-                </label>
-                <input
-                  type="text"
-                  value={sectionVideoUrl}
-                  onChange={(e) => setSectionVideoUrl(e.target.value)}
-                  placeholder={sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? "Ex: /o-que-fazemos/" : "https://youtube.com/watch?v=..."}
-                  className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
-                  disabled={isSaving}
-                />
+                {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? (
+                  <>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
+                      Link do Botão CTA (ex: /o-que-fazemos/)
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionVideoUrl}
+                      onChange={(e) => setSectionVideoUrl(e.target.value)}
+                      placeholder="Ex: /o-que-fazemos/"
+                      className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
+                      disabled={isSaving}
+                    />
+                  </>
+                ) : (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted2 block mb-1.5">
+                        Texto do Botão CTA
+                      </label>
+                      <input
+                        type="text"
+                        value={sectionCtaText}
+                        onChange={(e) => setSectionCtaText(e.target.value)}
+                        placeholder="Ex: Saiba Mais"
+                        className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
+                        disabled={isSaving}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted2 block mb-1.5">
+                        Link do Botão CTA
+                      </label>
+                      <input
+                        type="text"
+                        value={sectionCtaLink}
+                        onChange={(e) => setSectionCtaLink(e.target.value)}
+                        placeholder="Ex: /contato"
+                        className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
+                        disabled={isSaving}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Ordem de Exibição */}

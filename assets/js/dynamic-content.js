@@ -859,20 +859,53 @@
           </div>
         `;
 
-        var gridStyle = 'display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;';
+        var ctaHtml = '';
+        if (sec.videoUrl && sec.videoUrl.includes('|')) {
+          var parts = sec.videoUrl.split('|');
+          var cText = parts[0];
+          var cLink = parts[1];
+          ctaHtml = `
+            <div class="reveal vis" style="opacity:1;transform:translate(0);margin-top:2rem;">
+              <a href="${cLink}" class="btn-outline" style="border-color:${sec.bgType && sec.bgType.includes('WHITE') ? 'var(--line-dark)' : 'var(--line)'};">${cText}</a>
+            </div>
+          `;
+        } else if (sec.videoUrl) {
+          ctaHtml = `
+            <div class="reveal vis" style="opacity:1;transform:translate(0);margin-top:2rem;">
+              <a href="${sec.videoUrl}" class="btn-outline" style="border-color:${sec.bgType && sec.bgType.includes('WHITE') ? 'var(--line-dark)' : 'var(--line)'};">Saiba Mais</a>
+            </div>
+          `;
+        }
+
         var isEven = idx % 2 === 0;
-        var col1 = isEven ? `<div>${labelHtml}${titleHtml}${contentHtml}</div>` : imageHtml;
-        var col2 = isEven ? imageHtml : `<div>${labelHtml}${titleHtml}${contentHtml}</div>`;
+        var col1 = isEven ? `<div>${labelHtml}${titleHtml}${contentHtml}${ctaHtml}</div>` : imageHtml;
+        var col2 = isEven ? imageHtml : `<div>${labelHtml}${titleHtml}${contentHtml}${ctaHtml}</div>`;
 
         html += `
           <section class="${bgClass}" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));">
-            <div class="container" style="${gridStyle}">
+            <div class="container txt-grid">
               ${col1}
               ${col2}
             </div>
           </section>
         `;
       } else {
+        var ctaHtml = '';
+        if (sec.videoUrl && sec.videoUrl.includes('|')) {
+          var parts = sec.videoUrl.split('|');
+          ctaHtml = `
+            <div class="reveal vis" style="opacity:1;transform:translate(0);margin-top:2rem;">
+              <a href="${parts[1]}" class="btn-outline" style="border-color:${sec.bgType && sec.bgType.includes('WHITE') ? 'var(--line-dark)' : 'var(--line)'};">${parts[0]}</a>
+            </div>
+          `;
+        } else if (sec.videoUrl) {
+          ctaHtml = `
+            <div class="reveal vis" style="opacity:1;transform:translate(0);margin-top:2rem;">
+              <a href="${sec.videoUrl}" class="btn-outline" style="border-color:${sec.bgType && sec.bgType.includes('WHITE') ? 'var(--line-dark)' : 'var(--line)'};">Saiba Mais</a>
+            </div>
+          `;
+        }
+
         html += `
           <section class="${bgClass}" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2)); text-align: center;">
             <div class="container" style="max-width: 800px; margin: 0 auto;">
@@ -880,6 +913,7 @@
               ${titleHtml}
               <div style="text-align: left; max-width: 700px; margin: 0 auto;">
                 ${contentHtml}
+                ${ctaHtml}
               </div>
             </div>
           </section>

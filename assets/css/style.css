@@ -724,6 +724,13 @@ footer {
 .blog-strip-text { font-size: 0.9rem; font-weight: 300; color: var(--muted2); line-height: 1.6; }
 .blog-strip-text strong { color: var(--text); font-weight: 500; }
 
+/* ── Dynamic Text Sections ─────────────────────────────────── */
+.txt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
 /* ══ RESPONSIVE ════════════════════════════════════════════════ */
 @media (max-width: 1080px) {
   .card-grid-4 { grid-template-columns: repeat(2,1fr); }
@@ -745,6 +752,7 @@ footer {
   .blog-strip { flex-direction: column; align-items: flex-start; padding: 1.5rem; }
   .svc-grid { grid-template-columns: 1fr; gap: 1rem; }
   .svc-card { padding: 2rem 1.5rem; }
+  .txt-grid { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
 }
 
 /* ── Artistas ──────────────────────────────────────────────── */
