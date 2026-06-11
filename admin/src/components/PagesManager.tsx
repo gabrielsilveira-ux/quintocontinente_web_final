@@ -1058,8 +1058,7 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                       />
                     </div>
                   )}
-                </>
-              )}
+
 
               {/* Editor de Cards para o Layout GRID */}
               {sectionBgType.includes("GRID") && (
