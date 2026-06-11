@@ -511,6 +511,70 @@ section.hero {
 }
 .card-link:hover { gap: 0.8rem; }
 
+/* ── Service Cards (GRID layout — clean redesign) ──────────── */
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+.svc-card {
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: background .3s, border-color .3s, transform .3s;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.svc-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity .3s;
+}
+.svc-card:hover { background: var(--bg3); border-color: rgba(212,43,43,.25); transform: translateY(-2px); }
+.svc-card:hover::before { opacity: 1; }
+
+.svc-icon-wrap {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-md);
+  background: var(--bg3);
+  border: 1px solid var(--line2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  transition: background .3s, border-color .3s;
+}
+.svc-card:hover .svc-icon-wrap {
+  background: var(--accent-dim);
+  border-color: rgba(212,43,43,.3);
+}
+.svc-icon-wrap svg {
+  width: 22px; height: 22px;
+  stroke: var(--muted2);
+  transition: stroke .3s;
+}
+.svc-card:hover .svc-icon-wrap svg { stroke: var(--accent); }
+
+.svc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.svc-desc {
+  font-size: 0.85rem; font-weight: 300;
+  line-height: 1.78; color: var(--muted2);
+  flex: 1;
+}
+
 /* ── Stat rows ─────────────────────────────────────────────── */
 .stat-box { border: 1px solid var(--line2); border-radius: var(--radius-lg); overflow: hidden; }
 .stat-row {
@@ -675,6 +739,8 @@ footer {
   .footer-top { grid-template-columns: 1fr; gap: 2rem; }
   .footer-bot { flex-direction: column; gap: 0.5rem; text-align: center; }
   .blog-strip { flex-direction: column; align-items: flex-start; padding: 1.5rem; }
+  .svc-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .svc-card { padding: 2rem 1.5rem; }
 }
 
 /* ── Artistas ──────────────────────────────────────────────── */

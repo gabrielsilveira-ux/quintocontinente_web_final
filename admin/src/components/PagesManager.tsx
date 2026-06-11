@@ -74,10 +74,10 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
 
   // Grid Cards state
   const [gridCards, setGridCards] = useState([
-    { title: "", desc: "" },
-    { title: "", desc: "" },
-    { title: "", desc: "" },
-    { title: "", desc: "" }
+    { title: "", desc: "", icon: "" },
+    { title: "", desc: "", icon: "" },
+    { title: "", desc: "", icon: "" },
+    { title: "", desc: "", icon: "" }
   ]);
 
   // Loading States
@@ -277,10 +277,10 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     setSectionBgType("DARK");
     setSectionOrder((selectedPage.sections?.length || 0) + 1);
     setGridCards([
-      { title: "", desc: "" },
-      { title: "", desc: "" },
-      { title: "", desc: "" },
-      { title: "", desc: "" }
+      { title: "", desc: "", icon: "" },
+      { title: "", desc: "", icon: "" },
+      { title: "", desc: "", icon: "" },
+      { title: "", desc: "", icon: "" }
     ]);
     setErrorMsg("");
     setIsSectionModalOpen(true);
@@ -307,26 +307,26 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
           setGridCards(items.slice(0, 4));
         } else {
           setGridCards([
-            { title: "", desc: "" },
-            { title: "", desc: "" },
-            { title: "", desc: "" },
-            { title: "", desc: "" }
+            { title: "", desc: "", icon: "" },
+            { title: "", desc: "", icon: "" },
+            { title: "", desc: "", icon: "" },
+            { title: "", desc: "", icon: "" }
           ]);
         }
       } catch (e) {
         setGridCards([
-          { title: "", desc: "" },
-          { title: "", desc: "" },
-          { title: "", desc: "" },
-          { title: "", desc: "" }
+          { title: "", desc: "", icon: "" },
+          { title: "", desc: "", icon: "" },
+          { title: "", desc: "", icon: "" },
+          { title: "", desc: "", icon: "" }
         ]);
       }
     } else {
       setGridCards([
-        { title: "", desc: "" },
-        { title: "", desc: "" },
-        { title: "", desc: "" },
-        { title: "", desc: "" }
+        { title: "", desc: "", icon: "" },
+        { title: "", desc: "", icon: "" },
+        { title: "", desc: "", icon: "" },
+        { title: "", desc: "", icon: "" }
       ]);
     }
     
@@ -994,6 +994,62 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                         <span className="text-[9px] font-bold uppercase tracking-wider text-muted2">Card 0{cardIdx + 1}</span>
                       </div>
                       <div className="grid grid-cols-1 gap-2">
+                        {/* Icon selector */}
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-semibold uppercase tracking-wider text-muted2">Ícone (emoji ou deixe em branco para o padrão)</label>
+                          <div className="flex items-center gap-2">
+                            <div className="flex gap-1.5">
+                              {["🎵", "🎤", "🎸", "🎭", "🎬", "🎪", "⭐", "🏆", "📋", "🤝", "🎯", "💼"].map((emoji) => (
+                                <button
+                                  key={emoji}
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = [...gridCards];
+                                    updated[cardIdx] = { ...updated[cardIdx], icon: emoji };
+                                    setGridCards(updated);
+                                  }}
+                                  className={`w-7 h-7 rounded text-sm flex items-center justify-center border transition-all ${
+                                    gridCards[cardIdx]?.icon === emoji
+                                      ? "border-accent bg-accent/10"
+                                      : "border-line2 hover:border-accent/50 bg-bg"
+                                  }`}
+                                  title={emoji}
+                                  disabled={isSaving}
+                                >
+                                  {emoji}
+                                </button>
+                              ))}
+                            </div>
+                            <input
+                              type="text"
+                              value={gridCards[cardIdx]?.icon || ""}
+                              onChange={(e) => {
+                                const updated = [...gridCards];
+                                updated[cardIdx] = { ...updated[cardIdx], icon: e.target.value };
+                                setGridCards(updated);
+                              }}
+                              placeholder="Emoji ou deixe vazio"
+                              className="flex-1 bg-bg border border-line2 focus:border-accent text-text text-xs rounded px-2.5 py-1.5 outline-none transition-all"
+                              disabled={isSaving}
+                              maxLength={8}
+                            />
+                            {gridCards[cardIdx]?.icon && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const updated = [...gridCards];
+                                  updated[cardIdx] = { ...updated[cardIdx], icon: "" };
+                                  setGridCards(updated);
+                                }}
+                                className="text-muted2 hover:text-accent text-xs px-1 transition-colors"
+                                title="Limpar ícone"
+                                disabled={isSaving}
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
+                        </div>
                         <input
                           type="text"
                           value={gridCards[cardIdx]?.title || ""}

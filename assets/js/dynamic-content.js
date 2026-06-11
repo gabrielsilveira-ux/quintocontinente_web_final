@@ -748,26 +748,37 @@
         } catch (e) {
           console.warn("Erro ao fazer parse dos cards de serviços:", e);
         }
-        
-        var cardsHtml = '';
-        var icons = [
-          `<svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke-width="1.5" stroke-linecap="round" /></svg>`,
-          `<svg viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke-width="1.5" /><path d="M5 3V2M11 3V2M2 7h12" stroke-width="1.5" stroke-linecap="round" /></svg>`,
-          `<svg viewBox="0 0 16 16" fill="none"><polygon points="8,2 14,13 2,13" stroke-width="1.5" stroke-linejoin="round" /></svg>`,
-          `<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke-width="1.5" /><path d="M5.5 8.5S6 10 8 10s2.5-1.5 2.5-1.5" stroke-width="1.5" stroke-linecap="round" /><circle cx="6" cy="6.5" r=".8" fill="currentColor" stroke="none" /><circle cx="10" cy="6.5" r=".8" fill="currentColor" stroke="none" /></svg>`
+
+        // Default icons (SVG inline) — used as fallback if card.icon is empty
+        var defaultIcons = [
+          `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>`,
+          `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4V2M16 4V2M3 9h18"/></svg>`,
+          `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 21h20L12 3z"/><path d="M12 9v5M12 17h.01"/></svg>`,
+          `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>`
         ];
 
+        var cardsHtml = '';
         cardData.forEach(function (card, cIdx) {
-          var cardNum = (cIdx + 1).toString().padStart(2, '0');
-          var cardIcon = icons[cIdx % icons.length];
+          var iconContent = '';
+          if (card.icon) {
+            // If icon is an emoji or short text, display directly
+            if (card.icon.length <= 4) {
+              iconContent = `<span style="font-size:1.6rem;line-height:1;">${card.icon}</span>`;
+            } else {
+              // treat as SVG markup
+              iconContent = card.icon;
+            }
+          } else {
+            iconContent = defaultIcons[cIdx % defaultIcons.length];
+          }
+
           cardsHtml += `
-            <div class="card reveal vis" style="opacity: 1; transform: translate(0);">
-              <div class="card-bar"></div>
-              <div class="card-idx">${cardNum} / 04</div>
-              <div class="card-icon">${cardIcon}</div>
-              <h3 class="card-title">${card.title}</h3>
-              <p class="card-desc">${card.desc}</p>
-              <a href="${sec.videoUrl || '/o-que-fazemos/'}" class="card-link">Ver mais →</a>
+            <div class="svc-card reveal vis" style="opacity:1;transform:translate(0);">
+              <div class="svc-icon-wrap">${iconContent}</div>
+              <div>
+                <h3 class="svc-title">${card.title}</h3>
+              </div>
+              <p class="svc-desc">${card.desc}</p>
             </div>
           `;
         });
@@ -775,8 +786,8 @@
         var ctaHtml = '';
         if (sec.imageUrl && sec.videoUrl) {
           ctaHtml = `
-            <div style="text-align: center; margin-top: 4rem;">
-              <a href="${sec.videoUrl}" class="btn-main reveal vis" style="opacity: 1; transform: translate(0);">
+            <div style="text-align:center;margin-top:3.5rem;">
+              <a href="${sec.videoUrl}" class="btn-main reveal vis" style="opacity:1;transform:translate(0);">
                 ${sec.imageUrl}
                 <svg class="arr" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </a>
@@ -785,15 +796,15 @@
         }
 
         html += `
-          <section class="servicos section-dark" id="servicos" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));">
+          <section class="servicos section-dark" id="servicos" style="padding:7rem max(var(--site-pad),calc((100% - var(--max-w))/2));">
             <div class="servicos-hd">
               <div>
-                <div class="s-label reveal vis" style="opacity: 1; transform: translate(0);">${sec.subtitle || 'O Que Fazemos'}</div>
-                <h2 class="s-title reveal vis" style="opacity: 1; transform: translate(0);">${sec.title || 'Seu parceiro estratégico em todas as etapas.'}</h2>
+                <div class="s-label reveal vis" style="opacity:1;transform:translate(0);">${sec.subtitle || 'O Que Fazemos'}</div>
+                <h2 class="s-title reveal vis" style="opacity:1;transform:translate(0);">${sec.title || 'Seu parceiro estratégico em todas as etapas.'}</h2>
               </div>
-              <p class="servicos-hd-note reveal vis" style="opacity: 1; transform: translate(0);">Cada entrega é construída com precisão técnica e visão estratégica.</p>
+              <p class="servicos-hd-note reveal vis" style="opacity:1;transform:translate(0);">Cada entrega é construída com precisão técnica e visão estratégica.</p>
             </div>
-            <div class="cards-wrap card-grid-2">
+            <div class="svc-grid">
               ${cardsHtml}
             </div>
             ${ctaHtml}
