@@ -85,8 +85,8 @@ export const pageSectionSchema = z.object({
   title: z.string().optional().nullable(),
   subtitle: z.string().optional().nullable(),
   content: z.string().optional().nullable(),
-  imageUrl: z.string().url("A URL da imagem é inválida").or(z.literal("")).optional().nullable(),
-  videoUrl: z.string().url("A URL do vídeo é inválida").or(z.literal("")).optional().nullable(),
-  bgType: z.enum(["DARK", "WHITE"]).default("DARK"),
+  imageUrl: z.string().optional().nullable(),
+  videoUrl: z.string().optional().nullable(),
+  bgType: z.enum(["DARK", "WHITE", "GRID"]).default("DARK"),
   order: z.preprocess((val) => Number(val ?? 0), z.number().int().nonnegative()),
 });
