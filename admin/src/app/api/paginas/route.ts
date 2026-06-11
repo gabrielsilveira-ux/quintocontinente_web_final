@@ -29,7 +29,9 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: "Página inativa." }, { status: 403 });
       }
 
-      return NextResponse.json(page);
+      const response = NextResponse.json(page);
+      response.headers.set("Cache-Control", "public, s-maxage=30, stale-while-revalidate=300");
+      return response;
     }
 
     const where: any = {};
@@ -40,7 +42,9 @@ export async function GET(request: NextRequest) {
       orderBy: { title: "asc" },
     });
 
-    return NextResponse.json(pages);
+    const response = NextResponse.json(pages);
+    response.headers.set("Cache-Control", "public, s-maxage=30, stale-while-revalidate=300");
+    return response;
   } catch (error: any) {
     console.error("Erro ao buscar páginas:", error);
     return NextResponse.json(

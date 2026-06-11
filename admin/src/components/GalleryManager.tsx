@@ -83,7 +83,7 @@ export function GalleryManager({ initialItems }: GalleryManagerProps) {
     setErrorMsg("");
 
     try {
-      const compressedFile = await compressImage(file);
+      const compressedFile = await compressImage(file, 1200, 1200, 0.75);
       const formData = new FormData();
       formData.append("file", compressedFile);
       formData.append("bucket", "gallery");

@@ -36,11 +36,11 @@ window.initBannerSlider = function () {
   function animateProgress() {
     if (!progress) return;
     progress.style.transition = 'none';
-    progress.style.width = '0%';
+    progress.style.transform = 'scaleX(0)';
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        progress.style.transition = 'width ' + INTERVAL + 'ms linear';
-        progress.style.width = '100%';
+        progress.style.transition = 'transform ' + INTERVAL + 'ms linear';
+        progress.style.transform = 'scaleX(1)';
       });
     });
   }

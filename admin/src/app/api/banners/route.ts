@@ -15,7 +15,9 @@ export async function GET(request: NextRequest) {
       orderBy: { order: "asc" },
     });
 
-    return NextResponse.json(banners);
+    const response = NextResponse.json(banners);
+    response.headers.set("Cache-Control", "public, s-maxage=30, stale-while-revalidate=300");
+    return response;
   } catch (error: any) {
     console.error("Erro ao buscar banners:", error);
     return NextResponse.json(

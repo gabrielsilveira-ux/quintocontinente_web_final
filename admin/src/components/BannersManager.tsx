@@ -88,7 +88,7 @@ export function BannersManager({ initialBanners }: BannersManagerProps) {
     setErrorMsg("");
 
     try {
-      const compressedFile = await compressImage(file);
+      const compressedFile = await compressImage(file, 1600, 1200, 0.8);
       const formData = new FormData();
       formData.append("file", compressedFile);
       formData.append("bucket", "banners");

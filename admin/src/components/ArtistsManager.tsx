@@ -172,7 +172,7 @@ export function ArtistsManager({ initialArtists }: ArtistsManagerProps) {
     setErrorMsg("");
 
     try {
-      const compressedFile = await compressImage(file);
+      const compressedFile = await compressImage(file, 1000, 1000, 0.75);
       const formData = new FormData();
       formData.append("file", compressedFile);
       formData.append("bucket", "artists");
@@ -207,7 +207,7 @@ export function ArtistsManager({ initialArtists }: ArtistsManagerProps) {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const compressedFile = await compressImage(file);
+        const compressedFile = await compressImage(file, 1200, 1200, 0.75);
         const formData = new FormData();
         formData.append("file", compressedFile);
         formData.append("bucket", "artists");

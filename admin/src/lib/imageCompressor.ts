@@ -4,9 +4,9 @@
  */
 export function compressImage(
   file: File,
-  maxWidth = 1600,
-  maxHeight = 1600,
-  quality = 0.8
+  maxWidth = 1200,
+  maxHeight = 1200,
+  quality = 0.75
 ): Promise<File> {
   return new Promise((resolve) => {
     // Se o ambiente não suporta APIs do navegador para renderização, retorna o arquivo original

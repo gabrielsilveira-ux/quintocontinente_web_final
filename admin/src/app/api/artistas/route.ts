@@ -19,7 +19,9 @@ export async function GET(request: NextRequest) {
       if (!artist) {
         return NextResponse.json({ error: "Artista não encontrado." }, { status: 404 });
       }
-      return NextResponse.json(artist);
+      const response = NextResponse.json(artist);
+      response.headers.set("Cache-Control", "public, s-maxage=30, stale-while-revalidate=300");
+      return response;
     }
 
     const where: any = {};
@@ -31,7 +33,9 @@ export async function GET(request: NextRequest) {
       orderBy: { order: "asc" },
     });
 
-    return NextResponse.json(artists);
+    const response = NextResponse.json(artists);
+    response.headers.set("Cache-Control", "public, s-maxage=30, stale-while-revalidate=300");
+    return response;
   } catch (error: any) {
     console.error("Erro ao buscar artistas:", error);
     return NextResponse.json(

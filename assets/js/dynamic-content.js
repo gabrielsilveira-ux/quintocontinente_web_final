@@ -69,11 +69,82 @@
   captureAndStoreUtms();
 
   /* ── 1. Carregar Banners na Home ──────────────────────────── */
+  function renderBanners(slider, banners) {
+    var slidesHtml = '';
+    banners.forEach(function (banner, idx) {
+      var activeClass = idx === 0 ? 'active' : '';
+      var linkUrl = banner.linkUrl || '#contato';
+      var label = banner.label || 'Destaque';
+      var desc = banner.description || '';
+
+      slidesHtml += `
+        <div class="banner-slide ${activeClass}">
+          <img src="${banner.imageUrl}" alt="${banner.title}" ${idx > 0 ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async" style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0; z-index:-1;">
+          <div class="banner-overlay"></div>
+          <div class="banner-content">
+            <div class="banner-label"><span class="banner-label-dot"></span>${label}</div>
+            <div class="banner-title">${banner.title}</div>
+            <div class="banner-desc">${desc}</div>
+            <a href="${linkUrl}" class="btn-main">
+              Consultar disponibilidade 
+              <svg class="arr" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      `;
+    });
+
+    slidesHtml += `<div class="banner-progress" id="bannerProgress"></div>`;
+    
+    var dotsHtml = '';
+    banners.forEach(function (_, idx) {
+      var activeClass = idx === 0 ? 'active' : '';
+      dotsHtml += `<div class="banner-dot ${activeClass}" data-slide="${idx}"></div>`;
+    });
+
+    var controlsHtml = `
+      <div class="banner-controls">
+        <button class="banner-btn" id="bannerPrev" aria-label="Anterior">
+          <svg viewBox="0 0 16 16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 4l-4 4 4 4" />
+          </svg>
+        </button>
+        <div class="banner-dots" id="bannerDots">
+          ${dotsHtml}
+        </div>
+        <button class="banner-btn" id="bannerNext" aria-label="Próximo">
+          <svg viewBox="0 0 16 16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 4l4 4-4 4" />
+          </svg>
+        </button>
+      </div>
+    `;
+
+    slider.innerHTML = slidesHtml + controlsHtml;
+
+    if (typeof window.initBannerSlider === 'function') {
+      window.initBannerSlider();
+    }
+  }
+
   async function loadDynamicBanners() {
     var slider = document.getElementById('bannerSlider');
     if (!slider) return;
 
     slider.dataset.dynamic = 'true';
+
+    // Ler do Cache Local
+    var cached = localStorage.getItem('qc_banners');
+    if (cached) {
+      try {
+        var banners = JSON.parse(cached);
+        renderBanners(slider, banners);
+      } catch (e) {
+        console.warn("Erro ao ler banners do cache local:", e);
+      }
+    }
 
     try {
       var res = await fetch(getApiUrl('/banners?active=true'));
@@ -82,77 +153,53 @@
       var banners = await res.json();
       if (!banners || banners.length === 0) throw new Error("Sem banners ativos");
 
-      var slidesHtml = '';
-      banners.forEach(function (banner, idx) {
-        var activeClass = idx === 0 ? 'active' : '';
-        var linkUrl = banner.linkUrl || '#contato';
-        var label = banner.label || 'Destaque';
-        var desc = banner.description || '';
+      var serialized = JSON.stringify(banners);
+      localStorage.setItem('qc_banners', serialized);
 
-        slidesHtml += `
-          <div class="banner-slide ${activeClass}">
-            <img src="${banner.imageUrl}" alt="${banner.title}" ${idx > 0 ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async" style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0; z-index:-1;">
-            <div class="banner-overlay"></div>
-            <div class="banner-content">
-              <div class="banner-label"><span class="banner-label-dot"></span>${label}</div>
-              <div class="banner-title">${banner.title}</div>
-              <div class="banner-desc">${desc}</div>
-              <a href="${linkUrl}" class="btn-main">
-                Consultar disponibilidade 
-                <svg class="arr" width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        `;
-      });
-
-      slidesHtml += `<div class="banner-progress" id="bannerProgress"></div>`;
-      
-      var dotsHtml = '';
-      banners.forEach(function (_, idx) {
-        var activeClass = idx === 0 ? 'active' : '';
-        dotsHtml += `<div class="banner-dot ${activeClass}" data-slide="${idx}"></div>`;
-      });
-
-      var textLinkServicos = "o-que-fazemos/index.html";
-
-      var controlsHtml = `
-        <div class="banner-controls">
-          <button class="banner-btn" id="bannerPrev" aria-label="Anterior">
-            <svg viewBox="0 0 16 16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M10 4l-4 4 4 4" />
-            </svg>
-          </button>
-          <div class="banner-dots" id="bannerDots">
-            ${dotsHtml}
-          </div>
-          <button class="banner-btn" id="bannerNext" aria-label="Próximo">
-            <svg viewBox="0 0 16 16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 4l4 4-4 4" />
-            </svg>
-          </button>
-        </div>
-      `;
-
-      slider.innerHTML = slidesHtml + controlsHtml;
-
-      if (typeof window.initBannerSlider === 'function') {
-        window.initBannerSlider();
+      // Só re-renderiza se os dados de fato mudaram para evitar flashes visuais
+      if (serialized !== cached) {
+        renderBanners(slider, banners);
       }
     } catch (err) {
-      console.warn("Usando banners estáticos de fallback.", err);
-      if (typeof window.initBannerSlider === 'function') {
+      console.warn("Usando banners estáticos de fallback ou cache.", err);
+      if (!cached && typeof window.initBannerSlider === 'function') {
         window.initBannerSlider();
       }
     }
   }
 
   /* ── 2. Carregar Marquee de Artistas na Home ───────────────── */
+  function renderMarquee(track, artists) {
+    var itemsHtml = '';
+    artists.forEach(function (artist) {
+      itemsHtml += `
+        <a href="artistas/artista.html?slug=${artist.slug}" class="artist-card" style="text-decoration:none;">
+          <div class="artist-img">
+            <img src="${artist.imageUrl}" alt="${artist.name}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+          <div class="artist-info">
+            <h3 class="artist-name">${artist.name}</h3>
+          </div>
+        </a>
+      `;
+    });
+    track.innerHTML = itemsHtml + itemsHtml;
+  }
+
   async function loadMarqueeArtists() {
     var track = document.querySelector('.marquee-track');
     if (!track) return;
+
+    // Ler do Cache Local
+    var cached = localStorage.getItem('qc_featured_artists');
+    if (cached) {
+      try {
+        var artists = JSON.parse(cached);
+        renderMarquee(track, artists);
+      } catch (e) {
+        console.warn("Erro ao ler artistas do cache local:", e);
+      }
+    }
 
     try {
       var res = await fetch(getApiUrl('/artistas?active=true&featured=true'));
@@ -161,30 +208,50 @@
       var artists = await res.json();
       if (!artists || artists.length === 0) return;
 
-      var itemsHtml = '';
-      artists.forEach(function (artist) {
-        itemsHtml += `
-          <a href="artistas/artista.html?slug=${artist.slug}" class="artist-card" style="text-decoration:none;">
-            <div class="artist-img">
-              <img src="${artist.imageUrl}" alt="${artist.name}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            <div class="artist-info">
-              <h3 class="artist-name">${artist.name}</h3>
-            </div>
-          </a>
-        `;
-      });
+      var serialized = JSON.stringify(artists);
+      localStorage.setItem('qc_featured_artists', serialized);
 
-      track.innerHTML = itemsHtml + itemsHtml;
+      if (serialized !== cached) {
+        renderMarquee(track, artists);
+      }
     } catch (err) {
       console.warn("Erro ao carregar artistas dinâmicos no marquee.", err);
     }
   }
 
   /* ── 3. Carregar Lista de Artistas (Página Artistas) ────────── */
+  function renderArtistsGrid(grid, artists) {
+    var itemsHtml = '';
+    artists.forEach(function (artist) {
+      itemsHtml += `
+        <a href="artista.html?slug=${artist.slug}" class="artist-card reveal vis" data-name="${artist.name}" style="text-decoration:none;">
+          <div class="artist-img">
+            <img src="${artist.imageUrl}" alt="${artist.name}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+          <div class="artist-info">
+            <h3 class="artist-name">${artist.name}</h3>
+          </div>
+        </a>
+      `;
+    });
+
+    grid.innerHTML = itemsHtml;
+  }
+
   async function loadArtistsPage() {
     var grid = document.getElementById('artistsGrid');
     if (!grid) return;
+
+    // Ler do Cache Local
+    var cached = localStorage.getItem('qc_all_artists');
+    if (cached) {
+      try {
+        var artists = JSON.parse(cached);
+        renderArtistsGrid(grid, artists);
+      } catch (e) {
+        console.warn("Erro ao ler catálogo do cache local:", e);
+      }
+    }
 
     try {
       var res = await fetch(getApiUrl('/artistas?active=true'));
@@ -196,25 +263,19 @@
         return;
       }
 
-      var itemsHtml = '';
-      artists.forEach(function (artist) {
-        itemsHtml += `
-          <a href="artista.html?slug=${artist.slug}" class="artist-card reveal vis" data-name="${artist.name}" style="text-decoration:none;">
-            <div class="artist-img">
-              <img src="${artist.imageUrl}" alt="${artist.name}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            <div class="artist-info">
-              <h3 class="artist-name">${artist.name}</h3>
-            </div>
-          </a>
-        `;
-      });
+      var serialized = JSON.stringify(artists);
+      localStorage.setItem('qc_all_artists', serialized);
 
-      grid.innerHTML = itemsHtml;
+      if (serialized !== cached) {
+        renderArtistsGrid(grid, artists);
+      }
 
       var searchInput = document.getElementById('artistSearch');
       if (searchInput) {
-        searchInput.addEventListener('input', function (e) {
+        // Remove event listener antigo caso já exista recriando o elemento ou removendo/adicionando handler
+        var newSearchInput = searchInput.cloneNode(true);
+        searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+        newSearchInput.addEventListener('input', function (e) {
           var term = e.target.value.toLowerCase();
           var cards = grid.querySelectorAll('.artist-card');
           cards.forEach(function (card) {
@@ -234,13 +295,31 @@
     var grid = document.getElementById('galleryGrid');
     if (!grid) return;
 
+    // Ler do Cache Local
+    var cached = localStorage.getItem('qc_gallery');
+    if (cached) {
+      try {
+        allGalleryItems = JSON.parse(cached);
+        renderGalleryTabs();
+        renderGalleryGrid('Todos');
+      } catch (e) {
+        console.warn("Erro ao ler galeria do cache local:", e);
+      }
+    }
+
     try {
       var res = await fetch(getApiUrl('/galeria?active=true'));
       if (!res.ok) throw new Error();
 
-      allGalleryItems = await res.json();
-      renderGalleryTabs();
-      renderGalleryGrid('Todos');
+      var items = await res.json();
+      var serialized = JSON.stringify(items);
+      localStorage.setItem('qc_gallery', serialized);
+
+      if (serialized !== cached) {
+        allGalleryItems = items;
+        renderGalleryTabs();
+        renderGalleryGrid('Todos');
+      }
     } catch (err) {
       console.warn("Erro ao carregar fotos da galeria.", err);
     }
@@ -312,6 +391,10 @@
   function setupContactForm() {
     var form = document.querySelector('form[data-form="contato"]');
     if (!form) return;
+
+    // Evita acumular múltiplos listeners
+    if (form.dataset.hooked) return;
+    form.dataset.hooked = 'true';
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -387,6 +470,139 @@
   }
 
   /* ── 6. Carregar Detalhes de um Artista (artista.html) ─────── */
+  function renderArtistProfile(artist) {
+    document.getElementById('breadcrumb-name').textContent = artist.name;
+    document.getElementById('artist-name').textContent = artist.name;
+    
+    var genreEl = document.getElementById('artist-genre');
+    if (genreEl) genreEl.textContent = artist.genre || 'Gênero não informado';
+    
+    var bgEl = document.getElementById('artist-hero-bg');
+    if (bgEl) bgEl.style.backgroundImage = `url('${artist.imageUrl}')`;
+    
+    var bioImgEl = document.getElementById('artist-bio-img');
+    if (bioImgEl) bioImgEl.src = artist.imageUrl;
+    
+    var bioTextEl = document.getElementById('artist-bio-text');
+    if (bioTextEl && artist.bio) {
+      var paragraphs = artist.bio.split('\n').filter(Boolean);
+      bioTextEl.innerHTML = paragraphs.map(function(p) { return `<p>${p}</p>`; }).join('');
+    }
+
+    // Dynamic SEO tags
+    document.title = artist.name + ' — Quinto Continente | Agência de Artistas';
+    
+    var metaDesc = document.getElementById('meta-desc');
+    if (metaDesc) metaDesc.setAttribute('content', `Contrate ${artist.name} pela Quinto Continente. Veja biografia, galeria de fotos e solicite disponibilidade de cotação.`);
+    
+    var canonical = document.getElementById('canonical-link');
+    if (canonical) canonical.setAttribute('href', `https://quintocontinente.com.br/artistas/artista.html?slug=${artist.slug}`);
+    
+    var ogTitle = document.getElementById('og-title');
+    if (ogTitle) ogTitle.setAttribute('content', artist.name + ' — Quinto Continente | Agência de Artistas');
+    
+    var ogDesc = document.getElementById('og-desc');
+    if (ogDesc) ogDesc.setAttribute('content', `Contrate ${artist.name} pela Quinto Continente. Veja biografia, galeria de fotos e solicite disponibilidade de cotação.`);
+    
+    var ogImg = document.getElementById('og-img');
+    if (ogImg) ogImg.setAttribute('content', artist.imageUrl);
+
+    // JSON-LD dynamic injection
+    var oldSchema = document.getElementById('dynamic-artist-jsonld');
+    if (oldSchema) oldSchema.remove();
+
+    var schemaScript = document.createElement('script');
+    schemaScript.type = 'application/ld+json';
+    schemaScript.id = 'dynamic-artist-jsonld';
+    schemaScript.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "PerformingArtist",
+      "name": artist.name,
+      "image": artist.imageUrl,
+      "description": artist.bio,
+      "genre": artist.genre
+    });
+    document.head.appendChild(schemaScript);
+
+    // Trigger GTM artist_page_view event
+    trackEvent('artist_page_view', {
+      artistName: artist.name,
+      slug: artist.slug
+    });
+
+    // Render social links
+    var socialContainer = document.getElementById('social-links-container');
+    var hasSocial = false;
+    if (socialContainer) {
+      var socialHtml = '';
+      if (artist.websiteUrl) {
+        hasSocial = true;
+        socialHtml += `<li><a href="${artist.websiteUrl}" target="_blank" rel="noopener" class="artist-social-link">Website Oficial</a></li>`;
+      }
+      if (artist.instagramUrl) {
+        hasSocial = true;
+        socialHtml += `<li><a href="${artist.instagramUrl}" target="_blank" rel="noopener" class="artist-social-link">Instagram</a></li>`;
+      }
+      if (artist.spotifyUrl) {
+        hasSocial = true;
+        socialHtml += `<li><a href="${artist.spotifyUrl}" target="_blank" rel="noopener" class="artist-social-link">Spotify / Streaming</a></li>`;
+      }
+      socialContainer.innerHTML = socialHtml;
+      var socialSection = document.getElementById('social-section');
+      if (socialSection) socialSection.style.display = hasSocial ? 'block' : 'none';
+    }
+
+    // Render gallery slider
+    var trackEl = document.getElementById('gallery-track');
+    if (trackEl && artist.galleryUrls && artist.galleryUrls.length > 0) {
+      var slidesHtml = '';
+      artist.galleryUrls.forEach(function (url) {
+        slidesHtml += `
+          <div class="gallery-slide">
+            <img src="${url}" alt="Foto de ${artist.name}" loading="lazy">
+          </div>
+        `;
+      });
+      trackEl.innerHTML = slidesHtml;
+      var gallerySection = document.getElementById('gallery-section');
+      if (gallerySection) gallerySection.style.display = 'block';
+      setupSliderLogic(artist.galleryUrls.length);
+    } else {
+      var gallerySection = document.getElementById('gallery-section');
+      if (gallerySection) gallerySection.style.display = 'none';
+    }
+
+    // Hook Dynamic CTA links
+    var waCta = document.getElementById('dynamic-wa-cta');
+    if (waCta) {
+      var waText = encodeURIComponent(`Olá! Tenho interesse em contratar o show do artista ${artist.name} pela Quinto Continente. Gostaria de verificar disponibilidade de rota.`);
+      waCta.href = `https://wa.me/5567992185103?text=${waText}`;
+      if (!waCta.dataset.hooked) {
+        waCta.dataset.hooked = 'true';
+        waCta.addEventListener('click', function() {
+          trackEvent('artist_contact_click', {
+            artistName: artist.name,
+            channel: 'WhatsApp'
+          });
+        });
+      }
+    }
+
+    var formCta = document.getElementById('dynamic-form-cta');
+    if (formCta) {
+      formCta.href = `../contato/index.html?artista=${encodeURIComponent(artist.name)}`;
+      if (!formCta.dataset.hooked) {
+        formCta.dataset.hooked = 'true';
+        formCta.addEventListener('click', function() {
+          trackEvent('artist_contact_click', {
+            artistName: artist.name,
+            channel: 'Form'
+          });
+        });
+      }
+    }
+  }
+
   async function loadArtistProfilePage() {
     var nameEl = document.getElementById('artist-name');
     if (!nameEl) return;
@@ -398,133 +614,34 @@
       return;
     }
 
+    // Ler do Cache Local
+    var cacheKey = 'qc_artist_profile_' + slug;
+    var cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        var artist = JSON.parse(cached);
+        renderArtistProfile(artist);
+      } catch (e) {
+        console.warn("Erro ao ler perfil do artista do cache local:", e);
+      }
+    }
+
     try {
       var res = await fetch(getApiUrl('/artistas?slug=' + slug));
       if (!res.ok) throw new Error("Artista não encontrado");
 
       var artist = await res.json();
-      
-      document.getElementById('breadcrumb-name').textContent = artist.name;
-      document.getElementById('artist-name').textContent = artist.name;
-      
-      var genreEl = document.getElementById('artist-genre');
-      if (genreEl) genreEl.textContent = artist.genre || 'Gênero não informado';
-      
-      var bgEl = document.getElementById('artist-hero-bg');
-      if (bgEl) bgEl.style.backgroundImage = `url('${artist.imageUrl}')`;
-      
-      var bioImgEl = document.getElementById('artist-bio-img');
-      if (bioImgEl) bioImgEl.src = artist.imageUrl;
-      
-      var bioTextEl = document.getElementById('artist-bio-text');
-      if (bioTextEl && artist.bio) {
-        var paragraphs = artist.bio.split('\n').filter(Boolean);
-        bioTextEl.innerHTML = paragraphs.map(function(p) { return `<p>${p}</p>`; }).join('');
+      var serialized = JSON.stringify(artist);
+      localStorage.setItem(cacheKey, serialized);
+
+      if (serialized !== cached) {
+        renderArtistProfile(artist);
       }
-
-      // Dynamic SEO tags
-      document.title = artist.name + ' — Quinto Continente | Agência de Artistas';
-      
-      var metaDesc = document.getElementById('meta-desc');
-      if (metaDesc) metaDesc.setAttribute('content', `Contrate ${artist.name} pela Quinto Continente. Veja biografia, galeria de fotos e solicite disponibilidade de cotação.`);
-      
-      var canonical = document.getElementById('canonical-link');
-      if (canonical) canonical.setAttribute('href', `https://quintocontinente.com.br/artistas/artista.html?slug=${artist.slug}`);
-      
-      var ogTitle = document.getElementById('og-title');
-      if (ogTitle) ogTitle.setAttribute('content', artist.name + ' — Quinto Continente | Agência de Artistas');
-      
-      var ogDesc = document.getElementById('og-desc');
-      if (ogDesc) ogDesc.setAttribute('content', `Contrate ${artist.name} pela Quinto Continente. Veja biografia, galeria de fotos e solicite disponibilidade de cotação.`);
-      
-      var ogImg = document.getElementById('og-img');
-      if (ogImg) ogImg.setAttribute('content', artist.imageUrl);
-
-      // JSON-LD dynamic injection
-      var schemaScript = document.createElement('script');
-      schemaScript.type = 'application/ld+json';
-      schemaScript.text = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "PerformingArtist",
-        "name": artist.name,
-        "image": artist.imageUrl,
-        "description": artist.bio,
-        "genre": artist.genre
-      });
-      document.head.appendChild(schemaScript);
-
-      // Trigger GTM artist_page_view event
-      trackEvent('artist_page_view', {
-        artistName: artist.name,
-        slug: artist.slug
-      });
-
-      // Render social links
-      var socialContainer = document.getElementById('social-links-container');
-      var hasSocial = false;
-      if (socialContainer) {
-        var socialHtml = '';
-        if (artist.websiteUrl) {
-          hasSocial = true;
-          socialHtml += `<li><a href="${artist.websiteUrl}" target="_blank" rel="noopener" class="artist-social-link">Website Oficial</a></li>`;
-        }
-        if (artist.instagramUrl) {
-          hasSocial = true;
-          socialHtml += `<li><a href="${artist.instagramUrl}" target="_blank" rel="noopener" class="artist-social-link">Instagram</a></li>`;
-        }
-        if (artist.spotifyUrl) {
-          hasSocial = true;
-          socialHtml += `<li><a href="${artist.spotifyUrl}" target="_blank" rel="noopener" class="artist-social-link">Spotify / Streaming</a></li>`;
-        }
-        socialContainer.innerHTML = socialHtml;
-        var socialSection = document.getElementById('social-section');
-        if (socialSection && hasSocial) socialSection.style.display = 'block';
-      }
-
-      // Render gallery slider
-      var trackEl = document.getElementById('gallery-track');
-      if (trackEl && artist.galleryUrls && artist.galleryUrls.length > 0) {
-        var slidesHtml = '';
-        artist.galleryUrls.forEach(function (url) {
-          slidesHtml += `
-            <div class="gallery-slide">
-              <img src="${url}" alt="Foto de ${artist.name}" loading="lazy">
-            </div>
-          `;
-        });
-        trackEl.innerHTML = slidesHtml;
-        var gallerySection = document.getElementById('gallery-section');
-        if (gallerySection) gallerySection.style.display = 'block';
-        setupSliderLogic(artist.galleryUrls.length);
-      }
-
-      // Hook Dynamic CTA links
-      var waCta = document.getElementById('dynamic-wa-cta');
-      if (waCta) {
-        var waText = encodeURIComponent(`Olá! Tenho interesse em contratar o show do artista ${artist.name} pela Quinto Continente. Gostaria de verificar disponibilidade de rota.`);
-        waCta.href = `https://wa.me/5567992185103?text=${waText}`;
-        waCta.addEventListener('click', function() {
-          trackEvent('artist_contact_click', {
-            artistName: artist.name,
-            channel: 'WhatsApp'
-          });
-        });
-      }
-
-      var formCta = document.getElementById('dynamic-form-cta');
-      if (formCta) {
-        formCta.href = `../contato/index.html?artista=${encodeURIComponent(artist.name)}`;
-        formCta.addEventListener('click', function() {
-          trackEvent('artist_contact_click', {
-            artistName: artist.name,
-            channel: 'Form'
-          });
-        });
-      }
-
     } catch (err) {
       console.error("Erro ao carregar perfil do artista:", err);
-      nameEl.textContent = 'Erro ao carregar informações';
+      if (!cached) {
+        nameEl.textContent = 'Erro ao carregar informações';
+      }
     }
   }
 
@@ -547,14 +664,20 @@
       btnNext.disabled = index >= maxIndex;
     }
 
-    btnPrev.addEventListener('click', function() {
+    // Limpar event listeners antigos recriando os botões caso necessário
+    var newBtnPrev = btnPrev.cloneNode(true);
+    var newBtnNext = btnNext.cloneNode(true);
+    btnPrev.parentNode.replaceChild(newBtnPrev, btnPrev);
+    btnNext.parentNode.replaceChild(newBtnNext, btnNext);
+
+    newBtnPrev.addEventListener('click', function() {
       if (index > 0) {
         index--;
         update();
       }
     });
 
-    btnNext.addEventListener('click', function() {
+    newBtnNext.addEventListener('click', function() {
       var visibleWidth = track.parentElement.clientWidth;
       var maxIndex = Math.max(0, totalSlides - Math.floor(visibleWidth / slideWidth));
       if (index < maxIndex) {
@@ -563,11 +686,72 @@
       }
     });
 
+    window.removeEventListener('resize', update);
     window.addEventListener('resize', update);
     setTimeout(update, 300);
   }
 
   /* ── 7. Carregar Conteúdo Dinâmico das Páginas (CMS) ────── */
+  function renderDynamicPageContent(container, page, pageSlug) {
+    if (page.title && pageSlug !== 'home') {
+      document.title = page.title + ' — Quinto Continente | Agência de Artistas';
+    }
+    
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc && page.description) {
+      metaDesc.setAttribute('content', page.description);
+    }
+
+    var html = '';
+    page.sections.forEach(function (sec, idx) {
+      var bgClass = sec.bgType === 'WHITE' ? 'section-white' : 'section-dark';
+      var num = (idx + 1).toString().padStart(2, '0');
+      var labelHtml = sec.subtitle ? `<div class="s-label">${num} / ${sec.subtitle}</div>` : `<div class="s-label">${num} / Seção</div>`;
+      var titleHtml = sec.title ? `<h2 class="s-title" style="margin-bottom: 1.5rem;">${sec.title}</h2>` : '';
+      
+      var paragraphs = sec.content ? sec.content.split('\n').filter(Boolean) : [];
+      var contentHtml = paragraphs.map(function(p) { 
+        return `<p class="s-sub" style="font-size: 1.05rem; line-height: 1.8; margin-top: 1rem;">${p}</p>`; 
+      }).join('');
+
+      if (sec.imageUrl) {
+        var imageHtml = `
+          <div class="reveal vis" style="border-radius: var(--radius-lg); overflow: hidden; height: 350px; border: 1px solid ${sec.bgType === 'WHITE' ? 'var(--line-dark)' : 'var(--line)'};">
+            <img src="${sec.imageUrl}" alt="${sec.title || 'Imagem'}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+        `;
+
+        var gridStyle = 'display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;';
+        var isEven = idx % 2 === 0;
+        var col1 = isEven ? `<div>${labelHtml}${titleHtml}${contentHtml}</div>` : imageHtml;
+        var col2 = isEven ? imageHtml : `<div>${labelHtml}${titleHtml}${contentHtml}</div>`;
+
+        html += `
+          <section class="${bgClass}" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));">
+            <div class="container" style="${gridStyle}">
+              ${col1}
+              ${col2}
+            </div>
+          </section>
+        `;
+      } else {
+        html += `
+          <section class="${bgClass}" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2)); text-align: center;">
+            <div class="container" style="max-width: 800px; margin: 0 auto;">
+              ${labelHtml}
+              ${titleHtml}
+              <div style="text-align: left; max-width: 700px; margin: 0 auto;">
+                ${contentHtml}
+              </div>
+            </div>
+          </section>
+        `;
+      }
+    });
+
+    container.innerHTML = html;
+  }
+
   async function loadDynamicPageContent() {
     var container = document.getElementById('dynamic-sections');
     if (!container) return;
@@ -581,6 +765,18 @@
       else pageSlug = 'home';
     }
 
+    // Ler do Cache Local
+    var cacheKey = 'qc_page_' + pageSlug;
+    var cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        var page = JSON.parse(cached);
+        renderDynamicPageContent(container, page, pageSlug);
+      } catch (e) {
+        console.warn("Erro ao ler seções dinâmicas do cache local:", e);
+      }
+    }
+
     try {
       var res = await fetch(getApiUrl('/paginas?slug=' + pageSlug + '&active=true'));
       if (!res.ok) throw new Error();
@@ -588,65 +784,14 @@
       var page = await res.json();
       if (!page || !page.sections || page.sections.length === 0) return;
 
-      if (page.title && pageSlug !== 'home') {
-        document.title = page.title + ' — Quinto Continente | Agência de Artistas';
+      var serialized = JSON.stringify(page);
+      localStorage.setItem(cacheKey, serialized);
+
+      if (serialized !== cached) {
+        renderDynamicPageContent(container, page, pageSlug);
       }
-      
-      var metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc && page.description) {
-        metaDesc.setAttribute('content', page.description);
-      }
-
-      var html = '';
-      page.sections.forEach(function (sec, idx) {
-        var bgClass = sec.bgType === 'WHITE' ? 'section-white' : 'section-dark';
-        var num = (idx + 1).toString().padStart(2, '0');
-        var labelHtml = sec.subtitle ? `<div class="s-label">${num} / ${sec.subtitle}</div>` : `<div class="s-label">${num} / Seção</div>`;
-        var titleHtml = sec.title ? `<h2 class="s-title" style="margin-bottom: 1.5rem;">${sec.title}</h2>` : '';
-        
-        var paragraphs = sec.content ? sec.content.split('\n').filter(Boolean) : [];
-        var contentHtml = paragraphs.map(function(p) { 
-          return `<p class="s-sub" style="font-size: 1.05rem; line-height: 1.8; margin-top: 1rem;">${p}</p>`; 
-        }).join('');
-
-        if (sec.imageUrl) {
-          var imageHtml = `
-            <div class="reveal vis" style="border-radius: var(--radius-lg); overflow: hidden; height: 350px; border: 1px solid ${sec.bgType === 'WHITE' ? 'var(--line-dark)' : 'var(--line)'};">
-              <img src="${sec.imageUrl}" alt="${sec.title || 'Imagem'}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-          `;
-
-          var gridStyle = 'display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;';
-          var isEven = idx % 2 === 0;
-          var col1 = isEven ? `<div>${labelHtml}${titleHtml}${contentHtml}</div>` : imageHtml;
-          var col2 = isEven ? imageHtml : `<div>${labelHtml}${titleHtml}${contentHtml}</div>`;
-
-          html += `
-            <section class="${bgClass}" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2));">
-              <div class="container" style="${gridStyle}">
-                ${col1}
-                ${col2}
-              </div>
-            </section>
-          `;
-        } else {
-          html += `
-            <section class="${bgClass}" style="padding: 7rem max(var(--site-pad), calc((100% - var(--max-w)) / 2)); text-align: center;">
-              <div class="container" style="max-width: 800px; margin: 0 auto;">
-                ${labelHtml}
-                ${titleHtml}
-                <div style="text-align: left; max-width: 700px; margin: 0 auto;">
-                  ${contentHtml}
-                </div>
-              </div>
-            </section>
-          `;
-        }
-      });
-
-      container.innerHTML = html;
     } catch (err) {
-      console.warn("Usando conteúdo HTML de fallback para a página " + pageSlug, err);
+      console.warn("Erro ao buscar seções dinâmicas ou usando cache.", err);
     }
   }
 
