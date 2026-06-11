@@ -421,8 +421,8 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
     setErrorMsg("");
 
     let contentPayload = sectionContent.trim() || null;
-    if (sectionBgType === "GRID") contentPayload = JSON.stringify(gridCards);
-    if (sectionBgType === "DIFERENCIAIS") contentPayload = JSON.stringify(difCards);
+    if (sectionBgType.includes("GRID")) contentPayload = JSON.stringify(gridCards);
+    if (sectionBgType.includes("DIFERENCIAIS")) contentPayload = JSON.stringify(difCards);
 
     const payload = {
       title: sectionTitle.trim() || null,
@@ -1017,7 +1017,7 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
               </div>
 
               {/* Conteúdo / Texto Principal (Não exibe se for GRID ou DIFERENCIAIS) */}
-              {sectionBgType !== "GRID" && sectionBgType !== "DIFERENCIAIS" && (
+              {!sectionBgType.includes("GRID") && !sectionBgType.includes("DIFERENCIAIS") && (
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
                     Conteúdo / Descrição do Bloco
@@ -1034,7 +1034,7 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
               )}
 
               {/* Editor de Cards para o Layout GRID */}
-              {sectionBgType === "GRID" && (
+              {sectionBgType.includes("GRID") && (
                 <div className="space-y-4 border border-line2 rounded-xl p-4 bg-bg/50">
                   <div className="font-space font-bold text-accent uppercase tracking-wider text-[10px] mb-2">
                     ✏ Configuração dos 4 Cards de Soluções
@@ -1130,7 +1130,7 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
               )}
 
               {/* Editor de Cards para o Layout DIFERENCIAIS */}
-              {sectionBgType === "DIFERENCIAIS" && (
+              {sectionBgType.includes("DIFERENCIAIS") && (
                 <div className="space-y-4 border border-line2 rounded-xl p-4 bg-bg/50">
                   <div className="font-space font-bold text-accent uppercase tracking-wider text-[10px] mb-2">
                     ✏ Configuração dos 4 Diferenciais
@@ -1186,10 +1186,10 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
               {/* Configuração de Imagem/Banner (Só exibe ou muda label dependendo do GRID/DIFERENCIAIS) */}
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted2 block">
-                  {sectionBgType === "GRID" || sectionBgType === "DIFERENCIAIS" ? "Texto do Botão CTA (ex: Conheça nossas soluções) [Deixe em branco para ocultar]" : "Imagem / Banner do Bloco"}
+                  {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? "Texto do Botão CTA (ex: Conheça nossas soluções) [Deixe em branco para ocultar]" : "Imagem / Banner do Bloco"}
                 </label>
 
-                {sectionBgType === "GRID" || sectionBgType === "DIFERENCIAIS" ? (
+                {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? (
                   <input
                     type="text"
                     value={sectionImageUrl}
@@ -1257,13 +1257,13 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
               {/* Link do Vídeo / Link do CTA */}
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted2">
-                  {sectionBgType === "GRID" || sectionBgType === "DIFERENCIAIS" ? "Link do Botão CTA (ex: /o-que-fazemos/)" : "URL de Vídeo (Opcional)"}
+                  {sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? "Link do Botão CTA (ex: /o-que-fazemos/)" : "URL de Vídeo (Opcional)"}
                 </label>
                 <input
                   type="text"
                   value={sectionVideoUrl}
                   onChange={(e) => setSectionVideoUrl(e.target.value)}
-                  placeholder={sectionBgType === "GRID" || sectionBgType === "DIFERENCIAIS" ? "Ex: /o-que-fazemos/" : "https://youtube.com/watch?v=..."}
+                  placeholder={sectionBgType.includes("GRID") || sectionBgType.includes("DIFERENCIAIS") ? "Ex: /o-que-fazemos/" : "https://youtube.com/watch?v=..."}
                   className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3.5 py-2.5 outline-none transition-all"
                   disabled={isSaving}
                 />
@@ -1281,10 +1281,12 @@ export function PagesManager({ initialPages }: PagesManagerProps) {
                     className="w-full bg-bg border border-line2 focus:border-accent text-text text-xs rounded-lg px-3 py-2.5 outline-none transition-all cursor-pointer"
                     disabled={isSaving}
                   >
-                    <option value="DARK">Escuro (Dark)</option>
-                    <option value="WHITE">Claro (White)</option>
-                    <option value="GRID">Grade de Soluções (GRID)</option>
-                    <option value="DIFERENCIAIS">Diferenciais (4 Cards)</option>
+                    <option value="DARK">Textos Livres (Escuro)</option>
+                    <option value="WHITE">Textos Livres (Claro)</option>
+                    <option value="GRID">Grade de Soluções (Escuro)</option>
+                    <option value="GRID_WHITE">Grade de Soluções (Claro)</option>
+                    <option value="DIFERENCIAIS">Diferenciais 4 Cards (Escuro)</option>
+                    <option value="DIFERENCIAIS_WHITE">Diferenciais 4 Cards (Claro)</option>
                   </select>
                 </div>
 

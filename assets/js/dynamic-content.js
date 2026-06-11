@@ -741,7 +741,8 @@
       return pageSlug !== 'home' || sec.order !== 0;
     });
     contentSections.forEach(function (sec, idx) {
-      if (sec.bgType === 'GRID') {
+      if (sec.bgType && sec.bgType.includes('GRID')) {
+        var bgClass = sec.bgType.includes('WHITE') ? 'section-white' : 'section-dark';
         var cardData = [];
         try {
           cardData = JSON.parse(sec.content);
@@ -791,7 +792,7 @@
         }
 
         html += `
-          <section class="servicos section-dark" id="servicos" style="padding:7rem max(var(--site-pad),calc((100% - var(--max-w))/2));">
+          <section class="servicos ${bgClass}" id="servicos" style="padding:7rem max(var(--site-pad),calc((100% - var(--max-w))/2));">
             <div class="servicos-hd">
               <div>
                 <div class="s-label reveal vis" style="opacity:1;transform:translate(0);">${sec.subtitle || 'O Que Fazemos'}</div>
@@ -808,7 +809,8 @@
         return; // Pula para a próxima seção
       }
 
-      if (sec.bgType === 'DIFERENCIAIS') {
+      if (sec.bgType && sec.bgType.includes('DIFERENCIAIS')) {
+        var bgClass = sec.bgType.includes('WHITE') ? 'section-white' : 'section-dark';
         var difData = [];
         try {
           difData = JSON.parse(sec.content);
@@ -829,7 +831,7 @@
         });
 
         html += `
-          <section class="diferenciais section-white" id="diferenciais" style="padding:7rem max(var(--site-pad),calc((100% - var(--max-w))/2));">
+          <section class="diferenciais ${bgClass}" id="diferenciais" style="padding:7rem max(var(--site-pad),calc((100% - var(--max-w))/2));">
             <div class="s-label reveal vis" style="opacity:1;transform:translate(0);">${sec.subtitle || 'Diferenciais'}</div>
             <h2 class="s-title reveal vis" style="opacity:1;transform:translate(0);">${sec.title || ''}</h2>
             <div class="cards-wrap card-grid-4" style="margin-top:4rem">
@@ -840,7 +842,7 @@
         return; // Pula para a próxima seção
       }
 
-      var bgClass = sec.bgType === 'WHITE' ? 'section-white' : 'section-dark';
+      var bgClass = sec.bgType && sec.bgType.includes('WHITE') ? 'section-white' : 'section-dark';
       var num = (idx + 1).toString().padStart(2, '0');
       var labelHtml = sec.subtitle ? `<div class="s-label">${num} / ${sec.subtitle}</div>` : `<div class="s-label">${num} / Seção</div>`;
       var titleHtml = sec.title ? `<h2 class="s-title" style="margin-bottom: 1.5rem;">${sec.title}</h2>` : '';

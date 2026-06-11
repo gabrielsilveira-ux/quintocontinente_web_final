@@ -13,7 +13,7 @@
 .servicos { background:var(--bg); }
 .servicos-hd { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:3.5rem; gap:2rem; flex-wrap:wrap; }
 .servicos-hd-note { font-size:.875rem; font-weight:300; color:var(--muted2); max-width:240px; line-height:1.65; }
-.diferenciais { background:var(--bg3); }
+
 .dif { background:var(--bg3); padding:2.25rem 1.75rem; transition:background .3s; }
 .dif:hover { background:var(--surface); }
 .dif-title { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:700; color:var(--text); margin-bottom:.7rem; }

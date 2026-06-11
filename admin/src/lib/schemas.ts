@@ -87,6 +87,13 @@ export const pageSectionSchema = z.object({
   content: z.string().optional().nullable(),
   imageUrl: z.string().optional().nullable(),
   videoUrl: z.string().optional().nullable(),
-  bgType: z.enum(["DARK", "WHITE", "GRID", "DIFERENCIAIS"]).default("DARK"),
+  bgType: z.enum([
+    "DARK", 
+    "WHITE", 
+    "GRID", 
+    "GRID_WHITE", 
+    "DIFERENCIAIS", 
+    "DIFERENCIAIS_WHITE"
+  ]).default("DARK"),
   order: z.preprocess((val) => Number(val ?? 0), z.number().int().nonnegative()),
 });
